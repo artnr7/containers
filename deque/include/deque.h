@@ -1,5 +1,6 @@
 #include <cmath>
 #include <iostream>
+#include <>
 
 namespace s21 {
 template <typename T> class Deque {
@@ -7,13 +8,12 @@ private:
   /*--------→  VARIATIONS ←-------------*/
   const int block_size_ = 8; // deque block size
   int elems_qty_;
-  int capacity_;
   <T> **mem_blocks_;
 
   /*--------→  FUNCTIONS ←-------------*/
   void MemAlc();
-  void BlocksFill(int value);
-  int MemBlocksQty(int elems_qty);
+  int BlocksFill(int value);
+  void MemBlocksQty(int elems_qty);
 
 public:
   /*--------→ CONSTRUCTORS ←-------------*/

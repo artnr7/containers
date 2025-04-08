@@ -1,5 +1,6 @@
 #include "../include/deque.h"
 
+/*--------→ CONSTRUCTORS ←-------------*/
 template <typename T>
 s21::Deque<T>::Deque() : elems_qty(0), mem_blocks_(nullptr) {}
 
@@ -17,7 +18,9 @@ template <typename T> s21::Deque<T>::Deque(int nums_qty, int value) {
   BlocksFill(value);
 }
 
+// initializer list это штука которая
 template <typename T> s21::Deque<T>::Deque(std::initializer_list) {
+
   // выделяем 2 блока
   mem_blocks_qty = MemBlocksQty(block_size * 2);
   MemAlc();
