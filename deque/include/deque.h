@@ -1,26 +1,28 @@
 #include <cmath>
 #include <iostream>
-#include <>
+
+// int gn() { std::deque<int> dq = {1, 2, 3}; }
 
 namespace s21 {
 template <typename T> class Deque {
 private:
   /*--------→  VARIATIONS ←-------------*/
-  const int block_size_ = 8; // deque block size
-  int elems_qty_;
-  <T> **mem_blocks_;
+  const int _chunk_size = 512; // deque chunk size, at least 8 bytes.
+  <T> **_chunk_map;
 
-  /*--------→  FUNCTIONS ←-------------*/
+  /*--------→ PRIVATE FUNCTIONS ←-------------*/
   void MemAlc();
   int BlocksFill(int value);
-  void MemBlocksQty(int elems_qty);
+  void GetChunkCapacity(size_t &chunk_capacity);
+  void GetChunksQtyForMalloc(int Tp_qty, size_t &chunks_qty_for_malloc);
 
 public:
   /*--------→ CONSTRUCTORS ←-------------*/
   Deque();
-  Deque(int nums_qty);
-  Deque(int nums_qty, int value);
-  Deque(std::initializer_list);
+  Deque(int Tp_qty);
+  Deque(int Tp_qty, <T> value);
+  Deque(const std::initializer_list<T> &values);
+
   Deque(Deque &deque_src);
   Deque(Deque &&deque_src);
   ~Deque();
