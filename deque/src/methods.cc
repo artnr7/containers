@@ -16,3 +16,5 @@ template <typename T> void s21::Deque<T>::Resize() {
     realcd_mem_blocks[i] = <T>[block_size];
   }
 }
+
+template <typename T> void s21::Deque<T>::Size() {}

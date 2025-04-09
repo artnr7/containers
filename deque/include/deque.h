@@ -1,18 +1,30 @@
 #include <cmath>
+#include <deque>
 #include <iostream>
 
-// int gn() { std::deque<int> dq = {1, 2, 3}; }
+#define BUF
+
+// int gn() {
+  std::deque<int> dq = {1, 2, 3};
+//   std::deque<int>::iterator it;
+//   i
+// }
 
 namespace s21 {
 template <typename T> class Deque {
 private:
   /*--------→  VARIATIONS ←-------------*/
-  const int _chunk_size = 512; // deque chunk size, at least 8 bytes.
+  const size_t _chunk_size = 512; // deque chunk size, at least 8 bytes.
   <T> **_chunk_map;
+  <T> *_start;  // iterator
+  <T> *_finish; // iterator
 
   /*--------→ PRIVATE FUNCTIONS ←-------------*/
+  /*-----→ utils ←-------*/
   void MemAlc();
+  void MemFree();
   int BlocksFill(int value);
+  /*--------→ no_name ←-------------*/
   void GetChunkCapacity(size_t &chunk_capacity);
   void GetChunksQtyForMalloc(int Tp_qty, size_t &chunks_qty_for_malloc);
 
