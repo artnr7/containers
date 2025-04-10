@@ -2,10 +2,9 @@
 #include <deque>
 #include <iostream>
 
-#define BUF
 
 // int gn() {
-  std::deque<int> dq = {1, 2, 3};
+std::deque<int> dq = {1, 2, 3};
 //   std::deque<int>::iterator it;
 //   i
 // }
@@ -14,7 +13,7 @@ namespace s21 {
 template <typename T> class Deque {
 private:
   /*--------→  VARIATIONS ←-------------*/
-  const size_t _chunk_size = 512; // deque chunk size, at least 8 bytes.
+  size_t _chunk_size; // deque chunk size
   <T> **_chunk_map;
   <T> *_start;  // iterator
   <T> *_finish; // iterator
@@ -26,7 +25,7 @@ private:
   int BlocksFill(int value);
   /*--------→ no_name ←-------------*/
   void GetChunkCapacity(size_t &chunk_capacity);
-  void GetChunksQtyForMalloc(int Tp_qty, size_t &chunks_qty_for_malloc);
+  void InitChunkSize(const size_t &chunk_capacity);
 
 public:
   /*--------→ CONSTRUCTORS ←-------------*/
