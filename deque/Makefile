@@ -77,3 +77,11 @@ clean:
 
 cl:
 	clang-format -i $(deque_C_FILES) $(deque_H_FILES) $(deque_TEST_FILES) 
+
+
+
+T_DIR := testing
+t: 
+	clang-format -i $(T_DIR)/t.cc
+	g++ -Wall -Werror -Wextra $(T_DIR)/t.cc -o $(T_DIR)/t.exe
+	./$(T_DIR)/t.exe

@@ -15,8 +15,7 @@ template <typename T> void s21::Deque<T>::MemAlc() {
 
     // также наверное можно сделать заполнение полей значениями при
     // инициализации
-    
-    
+
     // взятие остатка(то есть порядок внутри чанка)
     int fin_ptr_last_j = Tp_qty % chunk_capacity;
     _finish = _chunk_map[i][fin_ptr_last_j];

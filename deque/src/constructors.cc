@@ -1,6 +1,7 @@
 #include "../include/deque.h"
 
 /*--------→ CONSTRUCTORS ←-------------*/
+
 template <typename T> s21::Deque<T>::Deque() : _chunk_map(nullptr), _start(nullptr), _finish(nullptr) {}
 
 template <typename T> s21::Deque<T>::Deque(int Tp_qty) {
@@ -9,7 +10,7 @@ template <typename T> s21::Deque<T>::Deque(int Tp_qty) {
   BlocksFill(0);
 }
 
-template <typename T> s21::Deque<T>::Deque(int Tp_qty, <T> value) {
+template <typename T> s21::Deque<T>::Deque(int Tp_qty, T value) {
   MemAlc();
   BlocksFill(value);
 }
