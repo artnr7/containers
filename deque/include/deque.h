@@ -8,7 +8,7 @@
 #include <iostream>
 
 // int gn() {
-// std::deque<int> dq = {1, 2, 3};
+std::deque<int> dq = {1, 2, 3};
 // std::deque<int>::iterator it;
 //   i
 // }
@@ -18,8 +18,8 @@ template <typename T> class Deque {
 public:
   /*--------→ CONSTRUCTORS ←-------------*/
   Deque();
-  Deque(int Tp_qty);
-  Deque(int Tp_qty, T value);
+  Deque(const size_t Tp_qty);
+  Deque(const size_t Tp_qty, T value);
   Deque(const std::initializer_list<T> &values);
 
   Deque(Deque &deque_src);
@@ -32,6 +32,7 @@ public:
 
   /*--------→ METHODS  ←-----------*/
   void PushBack(int value);
+  size_t Size();
 
 private:
   /*--------→  VARIATIONS ←-------------*/
@@ -42,12 +43,14 @@ private:
 
   /*--------→ PRIVATE FUNCTIONS ←-------------*/
   /*-----→ utils ←-------*/
-  void MemAlc();
-  void MemFree();
-  int BlocksFill(int value);
-  /*--------→ no_name ←-------------*/
   void GetChunkCapacity(size_t &chunk_capacity);
-  void InitChunkSize(const size_t &chunk_capacity);
+  void DeqInit(const size_t Tp_qty);
+  void DeqInit(const std::initializer_list<T>.size());
+
+  void MemFree();
+  void BlocksFill(const T value);
+  void BlocksFill(const std::initializer_list<T> values);
+  /*--------→ no_name ←-------------*/
 };
 
 } // namespace s21
