@@ -34,12 +34,15 @@ public:
   void PushBack(int value);
   size_t Size();
 
+  s21::Iterator<T> Begin();
+  s21::Iterator<T> End();
+
 private:
   /*--------→  VARIATIONS ←-------------*/
   size_t _chunk_size; // deque chunk size
   T **_chunk_map;
-  Iterator _start;  // iterator
-  Iterator _finish; // iterator
+  s21::Iterator<T> _start;  // iterator
+  s21::Iterator<T> _finish; // iterator
 
   /*--------→ PRIVATE FUNCTIONS ←-------------*/
   /*-----→ utils ←-------*/
@@ -48,8 +51,9 @@ private:
   void DeqInit(const std::initializer_list<T>.size());
 
   void MemFree();
-  void BlocksFill(const T value);
-  void BlocksFill(const std::initializer_list<T> values);
+  void BlocksFill(const T value, const size_t &chunk_capacity);
+  void BlocksFill(const std::initializer_list<T> values,
+                  const size_t &chunk_capacity);
   /*--------→ no_name ←-------------*/
 };
 
