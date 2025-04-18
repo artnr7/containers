@@ -2,7 +2,7 @@
 
 #include "./../s21_list.h"
 
-// TODO: Add test cases for list
+// TODO(root): Add test cases for list
 
 TEST(listTest, DefaultConstructor) {
   // Test default constructor

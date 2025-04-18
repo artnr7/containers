@@ -2,7 +2,7 @@
 
 #include "./../s21_queue.h"
 
-// TODO: Add test cases for queue
+// TODO(root): Add test cases for queue
 
 TEST(queueTest, DefaultConstructor) {
   // Test default constructor

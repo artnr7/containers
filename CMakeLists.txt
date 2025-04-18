@@ -1,7 +1,6 @@
 cmake_minimum_required(VERSION 3.28)
-project(S21ContainersTests LANGUAGES CXX)
+project(S21Containers LANGUAGES CXX)
 
-# Настройки компиляции
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
@@ -91,7 +90,7 @@ HeaderFilterRegex: '.*'
 ")
 
     # Единая цель для clang-tidy с обработкой ошибок
-    add_custom_target(clang-tidy
+    add_custom_target(clang-tidy-test
         COMMAND ${CLANG_TIDY}
         ${LIB_SOURCE_FILES} ${TEST_SOURCE_FILES}
         --config-file=${CMAKE_CURRENT_SOURCE_DIR}/.clang-tidy
@@ -101,16 +100,26 @@ HeaderFilterRegex: '.*'
         WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
         VERBATIM
     )
+
+    add_custom_target(clang-tidy-fix
+        COMMAND ${CLANG_TIDY}
+        ${LIB_SOURCE_FILES} ${TEST_SOURCE_FILES}
+        --config-file=${CMAKE_CURRENT_SOURCE_DIR}/.clang-tidy
+        -p=${CMAKE_BINARY_DIR}
+        --fix
+        --quiet
+        COMMENT "Applying clang-tidy fixes"
+        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+    )
 else()
     message(WARNING "clang-tidy not found! Static analysis target 'clang-tidy' will not be available")
 endif()
 
 
-# Поиск cppcheck
 find_program(CPPCHECK "cppcheck")
 if(CPPCHECK)
     # Цель для запуска cppcheck с базовыми настройками
-    add_custom_target(cppcheck
+    add_custom_target(cppcheck-test
         COMMAND ${CPPCHECK}
             --enable=warning,performance,portability,style
             --suppress=missingIncludeSystem
@@ -125,7 +134,7 @@ if(CPPCHECK)
     )
 
     # Альтернативная цель для проверки только исходников (без compile_commands.json)
-    add_custom_target(cppcheck-sources
+    add_custom_target(cppcheck-test-sources
         COMMAND ${CPPCHECK}
             --enable=all
             --suppress=missingIncludeSystem
@@ -152,7 +161,7 @@ if(VALGRIND)
     endforeach()
 
     # Основная цель для запуска всех тестов через Valgrind
-    add_custom_target(valgrind_test
+    add_custom_target(valgrind-test
         COMMAND ${CMAKE_COMMAND} -E echo "=== Running all tests with Valgrind ==="
         COMMAND ${VALGRIND}
             --leak-check=full
@@ -184,4 +193,25 @@ if(VALGRIND)
     endforeach()
 else()
     message(WARNING "Valgrind not found! Memory checking targets will not be available")
+endif()
+
+
+# Поиск clang-format
+find_program(CLANG_FORMAT "clang-format")
+if(CLANG_FORMAT)
+    # Цель для проверки форматирования (clang-format-check)
+    add_custom_target(clang-format-test
+        COMMAND ${CLANG_FORMAT} --style=Google -n --verbose ${LIB_SOURCE_FILES} ${TEST_SOURCE_FILES}
+        COMMENT "Checking code formatting with clang-format (Google Style)"
+        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+    )
+
+    # Цель для форматирования кода (clang-format)
+    add_custom_target(clang-format-fix
+        COMMAND ${CLANG_FORMAT} --style=Google -i ${LIB_SOURCE_FILES} ${TEST_SOURCE_FILES}
+        COMMENT "Formatting code with clang-format (Google Style)"
+        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+    )
+else()
+    message(WARNING "clang-format not found. clang-format-check and clang-format targets will not be available.")
 endif()

@@ -2,7 +2,7 @@
 
 #include "./../s21_array.h"
 
-// TODO: Add test cases for array
+// TODO(root): Add test cases for array
 
 TEST(arrayTest, DefaultConstructor) {
   // Test default constructor

@@ -2,7 +2,7 @@
 
 #include "./../s21_stack.h"
 
-// TODO: Add test cases for stack
+// TODO(root): Add test cases for stack
 
 TEST(stackTest, DefaultConstructor) {
   // Test default constructor

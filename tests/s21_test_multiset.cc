@@ -2,7 +2,7 @@
 
 #include "./../s21_multiset.h"
 
-// TODO: Add test cases for multiset
+// TODO(root): Add test cases for multiset
 
 TEST(multisetTest, DefaultConstructor) {
   // Test default constructor

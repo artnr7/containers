@@ -2,7 +2,7 @@
 
 #include "./../s21_vector.h"
 
-// TODO: Add test cases for vector
+// TODO(root): Add test cases for vector
 
 TEST(vectorTest, DefaultConstructor) {
   // Test default constructor

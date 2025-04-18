@@ -2,7 +2,7 @@
 
 #include "./../s21_set.h"
 
-// TODO: Add test cases for set
+// TODO(root): Add test cases for set
 
 TEST(setTest, DefaultConstructor) {
   // Test default constructor
