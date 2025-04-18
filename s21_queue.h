@@ -9,7 +9,7 @@ namespace s21 {
  */
 template <typename T>
 class queue {
-    // Реализация контейнера queue
+  // Реализация контейнера queue
 };
 
 }  // namespace s21

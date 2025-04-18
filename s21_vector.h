@@ -9,7 +9,7 @@ namespace s21 {
  */
 template <typename T>
 class vector {
-    // Реализация контейнера vector
+  // Реализация контейнера vector
 };
 
 }  // namespace s21

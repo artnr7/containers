@@ -9,7 +9,7 @@ namespace s21 {
  */
 template <typename T>
 class stack {
-    // Реализация контейнера stack
+  // Реализация контейнера stack
 };
 
 }  // namespace s21

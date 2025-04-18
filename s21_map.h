@@ -9,7 +9,7 @@ namespace s21 {
  */
 template <typename T>
 class map {
-    // Реализация контейнера map
+  // Реализация контейнера map
 };
 
 }  // namespace s21

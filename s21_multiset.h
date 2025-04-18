@@ -9,7 +9,7 @@ namespace s21 {
  */
 template <typename T>
 class multiset {
-    // Реализация контейнера multiset
+  // Реализация контейнера multiset
 };
 
 }  // namespace s21

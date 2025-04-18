@@ -9,7 +9,7 @@ namespace s21 {
  */
 template <typename T>
 class array {
-    // Реализация контейнера array
+  // Реализация контейнера array
 };
 
 }  // namespace s21
