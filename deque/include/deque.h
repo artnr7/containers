@@ -1,8 +1,6 @@
 #ifndef __DEQUE__
 #define __DEQUE__
 
-#include "deq_it.h"
-
 #include <cmath>
 #include <deque>
 #include <iostream>
@@ -36,6 +34,32 @@ public:
 
   s21::Iterator<T> Begin();
   s21::Iterator<T> End();
+
+  template <typename T> class Iterator {
+  public:
+    Iterator() noexcept : _cur_chunk(nullptr), _cur_elt(nullptr) {}
+    Iterator(const T **cur_chunk, const T *cur_elt) noexcept
+        : _cur_chunk(cur_chunk), _cur_elt(cur_elt) {}
+    ~Iterator() { _cur_chunk(nullptr), _cur_elt(nullptr); }
+
+    T &operator*(const T &ptr) const noexcept {
+      if (_cur_elt) {
+        return *_cur_elt;
+      }
+    }
+
+    Iterator<T> operator++(Iterator<T> it) {
+      size_t &chunk_capacity = nullptr;
+      GetChunkCapacity(chunk_capacity);
+      T *end_of_chunk = *_cur_chunk + chunk_capacity;-
+      if (_cur_elt ==)
+      // _cur_elt += sizeof(T);
+    }
+
+  private:
+    T **_cur_chunk;
+    T *_cur_elt;
+  };
 
 private:
   /*--------→  VARIATIONS ←-------------*/

@@ -19,19 +19,19 @@ template <typename T> void s21::Deque<T>::DeqInit(const size_t Tp_qty) {
   _chunk_size = Tp_qty / chunk_capacity + 1;
   size_t chunk_qty_to_malloc = std::max(8, _chunk_size + 2);
 
+  // ↓ взятие остатка(то есть порядок внутри чанка)
+  int fin_ptr_last_j = Tp_qty % chunk_capacity;
+
   _chunk_map = new<T> **[chunk_qty_to_malloc];
   // ↓ как тут работает сдвиг по памяти
   for (int i = 0; i < chunks_qty_for_malloc; i++) {
     _chunk_map[i] = new<T> *[chunk_capacity];
     // проверка на выделение памяти //
 
-    // ↓ взятие остатка(то есть порядок внутри чанка)
-    int fin_ptr_last_j = Tp_qty % chunk_capacity;
-
     // ↓ инициализация итераторов
-    _finish = {_chunk_map[]}
+    _finish = {_chunk_map[i], _chunk_map[i][fin_ptr_last_j]};
   }
-  _start = _chunk_map[0][0];
+  _start = {_chunk_map[0], _chunk_map[0][0]};
 }
 
 /** @brief Освобождение памяти, используется в конструкторах */
