@@ -1,31 +1,59 @@
-cmake_minimum_required(VERSION 3.10)
-project(s21_containers)
+cmake_minimum_required(VERSION 3.28)
+project(S21ContainersTests LANGUAGES CXX)
 
+# Настройки компиляции
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/bin/tests)
-
+# Поиск зависимостей: для гугл тестов
 find_package(GTest REQUIRED)
 find_package(Threads REQUIRED)
 
-include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+# Список тестируемых контейнеров
+set(CONTAINERS 
+    array
+    vector
+    list
+    map
+    set
+    stack
+    queue
+    multiset
+)
 
-set(CONTAINERS vector list map stack queue set multiset array)
+enable_testing()
 
-foreach(container ${CONTAINERS})
-    set(TEST_NAME s21_test_${container})
-    add_executable(${TEST_NAME} tests/s21_test_${container}.cc)
-    target_link_libraries(
-        ${TEST_NAME}
-        PRIVATE
+foreach(CONTAINER ${CONTAINERS})
+    # Имя тестового исполняемого файла
+    set(TEST_NAME "s21_test_${CONTAINER}")
+    
+    # Создание исполняемого файла
+    add_executable(${TEST_NAME} tests/${TEST_NAME}.cc)
+    
+    # Подключение зависимостей
+    target_link_libraries(${TEST_NAME}
+        PRIVATE 
         GTest::GTest
         GTest::Main
         Threads::Threads
     )
+    
+    # Добавление в CTest
+    add_test(NAME ${TEST_NAME} COMMAND ${TEST_NAME})
+    
+    # Создание цели для запуска
+    add_custom_target(run_${TEST_NAME}
+        COMMAND ./${TEST_NAME}
+        DEPENDS ${TEST_NAME}
+        COMMENT "Running ${TEST_NAME} tests"
+        WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+    )
+    
+    target_compile_options(${TEST_NAME} PRIVATE
+        -Wall
+        -Wextra
+        -Werror
+    )
 endforeach()
 
-enable_testing()
-foreach(container ${CONTAINERS})
-    add_test(NAME test_${container} COMMAND ${TEST_NAME})
-endforeach()
