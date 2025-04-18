@@ -5,6 +5,7 @@ project(S21ContainersTests LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # Поиск зависимостей: для гугл тестов
 find_package(GTest REQUIRED)
@@ -69,22 +70,118 @@ foreach(CONTAINER ${CONTAINERS})
     )
 endforeach()
 
-# Поиск clang-format
-find_program(CLANG_FORMAT "clang-format")
-if(CLANG_FORMAT)
-    # Цель для проверки форматирования (clang-format-check)
-    add_custom_target(clang-format-check
-        COMMAND ${CLANG_FORMAT} --style=Google -n --verbose ${LIB_SOURCE_FILES} ${TEST_SOURCE_FILES}
-        COMMENT "Checking code formatting with clang-format (Google Style)"
-        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-    )
+# Поиск clang-tidy и настройка анализа
+find_program(CLANG_TIDY "clang-tidy")
+if(CLANG_TIDY)
 
-    # Цель для форматирования кода (clang-format)
-    add_custom_target(clang-format
-        COMMAND ${CLANG_FORMAT} --style=Google -i ${LIB_SOURCE_FILES} ${TEST_SOURCE_FILES}
-        COMMENT "Formatting code with clang-format (Google Style)"
+    # Создаем упрощенный .clang-tidy конфиг (без AnalyzeTemporaryDtors)
+    file(WRITE ${CMAKE_CURRENT_SOURCE_DIR}/.clang-tidy
+    "---
+Checks: >
+    -*,
+    clang-analyzer-*,
+    google-*,
+    modernize-*,
+    performance-*,
+    readability-*,
+    bugprone-*
+WarningsAsErrors: '*'
+HeaderFilterRegex: '.*'
+...
+")
+
+    # Единая цель для clang-tidy с обработкой ошибок
+    add_custom_target(clang-tidy
+        COMMAND ${CLANG_TIDY}
+        ${LIB_SOURCE_FILES} ${TEST_SOURCE_FILES}
+        --config-file=${CMAKE_CURRENT_SOURCE_DIR}/.clang-tidy
+        -p=${CMAKE_BINARY_DIR}  # Указываем путь к compile_commands.json
+        --quiet
+        COMMENT "Running clang-tidy static analysis"
         WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+        VERBATIM
     )
 else()
-    message(WARNING "clang-format not found. clang-format-check and clang-format targets will not be available.")
+    message(WARNING "clang-tidy not found! Static analysis target 'clang-tidy' will not be available")
+endif()
+
+
+# Поиск cppcheck
+find_program(CPPCHECK "cppcheck")
+if(CPPCHECK)
+    # Цель для запуска cppcheck с базовыми настройками
+    add_custom_target(cppcheck
+        COMMAND ${CPPCHECK}
+            --enable=warning,performance,portability,style
+            --suppress=missingIncludeSystem
+            --std=c++20
+            --template="[{severity}][{id}] {message} {file}:{line}"
+            --error-exitcode=1
+            --inline-suppr
+            --project=${CMAKE_BINARY_DIR}/compile_commands.json
+            -i ${CMAKE_BINARY_DIR}  # Игнорируем build-директорию
+        COMMENT "Running cppcheck static analysis"
+        VERBATIM
+    )
+
+    # Альтернативная цель для проверки только исходников (без compile_commands.json)
+    add_custom_target(cppcheck-sources
+        COMMAND ${CPPCHECK}
+            --enable=all
+            --suppress=missingIncludeSystem
+            --std=c++20
+            --template="[{severity}][{id}] {message} {file}:{line}"
+            --error-exitcode=1
+            --inline-suppr
+            ${LIB_SOURCE_FILES} ${TEST_SOURCE_FILES}
+            -i ${CMAKE_BINARY_DIR}
+        COMMENT "Running cppcheck on source files directly"
+        VERBATIM
+    )
+else()
+    message(WARNING "cppcheck not found! Static analysis targets 'cppcheck' and 'cppcheck-sources' will not be available")
+endif()
+
+
+find_program(VALGRIND "valgrind")
+if(VALGRIND)
+    # Создаем список всех тестовых исполняемых файлов
+    set(TEST_EXECUTABLES)
+    foreach(CONTAINER ${CONTAINERS})
+        list(APPEND TEST_EXECUTABLES "s21_test_${CONTAINER}")
+    endforeach()
+
+    # Основная цель для запуска всех тестов через Valgrind
+    add_custom_target(valgrind_test
+        COMMAND ${CMAKE_COMMAND} -E echo "=== Running all tests with Valgrind ==="
+        COMMAND ${VALGRIND}
+            --leak-check=full
+            --show-leak-kinds=all
+            --track-origins=yes
+            --error-exitcode=1
+            --log-file=${CMAKE_BINARY_DIR}/valgrind.log
+            ${CMAKE_CTEST_COMMAND} --output-on-failure
+        WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+        COMMENT "Running all tests with Valgrind memory checker"
+        DEPENDS ${TEST_EXECUTABLES}  # Зависит от скомпилированных тестов
+    )
+
+    # Альтернативная цель для запуска отдельных тестов
+    foreach(CONTAINER ${CONTAINERS})
+        set(TEST_NAME "s21_test_${CONTAINER}")
+        add_custom_target(valgrind_${TEST_NAME}
+            COMMAND ${VALGRIND}
+                --leak-check=full
+                --show-leak-kinds=all
+                --track-origins=yes
+                --error-exitcode=1
+                --log-file=${CMAKE_BINARY_DIR}/valgrind_${TEST_NAME}.log
+                ./${TEST_NAME}
+            DEPENDS ${TEST_NAME}
+            WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+            COMMENT "Running ${TEST_NAME} with Valgrind"
+        )
+    endforeach()
+else()
+    message(WARNING "Valgrind not found! Memory checking targets will not be available")
 endif()
