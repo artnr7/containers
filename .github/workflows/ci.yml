@@ -35,7 +35,7 @@ jobs:
     - name: Check clang-format
       run: |
         cd build 
-        cmake --build . --target clang-format-check
+        cmake --build . --target clang-format-test
     - name: Run tests
       run: |
         cd build
