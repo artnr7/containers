@@ -20,3 +20,24 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt-get install -y build-essential cmake clang-format libgtest-dev
+    
+    - name: Configure cmake
+      run: |
+        mkdir build 
+        cd build
+        cmake ..
+
+    - name: build
+      run: |
+        cd build
+        cmake --build . --target all
+
+    - name: Check clang-format
+      run: |
+        cd build 
+        cmake --build . --target clang-format-check
+    - name: Run tests
+      run: |
+        cd build
+        cmake --build . --target test 
+
