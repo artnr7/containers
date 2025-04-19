@@ -271,3 +271,13 @@ if(LCOV_PATH AND GENHTML_PATH)
 else()
     message(WARNING "lcov or genhtml not found - coverage targets disabled")
 endif()
+
+
+find_package(Git QUIET)
+if(GIT_FOUND)
+    execute_process(
+        COMMAND ${GIT_EXECUTABLE} config core.hooksPath .githooks
+        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+    )
+    message(STATUS "Git hooks configured")
+endif()
