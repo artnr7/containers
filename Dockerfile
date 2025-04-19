@@ -18,16 +18,18 @@ RUN apt-get update && apt-get install -y \
     wget \
     gnupg \
     software-properties-common \
+    cppcheck \
     && rm -rf /var/lib/apt/lists/*
 
 # Добавляем репозиторий LLVM для Ubuntu 22.04
 RUN wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | apt-key add - && \
     echo "deb http://apt.llvm.org/jammy/ llvm-toolchain-jammy-18 main" > /etc/apt/sources.list.d/llvm.list
 
-# Устанавливаем clang-format-18
+# Устанавливаем инструменты LLVM 18
 RUN apt-get update && \
-    apt-get install -y clang-format-18 && \
-    ln -s /usr/bin/clang-format-18 /usr/bin/clang-format
+    apt-get install -y clang-format-18 clang-tidy-18 && \
+    ln -s /usr/bin/clang-format-18 /usr/bin/clang-format && \
+    ln -s /usr/bin/clang-tidy-18 /usr/bin/clang-tidy
 
 # Устанавливаем Google Test
 RUN apt-get update && apt-get install -y libgtest-dev && \

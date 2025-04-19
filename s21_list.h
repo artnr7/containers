@@ -1,6 +1,8 @@
 #ifndef S21_LIST_H
 #define S21_LIST_H
 
+#include <iostream>
+
 namespace s21 {
 
 /*
@@ -10,6 +12,10 @@ namespace s21 {
 template <typename T>
 class list {
   // Реализация контейнера list
+public:
+  list() {
+    std::cout << "A";
+  }
 };
 
 }  // namespace s21

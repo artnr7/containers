@@ -6,6 +6,8 @@
 
 TEST(listTest, DefaultConstructor) {
   // Test default constructor
+  s21::list<int> l;
+  (void)l;
 }
 
 TEST(listTest, InitializerListConstructor) {
