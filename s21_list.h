@@ -11,10 +11,6 @@ namespace s21 {
  */
 template <typename T>
 class list {
-  // Реализация контейнера list
- public:
-  list() { std::cout << "A"; }
-};
 
 }  // namespace s21
 
