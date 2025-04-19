@@ -38,19 +38,18 @@ jobs:
       run: |
         cd build
         cmake --build . --target clang-format-test
+    
+    - name: Run cppcheck
+      run: |
+        cd build
+        cmake --build . --target cppcheck
 
     - name: Run clang-tidy
       run: |
         cd build
         cmake --build . --target clang-tidy-test
 
-    - name: Run cppcheck
-      run: |
-        cd build
-        cmake --build . --target cppcheck
-
     - name: Run tests
       run: |
         cd build
         ctest --output-on-failure --parallel
-
