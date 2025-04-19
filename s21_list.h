@@ -12,6 +12,7 @@ namespace s21 {
 template <typename T>
 class list {
 
+};
 }  // namespace s21
 
 #endif  // S21_LIST_H
