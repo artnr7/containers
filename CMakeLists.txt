@@ -9,6 +9,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 find_package(GTest REQUIRED)
 find_package(Threads REQUIRED)
 
+
 # Список тестируемых контейнеров
 set(CONTAINERS 
     array
