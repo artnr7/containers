@@ -6,7 +6,7 @@
 #define BUF_SIZE 512
 /** @brief Нахождение максимально возможно количества вмещенных ШТ в BUF_SIZE*/
 template <typename T>
-void s21::Deque<T>::GetChunkCapacity(size_t &chunk_capacity) noexcept {
+void s21::Deque<T>::GetChunkCapacity(size_t *chunk_capacity) noexcept {
   /* Если размер ШТ < BUF_SIZE, то вычисляем какое кол-во их можно вместить  в
    * одном чанке
    * Если размер > (1/2 * BUF_SIZE), то кол-во ШТ в одном чанке будет равно 1 */
@@ -42,7 +42,8 @@ template <typename T> void s21::Deque<T>::MemFree() { delete[] _chunk_map; }
 template <typename T>
 void s21::Deque<T>::BlocksFill(const std::initializer_list<T> values,
                                const size_t &chunk_capacity) {
-  using s21::Iterator<T> = Iter;
-  for (Iter it = Begin(); it != End(); it++;)
-    std::for_each _chunk_map[i][j] = values[i * chunk_capacity + j];
+  size_t val_i = 0;
+  for (s21::Deque<T>::Iterator it = Begin(); it != End(); it++) {
+    *it = values[val_i];
+  }
 }

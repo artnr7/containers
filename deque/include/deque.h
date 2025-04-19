@@ -7,7 +7,7 @@
 
 // int gn() {
 std::deque<int> dq = {1, 2, 3};
-// std::deque<int>::iterator it;
+std::deque<int>::iterator it;	
 //   i
 // }
 
@@ -30,10 +30,11 @@ public:
 
   /*--------→ METHODS  ←-----------*/
   void PushBack(int value);
-  size_t Size();
+  size_t Size() noexcept;
+  bool Empty() noexcept;
 
-  s21::Iterator<T> Begin();
-  s21::Iterator<T> End();
+  T Begin();
+  T End();
 
   template <typename T> class Iterator {
   public:
@@ -44,16 +45,23 @@ public:
 
     T &operator*(const T &ptr) const noexcept {
       if (_cur_elt) {
-        return *_cur_elt;
+        return _cur_elt;
       }
     }
 
     Iterator<T> operator++(Iterator<T> it) {
-      size_t &chunk_capacity = nullptr;
+      size_t *chunk_capacity = nullptr;
       GetChunkCapacity(chunk_capacity);
-      T *end_of_chunk = *_cur_chunk + chunk_capacity;-
-      if (_cur_elt ==)
-      // _cur_elt += sizeof(T);
+
+      // проверка на конец чанк_мапа
+
+      T *end_of_chunk = *_cur_chunk + (chunk_capacity - 1);
+      if (_cur_elt == end_of_chunk) {
+        _cur_chunk++;
+        _cur_elt = *_cur_chunk;
+      } else {
+        _cur_elt++;
+      }
     }
 
   private:
@@ -70,7 +78,7 @@ private:
 
   /*--------→ PRIVATE FUNCTIONS ←-------------*/
   /*-----→ utils ←-------*/
-  void GetChunkCapacity(size_t &chunk_capacity);
+  void GetChunkCapacity(size_t *chunk_capacity);
   void DeqInit(const size_t Tp_qty);
   void DeqInit(const std::initializer_list<T>.size());
 
