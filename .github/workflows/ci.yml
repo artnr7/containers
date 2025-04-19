@@ -42,7 +42,7 @@ jobs:
     - name: Run cppcheck
       run: |
         cd build
-        cmake --build . --target cppcheck
+        cmake --build . --target cppcheck-test
 
     - name: Run clang-tidy
       run: |
