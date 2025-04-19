@@ -1,8 +1,8 @@
 #ifndef S21_LIST_H
 #define S21_LIST_H
 
-#include <iostream>
 #include <array>
+#include <iostream>
 
 namespace s21 {
 
