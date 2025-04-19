@@ -17,14 +17,6 @@
 cmake -B build -DCMAKE_BUILD_TYPE=Debug  # Или Release
 cmake --build build --parallel $(nproc)
 ```
-Сборка с включенными санитайзерами (если знаешь что это)
-```bash
-cmake -B build -DCMAKE_BUILD_TYPE=Debug -DENABLE_SANITIZERS=ON
-```
-Сборка в одну строчку
-```bash
-cmake -B build -DCMAKE_BUILD_TYPE=Debug && cmake --build build
-```
 
 ## Запуск тестов 
 ### Основные способы
@@ -41,12 +33,12 @@ cd build && ctest --output-on-failure
 ### Фильтрация тестов 
 Запуск тестов для конкретного контейнера
 ```bash
-ctest --test-dir build -R vector 
+ctest --test-dir build -R название_контейнера 
 ```
 
-Пропустить тесты с Valgrind
+Пропустить тест name 
 ```bash
-ctest --test-dir build -E _valgrind_
+ctest --test-dir build -E name 
 ```
 ### Параметры выполнения
 Параллельный запуск
@@ -109,10 +101,6 @@ cmake --build build --target coverage_all
 ### Запуск отдельных тестов
 ```bash
 cmake --build build --target run_s21_test_vector
-```
-### Покрытие для конкретного теста
-```bash
-cmake --build build --target run_coverage_vector
 ```
 ### Список всех целей
 ```bash
