@@ -34,15 +34,15 @@ jobs:
         cmake ..
         cmake --build . --parallel
 
-    - name: Run clang-format check
+    - name: Run clang-format test
       run: |
         cd build
-        cmake --build . --target clang-format-check
+        cmake --build . --target clang-format-test
 
     - name: Run clang-tidy
       run: |
         cd build
-        cmake --build . --target clang-tidy-check
+        cmake --build . --target clang-tidy-test
 
     - name: Run cppcheck
       run: |
