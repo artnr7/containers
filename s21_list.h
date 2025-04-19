@@ -4,8 +4,6 @@
 #include <iostream>
 #include <array>
 
-std::array<int> a;
-
 namespace s21 {
 
 template <typename T>
