@@ -20,6 +20,7 @@ set(CONTAINERS
     stack
     queue
     multiset
+    rb_tree
 )
 
 # Список тестовых файлов
