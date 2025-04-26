@@ -12,9 +12,7 @@ namespace s21 {
  */
 template <typename Key_, typename Value_, typename Compare_ = std::less<Key_>,
           typename Alloc_ = std::allocator<std::pair<const Key_, Value_>>>
-class map {
-
-};
+class map {};
 
 }  // namespace s21
 
