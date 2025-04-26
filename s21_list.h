@@ -4,7 +4,7 @@
 #include <array>
 #include <iostream>
 
-namespace s21 {
+//namespace s21 {
 
 template <typename T>
 class list {
@@ -333,6 +333,8 @@ class list {
       }
     }
   }
+            // using iterator_category = std::bidirectional_iterator_tag;
+
   // l1{7,4,3}
   // l2{9,0}
   // заменить на const_iteratos
@@ -354,11 +356,6 @@ class list {
       current_node->prev->next = other.fakeNode.next;
       current_node->prev = other.fakeNode.prev;
 
-      // current_node->prev->next=other.fakeNode.next;
-      // other.fakeNode.next->prev = current_node->prev;
-
-      // other.fakeNode.next=current_node;
-      // current_node->prev=&other.fakeNode;
     }
     other.fakeNode.next = &other.fakeNode;
     other.fakeNode.prev = &other.fakeNode;
@@ -366,7 +363,40 @@ class list {
     sz += other.sz;
     other.sz = 0;
   }
+
+
+  void merge(list& other) {
+    if (other.empty()) return;
+    if(empty()){
+      swap(other);
+      return;
+    }
+
+    iterator current_it = begin();
+    iterator other_it = other.begin();
+
+    while(current_it!=end() && other_it!=other.end()){
+      if(*current_it <= *other_it){
+        ++current_it;
+      }
+      else{
+        insert(current_it, *other_it);
+        other.erase(other_it++);
+      }
+    }
+
+    if(other_it!=other.end()){
+      splice(end(), other);
+    }
+  }
+
+  void sort(){
+    
+  }
+
 };
+
+
 
 // /*
 //  * @class list
@@ -381,6 +411,6 @@ class list {
 //   }
 // };
 
-}  // namespace s21
+//}  // namespace s21
 
 #endif  // S21_LIST_H
