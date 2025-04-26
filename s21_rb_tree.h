@@ -4,11 +4,13 @@
 namespace s21 {
 
 /*
- * @class RBTree 
- * @brief Реализация красно-черного дерева 
+ * @class RBTree
+ * @brief Реализация красно-черного дерева
  */
 template <typename T>
 class RBTree {
+  Node* right_;
+  Node* left_;
 
 };
 

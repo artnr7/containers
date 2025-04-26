@@ -10,9 +10,7 @@ namespace s21 {
  * @brief Реализация контейнера list аналогичного std::list
  */
 template <typename T>
-class list {
-
-};
+class list {};
 }  // namespace s21
 
 #endif  // S21_LIST_H
