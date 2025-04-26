@@ -9,6 +9,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 find_package(GTest REQUIRED)
 find_package(Threads REQUIRED)
 
+
 # Список тестируемых контейнеров
 set(CONTAINERS 
     array
@@ -72,8 +73,7 @@ endforeach()
 find_program(CLANG_TIDY "clang-tidy")
 if(CLANG_TIDY)
 
-    # Создаем упрощенный .clang-tidy конфиг (без AnalyzeTemporaryDtors)
-    file(WRITE ${CMAKE_CURRENT_SOURCE_DIR}/.clang-tidy
+file(WRITE ${CMAKE_CURRENT_SOURCE_DIR}/.clang-tidy
     "---
 Checks: >
     -*,
@@ -83,12 +83,13 @@ Checks: >
     performance-*,
     readability-*,
     bugprone-*
+    -modernize-use-auto,
+    -modernize-use-trailing-return-type
 WarningsAsErrors: '*'
 HeaderFilterRegex: '.*'
 ...
 ")
 
-    # Единая цель для clang-tidy с обработкой ошибок
     add_custom_target(clang-tidy-test
         COMMAND ${CLANG_TIDY}
         ${LIB_SOURCE_FILES} ${TEST_SOURCE_FILES}
@@ -98,17 +99,6 @@ HeaderFilterRegex: '.*'
         COMMENT "Running clang-tidy static analysis"
         WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
         VERBATIM
-    )
-
-    add_custom_target(clang-tidy-fix
-        COMMAND ${CLANG_TIDY}
-        ${LIB_SOURCE_FILES} ${TEST_SOURCE_FILES}
-        --config-file=${CMAKE_CURRENT_SOURCE_DIR}/.clang-tidy
-        -p=${CMAKE_BINARY_DIR}
-        --fix
-        --quiet
-        COMMENT "Applying clang-tidy fixes"
-        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
     )
 else()
     message(WARNING "clang-tidy not found! Static analysis target 'clang-tidy' will not be available")
@@ -281,4 +271,26 @@ if(LCOV_PATH AND GENHTML_PATH)
     )
 else()
     message(WARNING "lcov or genhtml not found - coverage targets disabled")
+endif()
+
+set(HOOK_SOURCE "${CMAKE_SOURCE_DIR}/scripts/git-hooks/pre-push/pre-push")
+set(HOOK_DEST_DIR "${CMAKE_SOURCE_DIR}/.git/hooks")
+set(HOOK_DEST "${HOOK_DEST_DIR}")
+
+add_custom_target(install-git-hook ALL
+    COMMAND ${CMAKE_COMMAND} -E make_directory "${HOOK_DEST_DIR}"
+    
+    COMMAND ${CMAKE_COMMAND} -E copy "${HOOK_SOURCE}" "${HOOK_DEST}"
+    
+    COMMAND chmod a+x "${HOOK_DEST}"
+    
+    COMMAND ${CMAKE_COMMAND} -E echo "Git hook installed successfully"
+    
+    COMMENT "Installing git pre-push hook"
+    VERBATIM
+)
+
+# Проверка существования исходного файла хука
+if(NOT EXISTS "${HOOK_SOURCE}")
+    message(WARNING "Git hook source not found: ${HOOK_SOURCE}")
 endif()
