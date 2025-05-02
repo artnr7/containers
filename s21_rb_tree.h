@@ -1,7 +1,11 @@
 #ifndef S21_MAP_H
 #define S21_MAP_H
 
+#include <type_traits>
+
 namespace s21 {
+
+#define CHECK_NOEXCEPT(COND) noexcept(COND)
 
 /*
  * @class RBTree
@@ -28,7 +32,12 @@ struct RBTreeHeader : RBTreeNodeBase {
 
 template <typename Value_>
 struct RBTreeNode : RBTreeNodeBase {
-  
+
+};
+
+template <typename KeyCompare_>
+struct RBTreeKeyCompare {
+  RBTreeKeyCompare() noexcept(std::is_nothrow_default_constructible_v<KeyCompare_>) = default;
 };
 
 }  // namespace s21
