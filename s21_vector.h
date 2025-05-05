@@ -139,7 +139,7 @@ class vector {
     }
   };
 
-  using value_type = T; 
+  using value_type = T;
   using reference = T&;
   using const_reference = const T&;
   using iterator = VectorIterator;
@@ -268,42 +268,43 @@ class vector {
 
   [[nodiscard]] const_iterator cbegin() const { return const_iterator(data_); }
 
-  [[nodiscard]] const_iterator cend() const { return const_iterator(data_ + size_); }
+  [[nodiscard]] const_iterator cend() const {
+    return const_iterator(data_ + size_);
+  }
 
-  [[nodiscard]]bool empty() const { return size_ == 0; }
+  [[nodiscard]] bool empty() const { return size_ == 0; }
 
-  [[nodiscard]]size_type size() const { return size_; }
+  [[nodiscard]] size_type size() const { return size_; }
 
-  [[nodiscard]]size_type max_size() const {
+  [[nodiscard]] size_type max_size() const {
     return std::numeric_limits<size_type>::max() / sizeof(T);
   }
 
   void reserve(size_type capacity) {
-    if (capacity > capacity_){
+    if (capacity > capacity_) {
       T* newdata = traits::allocate(alloc, capacity);
-    try {
-      for (size_type i = 0; i < size_; ++i) {
-        traits::construct(alloc, newdata + i, data_[i]);
+      try {
+        for (size_type i = 0; i < size_; ++i) {
+          traits::construct(alloc, newdata + i, data_[i]);
+        }
+      } catch (...) {
+        traits::deallocate(alloc, newdata, capacity);
+        throw;
       }
-    } catch (...) {
-      traits::deallocate(alloc, newdata, capacity);
-      throw;
-    }
 
-    for (size_type i = 0; i < size_; ++i) {
-      traits::destroy(alloc, data_ + i);
+      for (size_type i = 0; i < size_; ++i) {
+        traits::destroy(alloc, data_ + i);
+      }
+      traits::deallocate(alloc, data_, capacity_);
+      data_ = newdata;
+      capacity_ = capacity;
     }
-    traits::deallocate(alloc, data_, capacity_);
-    data_ = newdata;
-    capacity_ = capacity;
-    }
-    
   }
 
   size_type capacity() { return capacity_; }
 
   void shrink_to_fit() {
-    if (size_ != capacity_){
+    if (size_ != capacity_) {
       T* newData = traits::allocate(alloc, size_);
       for (size_type i = 0; i < size_; ++i) {
         traits::construct(alloc, newData + i, std::move(data_[i]));
@@ -317,8 +318,6 @@ class vector {
       data_ = newData;
       capacity_ = size_;
     }
-
-    
   }
 
   void clear() {
@@ -381,7 +380,7 @@ class vector {
     size_--;
   }
 
-  void swap(vector& other) noexcept{
+  void swap(vector& other) noexcept {
     using std::swap;
     swap(data_, other.data_);
     swap(size_, other.size_);

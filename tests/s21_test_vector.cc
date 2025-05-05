@@ -146,9 +146,9 @@ TEST(VectorTest, ReserveIncreasesCapacity) {
 
 TEST(VectorTest, ShrinkToFitReducesCapacity) {
   s21::vector<int> victor;
-  for (int i = 0; i < 10; ++i){
+  for (int i = 0; i < 10; ++i) {
     victor.push_back(i);
-  } 
+  }
   victor.reserve(20);
   EXPECT_GT(victor.capacity(), victor.size());
   victor.shrink_to_fit();
