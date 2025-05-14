@@ -84,8 +84,10 @@ Checks: >
     performance-*,
     readability-*,
     bugprone-*
+    -readability-magic-numbers,
     -modernize-use-auto,
-    -modernize-use-trailing-return-type
+    -modernize-use-trailing-return-type,
+    -modernize-use-nodiscard
 WarningsAsErrors: '*'
 HeaderFilterRegex: '.*'
 ...
