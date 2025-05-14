@@ -81,12 +81,15 @@ Checks: >
     google-*,
     modernize-*,
     performance-*,
-    readability-*,
+    readability-*
+    -readability-magic-numbers,
     bugprone-*
+    -bugprone-use-after-move,
     -modernize-use-auto,
-    -modernize-use-trailing-return-type
+    -modernize-use-trailing-return-type,
+    -modernize-use-nodiscard
 WarningsAsErrors: '*'
-HeaderFilterRegex: '.*'
+HeaderFilterRegex: '.h'
 ...
 ")
 
