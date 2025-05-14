@@ -53,7 +53,7 @@ class array {
     return data_[pos];
   }
 
-  [[nodiscard]] const_reference at(size_type pos) const {
+  const_reference at(size_type pos) const {
     if (pos >= N) {
       throw std::out_of_range("OUT OF THE RANGE");
     }
