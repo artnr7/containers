@@ -30,10 +30,11 @@ public:
 
   /*--------→ METHODS  ←-----------*/
   void PushBack(int value);
-  size_t Size();
+  size_t Size() noexcept;
+  bool Empty() noexcept;
 
-  s21::Iterator<T> Begin();
-  s21::Iterator<T> End();
+  T Begin();
+  T End();
 
   template <typename T> class Iterator {
   public:
@@ -45,7 +46,7 @@ public:
     T &operator*(const Iterator<T> it) const noexcept { return _cur_elt; }
 
     Iterator<T> operator++(Iterator<T> it) {
-      size_t &chunk_capacity = nullptr;
+      size_t *chunk_capacity = nullptr;
       GetChunkCapacity(chunk_capacity);
       T *end_of_chunk = *_cur_chunk + chunk_capacity;
       -if (_cur_elt ==)
