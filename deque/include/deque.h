@@ -6,7 +6,7 @@
 #include <iostream>
 
 // int gn() {
-std::deque<int> dq = {1, 2, 3};
+// std::deque<int> dq = {1, 2, 3};
 // std::deque<int>::iterator it;
 //   i
 // }
@@ -42,17 +42,13 @@ public:
         : _cur_chunk(cur_chunk), _cur_elt(cur_elt) {}
     ~Iterator() { _cur_chunk(nullptr), _cur_elt(nullptr); }
 
-    T &operator*(const T &ptr) const noexcept {
-      if (_cur_elt) {
-        return *_cur_elt;
-      }
-    }
+    T &operator*(const Iterator<T> it) const noexcept { return _cur_elt; }
 
     Iterator<T> operator++(Iterator<T> it) {
       size_t &chunk_capacity = nullptr;
       GetChunkCapacity(chunk_capacity);
-      T *end_of_chunk = *_cur_chunk + chunk_capacity;-
-      if (_cur_elt ==)
+      T *end_of_chunk = *_cur_chunk + chunk_capacity;
+      -if (_cur_elt ==)
       // _cur_elt += sizeof(T);
     }
 
@@ -70,14 +66,13 @@ private:
 
   /*--------→ PRIVATE FUNCTIONS ←-------------*/
   /*-----→ utils ←-------*/
-  void GetChunkCapacity(size_t &chunk_capacity);
+  void GetChunkCapacity(const size_t *chunk_capacity);
   void DeqInit(const size_t Tp_qty);
   void DeqInit(const std::initializer_list<T>.size());
 
   void MemFree();
-  void BlocksFill(const T value, const size_t &chunk_capacity);
-  void BlocksFill(const std::initializer_list<T> values,
-                  const size_t &chunk_capacity);
+  void BlocksFill(const T value);
+  void BlocksFill(const std::initializer_list<T> values);
   /*--------→ no_name ←-------------*/
 };
 
