@@ -7,11 +7,11 @@ GPP = g++ -Wall -Werror -Wextra -std=c++20 -pedantic
 VALGRIND_CHECK_FLAGS = -lcheck -lm -lsubunit
 
 # директории
-DEQUE_TEST_DIR = deque_test_dir
+DEQUE_TEST_DIR = test_dir
 
 # файлы для компиляции
-DEQUE_CPP_FILES = $(wildcard ) 
-DEQUE_H_FILES = $(wildcard )
+DEQUE_CPP_FILES = $(wildcard src/*.c)
+DEQUE_H_FILES := include/deque.h
 DEQUE_TEST_FILES = $(wildcard $(DEQUE_TEST_DIR)/*.c)
 DEQUE_OBJ_FILES = $(patsubst %.c, %.o, $(DEQUE_CPP_FILES))
 
@@ -76,7 +76,7 @@ clean:
 	rm -rf $(FILES_TO_DEL)
 
 cl:
-	clang-format -i $(DEQUE_CPP_FILES) $(DEQUE_H_FILES) $(DEQUE_TEST_FILES) 
+	clang-format -i $(DEQUE_CPP_FILES) $(DEQUE_H_FILES)
 
 
 
@@ -85,3 +85,7 @@ t:
 	clang-format -i $(T_DIR)/t.cc
 	g++ -Wall -Werror -Wextra $(T_DIR)/t.cc -o $(T_DIR)/t.exe
 	./$(T_DIR)/t.exe
+
+ma: $(DEQUE_LIB_FILE) cl
+	$(GPP) $(T_DIR)/main.cc -o $(T_DIR)/main.exe
+	./$(T_DIR)/main.exe
