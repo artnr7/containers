@@ -10,8 +10,8 @@ VALGRIND_CHECK_FLAGS = -lcheck -lm -lsubunit
 DEQUE_TEST_DIR = test_dir
 
 # файлы для компиляции
-DEQUE_CPP_FILES = $(wildcard src/*.c)
-DEQUE_H_FILES := include/deque.h
+DEQUE_CPP_FILES = $(wildcard deque_map/src/*.c)
+DEQUE_H_FILES := deque_map/deque.h
 DEQUE_TEST_FILES = $(wildcard $(DEQUE_TEST_DIR)/*.c)
 DEQUE_OBJ_FILES = $(patsubst %.c, %.o, $(DEQUE_CPP_FILES))
 
@@ -41,7 +41,7 @@ $(DEQUE_LIB_FILE): $(DEQUE_OBJ_FILES)
 	ranlib $@
 
 %.o: %.c
-	$(GPP) -c $< -o $@ -g
+	$(GPP) -c $< -o $@
 
 
 ###--------→ тестирование ←--------------------------------------------------------------------###

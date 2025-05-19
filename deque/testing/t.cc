@@ -42,10 +42,19 @@ int main() {
   // num.push_back(3);
   // std::cout << a;
 
-  std::shared_ptr<int> sptr{new int{10}};
+  // std::shared_ptr<int> sptr{new int{10}};
 
-  cout << *sptr << "\n";
+  // cout << *sptr << "\n";
 
-  std::deque<int, boost::pool<boost::default_user_allocator_new_delete>>
-      boostdeq{1, 2, 3, 4};
+  // std::deque<int, boost::pool<boost::default_user_allocator_new_delete>>
+  //     boostdeq{1, 2, 3, 4};
+
+  std::deque<int> d1{};
+
+  auto it1 = d1.end();
+  auto it2 = d1.begin();
+
+  int dq_sz = d1.size();
+
+  cout << *it2 << "\t" << *it1 << endl << dq_sz;
 }

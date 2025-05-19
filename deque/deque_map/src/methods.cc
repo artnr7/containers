@@ -1,4 +1,4 @@
-#include "../include/deque.h"
+#include "../deque.h"
 
 template <typename T> void s21::Deque<T>::PushBack(int value) {
   int mem_blocks_qty = MemBlocksQty(elems_qty_);
@@ -18,12 +18,14 @@ template <typename T> bool s21::Deque<T>::Empty() noexcept { return !Size(); }
 
 template <typename T> bool s21::Deque<T>::PushBack(const T &value) noexcept {
   T *end_of_chunk = *_cur_chunk + (chunk_capacity - 1);
-  if(_finish )
-  *(++_finish) = value; 
- }
+  if (_finish)
+    *(++_finish) = value;
+}
 
-template <typename T> bool s21::Deque<T>::PushFront() noexcept { }
+template <typename T> bool s21::Deque<T>::PushFront() noexcept {}
 
-template <typename T> T s21::Deque<T>::Begin() { return _start; }
+template <typename T> s21::Iterator<T> s21::Deque<T>::Begin() { return _start; }
 
-template <typename T> T s21::Deque<T>::End() { return _finish + 1; }
+template <typename T> s21::Iterator<T> s21::Deque<T>::End() {
+  return _finish + 1;
+}

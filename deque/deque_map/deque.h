@@ -5,46 +5,40 @@
 #include <deque>
 #include <iostream>
 
-// int gn() {
-// std::deque<int> dq = {1, 2, 3};
-// std::deque<int>::iterator it;
-//   i
-// }
-
 namespace s21 {
 template <typename T> class Deque {
 public:
   /*--------→ CONSTRUCTORS ←-------------*/
-  Deque();
-  Deque(const size_t Tp_qty);
+  Deque(const size_t Tp_qty); // explicit
   Deque(const size_t Tp_qty, T value);
   Deque(const std::initializer_list<T> &values);
 
-  Deque(Deque &deque_src);
-  Deque(Deque &&deque_src);
+  Deque(const Deque &other);
+  Deque(Deque &&other);
   ~Deque();
 
   /*--------→ OPERATORS ←-------------*/
-  operator=(Deque & deque_src);
-  operator=(Deque && deque_src);
+  Deque &operator=(const Deque &other) noexcept;
+  Deque &operator=(Deque &&other) noexcept;
 
   /*--------→ METHODS  ←-----------*/
   void PushBack(int value);
   size_t Size() noexcept;
   bool Empty() noexcept;
 
-  T Begin();
-  T End();
+  Iterator<T> Begin() noexcept;
+  Iterator<T> End();
 
   template <typename T> class Iterator {
   public:
+    /*--------→ CONSTRUCTORS ←-------------*/
     Iterator() noexcept : _cur_chunk(nullptr), _cur_elt(nullptr) {}
     Iterator(const T **cur_chunk, const T *cur_elt) noexcept
         : _cur_chunk(cur_chunk), _cur_elt(cur_elt) {}
     ~Iterator() { _cur_chunk(nullptr), _cur_elt(nullptr); }
 
+    /*--------→ OPERATORS ←-------------*/
     T &operator*(const Iterator<T> it) const noexcept { return _cur_elt; }
-
     Iterator<T> operator++(Iterator<T> it) {
       size_t *chunk_capacity = nullptr;
       GetChunkCapacity(chunk_capacity);
