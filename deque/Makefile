@@ -3,89 +3,93 @@
 
 ###--------→ сборка и компиляция ←--------------------------------------------------------------------###
 
-GPP = g++ -Wall -Werror -Wextra -std=c++20 -pedantic
-VALGRIND_CHECK_FLAGS = -lcheck -lm -lsubunit
+GPP := g++ -Wall -Werror -Wextra -std=c++20 -pedantic
+VALGRIND_FLAGS := -lcheck -lm -lsubunit
 
 # директории
-DEQUE_TEST_DIR = test_dir
+TEST_DIR := test_dir
+INST_DIR := install_dir
 
 # файлы для компиляции
-DEQUE_CPP_FILES = $(wildcard deque_map/src/*.c)
-DEQUE_H_FILES := deque_map/deque.h
-DEQUE_TEST_FILES = $(wildcard $(DEQUE_TEST_DIR)/*.c)
-DEQUE_OBJ_FILES = $(patsubst %.c, %.o, $(DEQUE_CPP_FILES))
+CC_FILES := $(wildcard deque_map/src/*.cc)
+H_FILES := deque_map/deque.h
+TEST_FILES := $(wildcard $(TEST_DIR)/*.cc)
+OBJ_FILES := $(patsubst %.cc, $(INST_DIR)/%.o, $(CC_FILES))
 
 # скомпилированные файлы
-DEQUE_LIB_FILE = deque.a
-DEQUE_TEST_EXE_FILE = deque_test
+LIB_FILE := $(INST_DIR)/deque.a
+TEST_EXE_FILE := deque_test
 
 
-###--------→ главные функции по заданию ←--------------------------------------------------------------###
+###--------→ главные функции по заданию ←----------------------------------------------------###
 
-all: $(DEQUE_LIB_FILE)
+all: $(LIB_FILE)
 
 rebuild: clean cl all
 
-r: clean cl $(DEQUE_LIB_FILE)
-	$(GPP) deque_main.c $(DEQUE_LIB_FILE) $(VALGRIND_CHECK_FLAGS) -o $(DEQUE_TEST_EXE_FILE)
-	./$(DEQUE_TEST_EXE_FILE)
+###--------→ МАНКИ ТЕСТЫ ←-----------------------------------------------------------###
+T_DIR := testing
+MAIN_EXE := main.exe
 
-g: clean cl $(DEQUE_LIB_FILE)
-	$(GPP) deque_main.c $(DEQUE_LIB_FILE) $(VALGRIND_CHECK_FLAGS) -o $(DEQUE_TEST_EXE_FILE) -g
-	gdb --tty=/dev/pts/5 -tui -x .gdbinit $(DEQUE_TEST_EXE_FILE)
+r: clean cl $(LIB_FILE)
+	@$(GPP) $(T_DIR)/main.cc -o $(T_DIR)/$(MAIN_EXE) $(LIB_FILE)
+	./$(T_DIR)/$(MAIN_EXE)
+
+# g: clean cl $(LIB_FILE)
+# 	$(GPP) deque_main.c $(LIB_FILE) $(VALGRIND_FLAGS) -o $(TEST_EXE_FILE) -g
+# 	gdb --tty=/dev/pts/5 -tui -x .gdbinit $(TEST_EXE_FILE)
 
 
-# сборка библиотек и обджект файлов
-$(DEQUE_LIB_FILE): $(DEQUE_OBJ_FILES)
+###--------→ СБОРКА БИБЛИОТЕКИ ←-----------------------------------------------------------###
+$(LIB_FILE): $(OBJ_FILES)
 	ar rcs $@ $^
 	ranlib $@
 
-%.o: %.c
-	$(GPP) -c $< -o $@
+# КОМПИЛЯЦИЯ ОБДЖЕКТ ФАЙЛОВ 
+$(INST_DIR)/%.o: %.cc
+	@mkdir -p $(dir $@)
+	@$(GPP) -c $< -o $@
 
 
-###--------→ тестирование ←--------------------------------------------------------------------###
+###--------→ тестирование ←--------------------------------------------------------------###
 
-deque_test: clean cl $(DEQUE_TEST_EXE_FILE)
-	./$(DEQUE_TEST_EXE_FILE)
+test: clean cl $(TEST_EXE_FILE)
+	./$(TEST_EXE_FILE)
 
-deque_test_valgrind: clean cl $(DEQUE_TEST_EXE_FILE)
-	valgrind --tool=memcheck --leak-check=full ./$(DEQUE_TEST_EXE_FILE)
+test_valgrind: clean cl $(TEST_EXE_FILE)
+	valgrind --tool=memcheck --leak-check=full ./$(TEST_EXE_FILE)
 
-deque_test_compile: $(DEQUE_LIB_FILE)
-	$(GPP) $(DEQUE_TEST_FILES) $(DEQUE_LIB_FILE) $(VALGRIND_CHECK_FLAGS) -o $(DEQUE_TEST_EXE_FILE)
+$(TEST_EXE_FILE): $(LIB_FILE)
+	$(GPP) $(TEST_FILES) $(LIB_FILE) $(VALGRIND_FLAGS) -o $@
 
 
 ###--------→ покрытие кода ←--------------------------------------------------------------------###
+TETRIS_GCOV_DIRS := coverage_report gcov_report_dir coverage.info
 
 gcov_report: clean 
-	$(GPP) $(CPPFILES) $(TEST_FILES) $(GT_FLAGS) --coverage -o gcov_test
-	./gcov_test
+	@mkdir gcov_report_dir
+	@$(GPP) $(CC_FILES) $(TEST_FILES) $(GT_FLAGS) --coverage -o gcov_report_dir/gcov_test
+	./gcov_report_dir/gcov_test
 	geninfo --ignore-errors mismatch --ignore-errors gcov . -o coverage.info
 	genhtml coverage.info -o coverage_report
+	@echo "GCOV done"
 
 
 ###--------→ clang и удаление ←--------------------------------------------------------------------###
 
-FILES_TO_DEL = *.o *.a $(DEQUE_TEST_EXE_FILE) $(DEQUE_LIB_FILE)\
- $(DEQUE_OBJ_FILES) *.gcno *.gcda *.gcov gcov_test coverage.info\
- coverage_report errors.log
-# не меняй название с test_f на test
+FILES_TO_DEL = $(INST_DIR)
 
 clean: 
 	rm -rf $(FILES_TO_DEL)
 
 cl:
-	clang-format -i $(DEQUE_CPP_FILES) $(DEQUE_H_FILES)
+	clang-format -i $(CC_FILES) $(H_FILES)
 
 
+###--------→ сборка и пользовательские обезьяние тесты ←-------------------------------------------###
 
-T_DIR := testing
-t: 
-	clang-format -i $(T_DIR)/t.cc
-	g++ -Wall -Werror -Wextra $(T_DIR)/t.cc -o $(T_DIR)/t.exe
-	./$(T_DIR)/t.exe
+# t: 
+# 	clang-format -i $(T_DIR)/t.cc
+# 	g++ -Wall -Werror -Wextra $(T_DIR)/t.cc -o $(T_DIR)/t.exe
+# 	./$(T_DIR)/t.exe
 
-ma: $(DEQUE_LIB_FILE) cl
-	$(GPP) $(T_DIR)/main.cc -o $(T_DIR)/main.exe
-	./$(T_DIR)/main.exe
