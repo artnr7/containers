@@ -3,18 +3,20 @@
 
 #include <type_traits>
 #include <cstddef>
+#include <memory>
 #include <new>
 
 namespace s21 {
 
 /*
- * @class RBTree
- * @brief Реализация красно-черного дерева
+ * @class RBTree @brief Реализация красно-черного дерева
  */
 enum class RBTreeColor : bool { kRed = false, kBlack = true };
 
+template <typename Ptr_>
 struct RBTreeNodeBase {
-  using BasePtr_ = RBTreeNodeBase*;
+  using BasePtr_ =
+    typename std::pointer_traits<Ptr_>::template rebind<RBTreeNodeBase>;
 
   BasePtr_ parent_;
   BasePtr_ left_;
@@ -22,13 +24,19 @@ struct RBTreeNodeBase {
 
   RBTreeColor color_;
 
-  static BasePtr_ minimum(BasePtr_ tree);
-  static BasePtr_ maximum(BasePtr_ tree);
+  static BasePtr_ minimum(BasePtr_ tree) noexcept;
+  static BasePtr_ maximum(BasePtr_ tree) noexcept;
+  BasePtr_ base_ptr() const noexcept;
 };
 
+template <typename NodeBase_>
 struct RBTreeHeader {
-  RBTreeNodeBase header_;
-  std::size_t node_count_{0};
+ private:
+  using BasePtr_ = typename NodeBase_::BasePtr_;
+
+ public:
+  NodeBase_ header_;
+  size_t node_count_;
 
   RBTreeHeader() noexcept;
   RBTreeHeader(RBTreeHeader&& other) noexcept;
@@ -37,15 +45,11 @@ struct RBTreeHeader {
   void move_data(RBTreeHeader& other) noexcept;
 };
 
-template <typename Val_>
-struct RBTreeNode : RBTreeNodeBase {
-  std::byte storage_[sizeof(Val_)] alignas(Val_);
+template <typename ValPtr_>
+struct RBTreeNode : public RBTreeNodeBase<
+    typename std::pointer_traits<ValPtr_>:: template rebind<void>
+  > {
 
-  [[nodiscard]] Val_* valptr() noexcept;
-  [[nodiscard]] const Val_* valptr() const noexcept;
-
-  [[nodiscard]] RBTreeNode* node_ptr() noexcept;
-  [[nodiscard]] const RBTreeNode* node_ptr() const noexcept;
 };
 
 template <typename KeyCompare_>

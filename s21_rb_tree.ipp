@@ -5,18 +5,57 @@
 
 namespace s21 {
 
-RBTreeNodeBase::BasePtr_ RBTreeNodeBase::maximum(BasePtr_ tree) {
-    while (tree->right_ != nullptr) {
-        tree = tree->right_;
-    }
-    return tree;
+template <typename Ptr_>
+RBTreeNodeBase<Ptr_>::BasePtr_ RBTreeNodeBase<Ptr_>::maximum(BasePtr_ tree) noexcept {
+  while (tree->right_ != nullptr) {
+    tree = tree->right_;
+  }
+  return tree;
 }
 
-RBTreeNodeBase::BasePtr_ RBTreeNodeBase::minimum(BasePtr_ tree) {
-    while (tree->left_ != nullptr) {
-        tree = tree->left_;
-    }
-    return tree;
+template <typename Ptr_>
+RBTreeNodeBase<Ptr_>::BasePtr_ RBTreeNodeBase<Ptr_>::minimum(BasePtr_ tree) noexcept {
+  while (tree->left_ != nullptr) {
+    tree = tree->left_;
+  }
+  return tree;
+}
+
+template <typename Ptr_>
+RBTreeNodeBase<Ptr_>::BasePtr_ RBTreeNodeBase<Ptr_>::base_ptr() const noexcept {
+  return const_cast<BasePtr_>(this);
+}
+
+template <typename NodeBase_>
+RBTreeHeader<NodeBase_>::RBTreeHeader() noexcept {
+  header_.color_ = RBTreeColor::kRed;    
+  reset();
+}
+
+template <typename NodeBase_>
+RBTreeHeader<NodeBase_>::RBTreeHeader(RBTreeHeader&& other) noexcept {
+  if (other.header_.parent_ != nullptr) {
+    move_data(other);
+  } else {
+    header_.color_ = RBTreeColor::kRed;
+    reset();
+  }
+}
+
+template <typename NodeBase_>
+void RBTreeHeader<NodeBase_>::reset() noexcept {
+ header_.parent_  = nullptr;
+ header_.left_ = &header_;
+ header_.right_ = &header_;
+ node_count_ = 0;
+}
+
+template <typename NodeBase_>
+void RBTreeHeader<NodeBase_>::move_data(RBTreeHeader& other) noexcept {
+  header_ = other.header_;
+  header_.parent_->parent_  = &header_;
+  node_count_ = other.node_count_;
+  other.reset();
 }
 
 template <typename KeyCompare_>
@@ -31,33 +70,6 @@ RBTreeKeyCompare<KeyCompare_>::RBTreeKeyCompare(RBTreeKeyCompare&& other)
   : key_compare_(other.key_compare_) 
   {}
 
-RBTreeHeader::RBTreeHeader() noexcept {
-  header_.color_ = RBTreeColor::kRed;    
-  reset();
-}
-
-RBTreeHeader::RBTreeHeader(RBTreeHeader&& other) noexcept {
-  if (other.header_.parent_ != nullptr) {
-    move_data(other);
-  } else {
-    header_.color_ = RBTreeColor::kRed;
-    reset();
-  }
-}
-
-void RBTreeHeader::reset() noexcept {
- header_.parent_  = nullptr;
- header_.left_ = &header_;
- header_.right_ = &header_;
- node_count_ = 0;
-}
-
-void RBTreeHeader::move_data(RBTreeHeader& other) noexcept {
-  header_ = other.header_;
-  header_.parent_->parent_  = &header_;
-  node_count_ = other.node_count_;
-  other.reset();
-}
 
 template <typename Val_>
 [[nodiscard]] 
