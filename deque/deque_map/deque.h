@@ -33,21 +33,21 @@ public:
     ~Iterator() { _cur_chunk = nullptr, _cur_elt = nullptr; }
 
     /*--------→ OPERATORS ←-------------*/
-    T &operator*(Iterator it) const noexcept { return *_cur_elt; }
+    T &operator*() const noexcept { return *_cur_elt; }
 
-    Iterator operator++(Iterator it) {
-      size_t *chunk_capacity = nullptr;
+    Iterator operator++(int) {
+      size_t chunk_capacity = 0;
       size_t &ref_chunk_capacity = chunk_capacity;
       GetChunkCapacity(ref_chunk_capacity);
-      T *end_of_chunk = *(it._cur_chunk) + chunk_capacity;
-      if (it._cur_elt != end_of_chunk) {
-        it._cur_elt++;
+      T *end_of_chunk = *(_cur_chunk) + chunk_capacity;
+      if (_cur_elt != end_of_chunk) {
+        _cur_elt++;
       } else { //@todo тут надо создавать новый чанк если нет места
-        it._cur_chunk++;
-        it._cur_elt = it._cur_chunk;
+        _cur_chunk++;
+        _cur_elt = _cur_chunk;
       }
     }
-    Iterator &operator=(const Iterator &o) {
+    Iterator &operator=(Iterator &o) {
       if (this == &o) {
         return *this;
       }
@@ -213,9 +213,6 @@ private:
    * значениями */
   void BlocksFill(const T value) {
 
-    // ↓ тут можно юзнуть лямбду для объединения
-    size_t val_i = 0;
-
     for (Iterator it = Begin(); it != End(); it++)
       *it = value;
   }
@@ -224,11 +221,9 @@ private:
 
   void BlocksFill(const std::initializer_list<T> values) {
 
-    // ↓ тут можно юзнуть лямбду для объединения
     size_t val_i = 0;
-
     for (Iterator it = Begin(); it != End(); it++)
-      *it = values[val_i];
+      *it = values[val_i++];
   }
   /*--------→ no_name ←-------------*/
 };
