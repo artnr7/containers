@@ -16,13 +16,13 @@ TEST_FILES := $(wildcard $(TEST_DIR)/*.cc)
 OBJ_FILES := $(patsubst %.cc, $(INST_DIR)/%.o, $(CC_FILES))
 
 # скомпилированные файлы
-LIB_FILE := $(INST_DIR)/deque.a
+DEQUE_H_FILE := deque_map/deque.h
 TEST_EXE_FILE := deque_test
 
 
 ###--------→ главные функции по заданию ←--------------------------------------###
 
-all: $(LIB_FILE)
+all: $(DEQUE_H_FILE)
 
 rebuild: clean cl all
 
@@ -30,25 +30,27 @@ rebuild: clean cl all
 T_DIR := testing
 MAIN_EXE := main.exe
 
-r: clean cl $(LIB_FILE)
-	@$(GPP) $(T_DIR)/main.cc -o $(T_DIR)/$(MAIN_EXE) $(LIB_FILE)
-	./$(T_DIR)/$(MAIN_EXE)
+r: clean cl $(DEQUE_H_FILE)
+	@$(GPP) $(T_DIR)/main.cc -o $(T_DIR)/$(MAIN_EXE) $(DEQUE_H_FILE)
+	@echo main running...
+	@./$(T_DIR)/$(MAIN_EXE)
 
-# g: clean cl $(LIB_FILE)
-# 	$(GPP) deque_main.c $(LIB_FILE) $(VALGRIND_FLAGS) -o $(TEST_EXE_FILE) -g
+# g: clean cl $(DEQUE_H_FILE)
+# 	$(GPP) deque_main.c $(DEQUE_H_FILE) $(VALGRIND_FLAGS) -o $(TEST_EXE_FILE) -g
 # 	gdb --tty=/dev/pts/5 -tui -x .gdbinit $(TEST_EXE_FILE)
 
 
-###--------→ СБОРКА БИБЛИОТЕКИ ←-----------------------------------------------------------###
-$(LIB_FILE): 
-	@mkdir -p $(dir $@)
-	ar rcs $@ deque_map/deque.h
-	ranlib $@
+# ###--------→ СБОРКА БИБЛИОТЕКИ ←-----------------------------------------------------------###
+# $(DEQUE_H_FILE): 
+# 	@mkdir -p $(dir $@)
+# 	ar rcs $@ deque_map/deque.h
+# 	ranlib $@
 
 # КОМПИЛЯЦИЯ ОБДЖЕКТ ФАЙЛОВ 
 $(INST_DIR)/%.o: %.cc
 	@mkdir -p $(dir $@)
 	@$(GPP) -c $< -o $@
+	@echo OBJS compiled
 
 
 ###--------→ тестирование ←--------------------------------------------------------------###
@@ -59,8 +61,8 @@ test: clean cl $(TEST_EXE_FILE)
 test_valgrind: clean cl $(TEST_EXE_FILE)
 	valgrind --tool=memcheck --leak-check=full ./$(TEST_EXE_FILE)
 
-$(TEST_EXE_FILE): $(LIB_FILE)
-	$(GPP) $(TEST_FILES) $(LIB_FILE) $(VALGRIND_FLAGS) -o $@
+$(TEST_EXE_FILE): $(DEQUE_H_FILE)
+	$(GPP) $(TEST_FILES) $(DEQUE_H_FILE) $(VALGRIND_FLAGS) -o $@
 
 
 ###--------→ покрытие кода ←--------------------------------------------------------------------###
@@ -77,14 +79,15 @@ gcov_report: clean
 
 ###--------→ clang и удаление ←---------------------------------------------------------------###
 
-FILES_TO_DEL = $(INST_DIR)
+FILES_TO_DEL := 
 
 clean: 
-	rm -rf $(FILES_TO_DEL)
+	@rm -rf $(FILES_TO_DEL)
+	@echo clean done
 
 cl:
-	clang-format -i $(H_FILES)
-
+	@clang-format -i $(H_FILES)
+	@echo clang done
 
 ###--------→ сборка и пользовательские обезьяние тесты ←-------------------------------------------###
 

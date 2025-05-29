@@ -1,6 +1,7 @@
 #ifndef __DEQUE__
 #define __DEQUE__
 
+#include <algorithm>
 #include <cmath>
 #include <deque>
 #include <iostream>
@@ -44,9 +45,11 @@ public:
         _cur_elt++;
       } else { //@todo тут надо создавать новый чанк если нет места
         _cur_chunk++;
-        _cur_elt = _cur_chunk;
+        _cur_elt = *_cur_chunk;
       }
+      return *this;
     }
+
     Iterator &operator=(Iterator &o) {
       if (this == &o) {
         return *this;
@@ -156,6 +159,7 @@ public:
   Iterator End() noexcept { return _finish; }
 
 private:
+  friend class Iterator;
   /*--------→  VARIABLES ←-------------*/
   size_t _chunk_size; // deque chunk size
   T **_chunk_map;
@@ -172,7 +176,7 @@ private:
   /** @brief Нахождение максимально возможно количества вмещенных ШТ в
    * BUF_SIZE*/
 
-  void GetChunkCapacity(size_t &chunk_capacity) noexcept {
+  static void GetChunkCapacity(size_t &chunk_capacity) noexcept {
     /* Если размер ШТ < BUF_SIZE, то вычисляем какое кол-во их можно вместить  в
      * одном чанке
      * Если размер > (1/2 * BUF_SIZE), то кол-во ШТ в одном чанке будет равно 1
@@ -209,16 +213,19 @@ private:
     _chunk_map = nullptr;
   }
 
-  /** @brief Функция заполнения выделенной памяти стандартными или заданными
-   * значениями */
-  void BlocksFill(const T value) {
+  /** @brief Функция заполнения выделенной памяти стандартными значениями */
+  void BlocksFill() {
+    T default_value = T();
+    std::fill(Begin(), End(), default_value);
+  }
 
+  /** @brief Функция заполнения выделенной памяти заданными значениями */
+  void BlocksFill(const T value) { // @todo сделать const T& value
     for (Iterator it = Begin(); it != End(); it++)
       *it = value;
   }
-  /** @brief Функция заполнения выделенной памяти стандартными или заданными
-   * значениями из initializer_list */
-
+  /** @brief Функция заполнения выделенной памяти заданными значениями из
+   * initializer_list */
   void BlocksFill(const std::initializer_list<T> values) {
 
     size_t val_i = 0;
