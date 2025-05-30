@@ -36,7 +36,7 @@ public:
     /*--------→ OPERATORS ←-------------*/
     T &operator*() const noexcept { return *_cur_elt; }
 
-    Iterator operator++(int) {
+    Iterator &operator++() {
       size_t chunk_capacity = 0;
       size_t &ref_chunk_capacity = chunk_capacity;
       GetChunkCapacity(ref_chunk_capacity);
@@ -85,18 +85,18 @@ public:
   /*--------→ CONSTRUCTORS ←-------------*/
   explicit Deque(const size_t Tp_qty = 0)
       : _chunk_size(0), _chunk_map(nullptr), _start(), _finish() {
-    if (Tp_qty < 1) {
-      return;
-    }
+    HandleDequeConstructorExceptions(Tp_qty);
     size_t chunk_capacity = 0;
     size_t &ref_chunk_capacity = chunk_capacity;
     GetChunkCapacity(ref_chunk_capacity);
     DeqInit(Tp_qty, ref_chunk_capacity);
-    BlocksFill(0); // чем заполнять если тип может быть шаблонным, вопрос
+    BlocksFill();
   }
 
   Deque(const size_t Tp_qty, T value)
       : _chunk_size(0), _chunk_map(nullptr), _start(), _finish() {
+    HandleDequeConstructorExceptions(Tp_qty);
+
     size_t chunk_capacity = 0;
     size_t &ref_chunk_capacity = chunk_capacity;
     GetChunkCapacity(ref_chunk_capacity);
@@ -145,7 +145,7 @@ public:
   /** @brief Вычисляет размер deque */
   size_t Size() noexcept {
     size_t size = 0;
-    for (Iterator it = Begin(); it != End(); it++) {
+    for (Iterator it = Begin(); it != End(); ++it) {
       size++;
     }
     return size;
@@ -158,6 +158,9 @@ public:
 
   Iterator End() noexcept { return _finish; }
 
+#define  4611686018427387903
+  size_t Max_Size() noexcept constexpr {return }
+
 private:
   friend class Iterator;
   /*--------→  VARIABLES ←-------------*/
@@ -167,12 +170,10 @@ private:
   Iterator _finish; // iterator
 
   /*--------→ PRIVATE FUNCTIONS ←-------------*/
-  /*-----→ utils ←-------*/
-
   /** @note Определения
    * ШТ - Шаблонный тип */
 
-#define BUF_SIZE 512
+#define BUF_SIZE 512 // ← в байтах
   /** @brief Нахождение максимально возможно количества вмещенных ШТ в
    * BUF_SIZE*/
 
@@ -197,9 +198,9 @@ private:
     }
     _start = Iterator(&_chunk_map[0], &_chunk_map[0][0]);
 
-    _finish =
-        Iterator(&_chunk_map[_chunk_size - 1],
-                 &_chunk_map[_chunk_size - 1][Tp_qty % chunk_capacity] + 1);
+    _finish = Iterator(
+        &_chunk_map[_chunk_size - 1],
+        &_chunk_map[_chunk_size - 1][(Tp_qty - 1) % chunk_capacity] + 1);
     // взятие остатка(то есть порядок внутри чанка) ↑
   }
 
@@ -207,6 +208,7 @@ private:
   void MemFree() {
     for (size_t i = 0; i < _chunk_size; i++) {
       delete[] _chunk_map[i];
+      _chunk_map[i] = nullptr;
     }
     delete[] _chunk_map;
 
@@ -215,24 +217,39 @@ private:
 
   /** @brief Функция заполнения выделенной памяти стандартными значениями */
   void BlocksFill() {
-    T default_value = T();
+    T default_value = T{};
     std::fill(Begin(), End(), default_value);
   }
 
   /** @brief Функция заполнения выделенной памяти заданными значениями */
   void BlocksFill(const T value) { // @todo сделать const T& value
-    for (Iterator it = Begin(); it != End(); it++)
-      *it = value;
+    std::fill(Begin(), End(), value);
   }
   /** @brief Функция заполнения выделенной памяти заданными значениями из
    * initializer_list */
   void BlocksFill(const std::initializer_list<T> values) {
 
     size_t val_i = 0;
-    for (Iterator it = Begin(); it != End(); it++)
-      *it = values[val_i++];
+    std::fill(Begin(), End(), values[val_i++]);
   }
-  /*--------→ no_name ←-------------*/
+
+  /*-----→ utils ←-------*/
+  void IsCorrectDequeSize(const size_t &Tp_qty) {
+    if (Tp_qty < 1) {
+      throw std::invalid_argument(
+          "To use this constructor Tp_qty must be greater than 0");
+    }
+  }
+
+  void HandleDequeConstructorExceptions(const size_t &Tp_qty) {
+    std::cout << Tp_qty << std::endl;
+    try {
+      IsCorrectDequeSize(Tp_qty);
+    } catch (const std::invalid_argument &e) {
+      std::cerr << e.what() << std::endl;
+      std::terminate();
+    }
+  }
 };
 
 } // namespace s21

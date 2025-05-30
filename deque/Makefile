@@ -4,7 +4,7 @@
 ###--------→ сборка и компиляция ←---------------------------------------------###
 
 GPP := g++ -Wall -Werror -Wextra -std=c++20 -pedantic
-VALGRIND_FLAGS := -lcheck -lm -lsubunit
+VALGRIND_FLAGS := -lgtest -lgmock -pthread
 
 # директории
 TEST_DIR := test_dir
@@ -17,7 +17,7 @@ OBJ_FILES := $(patsubst %.cc, $(INST_DIR)/%.o, $(CC_FILES))
 
 # скомпилированные файлы
 DEQUE_H_FILE := deque_map/deque.h
-TEST_EXE_FILE := deque_test
+TEST_EXE_FILE := test_dir/deque_test
 
 
 ###--------→ главные функции по заданию ←--------------------------------------###
@@ -29,11 +29,17 @@ rebuild: clean cl all
 ###--------→ МАНКИ ТЕСТЫ ←-----------------------------------------------------------###
 T_DIR := testing
 MAIN_EXE := main.exe
+T_EXE := t.exe
 
 r: clean cl $(DEQUE_H_FILE)
 	@$(GPP) $(T_DIR)/main.cc -o $(T_DIR)/$(MAIN_EXE) $(DEQUE_H_FILE)
 	@echo main running...
 	@./$(T_DIR)/$(MAIN_EXE)
+
+t: clean cl $(DEQUE_H_FILE)
+	@$(GPP) $(T_DIR)/t.cc -o $(T_DIR)/$(T_EXE) $(DEQUE_H_FILE)
+	@echo t running...
+	@./$(T_DIR)/$(T_EXE)
 
 # g: clean cl $(DEQUE_H_FILE)
 # 	$(GPP) deque_main.c $(DEQUE_H_FILE) $(VALGRIND_FLAGS) -o $(TEST_EXE_FILE) -g
@@ -61,8 +67,8 @@ test: clean cl $(TEST_EXE_FILE)
 test_valgrind: clean cl $(TEST_EXE_FILE)
 	valgrind --tool=memcheck --leak-check=full ./$(TEST_EXE_FILE)
 
-$(TEST_EXE_FILE): $(DEQUE_H_FILE)
-	$(GPP) $(TEST_FILES) $(DEQUE_H_FILE) $(VALGRIND_FLAGS) -o $@
+$(TEST_EXE_FILE): 
+	$(GPP) $(TEST_FILES) $(DEQUE_H_FILE) -o $@ $(VALGRIND_FLAGS)
 
 
 ###--------→ покрытие кода ←--------------------------------------------------------------------###
@@ -79,7 +85,7 @@ gcov_report: clean
 
 ###--------→ clang и удаление ←---------------------------------------------------------------###
 
-FILES_TO_DEL := 
+FILES_TO_DEL := test_dir/deque_test 
 
 clean: 
 	@rm -rf $(FILES_TO_DEL)

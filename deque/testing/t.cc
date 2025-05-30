@@ -49,12 +49,13 @@ int main() {
   // std::deque<int, boost::pool<boost::default_user_allocator_new_delete>>
   //     boostdeq{1, 2, 3, 4};
 
-  std::deque<int> d1{};
+  std::deque<int> d1(1);
 
   auto it1 = d1.end();
   auto it2 = d1.begin();
 
   int dq_sz = d1.size();
 
-  cout << *it2 << "\t" << *it1 << endl << dq_sz;
+  cout << "begin = " << *it2 << "\tend = " << *it1 << endl
+       << "size = " << dq_sz;
 }
