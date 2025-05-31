@@ -12,7 +12,7 @@ INST_DIR := install_dir
 
 # файлы для компиляции
 H_FILES := deque_map/deque.h
-TEST_FILES := $(wildcard $(TEST_DIR)/*.cc)
+TEST_FILES := $(shell find $(TEST_DIR) -name '*.cc')
 OBJ_FILES := $(patsubst %.cc, $(INST_DIR)/%.o, $(CC_FILES))
 
 # скомпилированные файлы
@@ -91,8 +91,9 @@ clean:
 	@rm -rf $(FILES_TO_DEL)
 	@echo clean done
 
+FILES_TO_CLANG := $(H_FILES) $(TEST_FILES)
 cl:
-	@clang-format -i $(H_FILES)
+	@clang-format -i $(FILES_TO_CLANG)
 	@echo clang done
 
 ###--------→ сборка и пользовательские обезьяние тесты ←-------------------------------------------###

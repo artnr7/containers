@@ -40,7 +40,7 @@ public:
       size_t chunk_capacity = 0;
       size_t &ref_chunk_capacity = chunk_capacity;
       GetChunkCapacity(ref_chunk_capacity);
-      T *end_of_chunk = *(_cur_chunk) + chunk_capacity;
+      T *end_of_chunk = *(_cur_chunk) + chunk_capacity - 1;
       if (_cur_elt != end_of_chunk) {
         _cur_elt++;
       } else { //@todo тут надо создавать новый чанк если нет места
@@ -117,13 +117,14 @@ public:
   Deque(const std::initializer_list<T> &values)
       : _chunk_size(0), _chunk_map(nullptr), _start(), _finish() {
     HandleCtorEx(values.size());
+    if (!EqZero(values.size())) {
+      size_t chunk_capacity = 0;
+      size_t &ref_chunk_capacity = chunk_capacity;
+      GetChunkCapacity(ref_chunk_capacity);
 
-    size_t chunk_capacity = 0;
-    size_t &ref_chunk_capacity = chunk_capacity;
-    GetChunkCapacity(ref_chunk_capacity);
-
-    DeqInit(values.size(), ref_chunk_capacity);
-    BlocksFill(values);
+      DeqInit(values.size(), ref_chunk_capacity);
+      BlocksFill(values);
+    }
   }
 
   Deque(const Deque &other);
@@ -240,7 +241,10 @@ private:
   void BlocksFill(const std::initializer_list<T> values) {
 
     size_t val_i = 0;
-    std::fill(Begin(), End(), values[val_i++]);
+    for (auto itB = Begin(); itB != End(); ++itB) {
+      *itB = *(values.begin() + val_i);
+      val_i++;
+    }
   }
 
   /*-----→ utils ←-------*/
@@ -275,7 +279,8 @@ private:
     }
   }
 
-  /** @brief Обработчик исключений конструктора с парой (кол-во эл-тов, значение)**/
+  /** @brief Обработчик исключений конструктора с парой (кол-во эл-тов,
+   * значение)**/
   void HandleCtorEx(const size_t &Tp_qty) {
     try {
       TpqtyBiggerMaxSizeEx(Tp_qty);
