@@ -77,25 +77,33 @@ public:
       return (_cur_chunk != o._cur_chunk || _cur_elt != o._cur_elt);
     }
 
+    bool operator==(const Iterator &o) {
+      return (_cur_chunk == o._cur_chunk && _cur_elt == o._cur_elt);
+    }
+
   private:
     T **_cur_chunk;
     T *_cur_elt;
   };
 
   /*--------→ CONSTRUCTORS ←-------------*/
+
   explicit Deque(const size_t Tp_qty = 0)
       : _chunk_size(0), _chunk_map(nullptr), _start(), _finish() {
-    HandleDequeConstructorExceptions(Tp_qty);
-    size_t chunk_capacity = 0;
-    size_t &ref_chunk_capacity = chunk_capacity;
-    GetChunkCapacity(ref_chunk_capacity);
-    DeqInit(Tp_qty, ref_chunk_capacity);
-    BlocksFill();
+    HandleDefCtorEx(Tp_qty);
+
+    if (!EqZero(Tp_qty)) {
+      size_t chunk_capacity = 0;
+      size_t &ref_chunk_capacity = chunk_capacity;
+      GetChunkCapacity(ref_chunk_capacity);
+      DeqInit(Tp_qty, ref_chunk_capacity);
+      BlocksFill();
+    }
   }
 
   Deque(const size_t Tp_qty, T value)
       : _chunk_size(0), _chunk_map(nullptr), _start(), _finish() {
-    HandleDequeConstructorExceptions(Tp_qty);
+    HandleCtorEx(Tp_qty);
 
     size_t chunk_capacity = 0;
     size_t &ref_chunk_capacity = chunk_capacity;
@@ -108,6 +116,8 @@ public:
    * @param values initializer_list, которая передаёт данные в скобочках */
   Deque(const std::initializer_list<T> &values)
       : _chunk_size(0), _chunk_map(nullptr), _start(), _finish() {
+    HandleCtorEx(values.size());
+
     size_t chunk_capacity = 0;
     size_t &ref_chunk_capacity = chunk_capacity;
     GetChunkCapacity(ref_chunk_capacity);
@@ -158,8 +168,8 @@ public:
 
   Iterator End() noexcept { return _finish; }
 
-#define  4611686018427387903
-  size_t Max_Size() noexcept constexpr {return }
+#define CONTAINER_ELEM_MAX_QTY 4611686018427387903
+  constexpr size_t MaxSize() noexcept { return CONTAINER_ELEM_MAX_QTY; }
 
 private:
   friend class Iterator;
@@ -234,17 +244,42 @@ private:
   }
 
   /*-----→ utils ←-------*/
-  void IsCorrectDequeSize(const size_t &Tp_qty) {
-    if (Tp_qty < 1) {
+  /** @brief Равен ли объект типа нулю **/
+  bool EqZero(const size_t &sizet) { return sizet == 0; }
+
+  /** @brief Если объект типа равен нулю, то выбрасывается исключение
+   * недопустимого значения **/
+  void TpqtyEqZeroEx(const size_t &Tp_qty) {
+    if (EqZero(Tp_qty)) {
       throw std::invalid_argument(
           "To use this constructor Tp_qty must be greater than 0");
     }
   }
 
-  void HandleDequeConstructorExceptions(const size_t &Tp_qty) {
-    std::cout << Tp_qty << std::endl;
+  /** @brief Если объект типа больше чем CONTAINER_ELEM_MAX_QTY, то
+   * выбрасывается исключение недопустимого значения **/
+  void TpqtyBiggerMaxSizeEx(const size_t &Tp_qty) {
+    if (Tp_qty > MaxSize()) {
+      throw std::invalid_argument(
+          "To use this constructor Tp_qty must be less than MaxSize()");
+    }
+  }
+
+  /** @brief Обработчик исключений конструктора по умолчанию**/
+  void HandleDefCtorEx(const size_t &Tp_qty) {
     try {
-      IsCorrectDequeSize(Tp_qty);
+      TpqtyBiggerMaxSizeEx(Tp_qty);
+    } catch (const std::invalid_argument &e) {
+      std::cerr << e.what() << std::endl;
+      std::terminate();
+    }
+  }
+
+  /** @brief Обработчик исключений конструктора с парой (кол-во эл-тов, значение)**/
+  void HandleCtorEx(const size_t &Tp_qty) {
+    try {
+      TpqtyBiggerMaxSizeEx(Tp_qty);
+      TpqtyEqZeroEx(Tp_qty);
     } catch (const std::invalid_argument &e) {
       std::cerr << e.what() << std::endl;
       std::terminate();

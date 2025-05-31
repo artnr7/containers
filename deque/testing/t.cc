@@ -49,7 +49,7 @@ int main() {
   // std::deque<int, boost::pool<boost::default_user_allocator_new_delete>>
   //     boostdeq{1, 2, 3, 4};
 
-  std::deque<int> d1(1);
+  std::deque<int> d1;
 
   auto it1 = d1.end();
   auto it2 = d1.begin();
