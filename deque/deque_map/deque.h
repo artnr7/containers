@@ -5,7 +5,6 @@
 #include <cmath>
 #include <deque>
 #include <iostream>
-
 namespace s21 {
 template <typename T> class Deque {
 
@@ -116,13 +115,16 @@ public:
    * @param values initializer_list, которая передаёт данные в скобочках */
   Deque(const std::initializer_list<T> &values)
       : _chunk_size(0), _chunk_map(nullptr), _start(), _finish() {
+
     HandleCtorEx(values.size());
     if (!EqZero(values.size())) {
+
       size_t chunk_capacity = 0;
       size_t &ref_chunk_capacity = chunk_capacity;
       GetChunkCapacity(ref_chunk_capacity);
 
       DeqInit(values.size(), ref_chunk_capacity);
+
       BlocksFill(values);
     }
   }
@@ -200,7 +202,10 @@ private:
   /** @brief Выделение памяти и инициализация итераторов */
 
   void DeqInit(const size_t Tp_qty, const size_t &chunk_capacity) {
-    _chunk_size = Tp_qty / chunk_capacity + 1;
+    _chunk_size = ((Tp_qty + chunk_capacity - 1) / chunk_capacity) + 1;
+    std::cout << "===== _chunk_size = " << _chunk_size << std::endl;
+    std::cout << "===== Tp_qty = " << Tp_qty << std::endl;
+    std::cout << "===== chunk_capacity = " << chunk_capacity << std::endl;
 
     _chunk_map = new T *[_chunk_size];
     for (size_t i = 0; i < _chunk_size; i++) {
@@ -210,8 +215,8 @@ private:
     _start = Iterator(&_chunk_map[0], &_chunk_map[0][0]);
 
     _finish = Iterator(
-        &_chunk_map[_chunk_size - 1],
-        &_chunk_map[_chunk_size - 1][(Tp_qty - 1) % chunk_capacity] + 1);
+        &_chunk_map[_chunk_size - 2],
+        &_chunk_map[_chunk_size - 2][(Tp_qty - 1) % chunk_capacity] + 1);
     // взятие остатка(то есть порядок внутри чанка) ↑
   }
 
@@ -240,10 +245,9 @@ private:
    * initializer_list */
   void BlocksFill(const std::initializer_list<T> values) {
 
-    size_t val_i = 0;
-    for (auto itB = Begin(); itB != End(); ++itB) {
-      *itB = *(values.begin() + val_i);
-      val_i++;
+    auto values_it = values.begin();
+    for (auto itB = Begin(); itB != End(); ++itB, ++values_it) {
+      *itB = *values_it;
     }
   }
 

@@ -60,16 +60,17 @@ int main() {
   // cout << "begin = " << *it2 << "\tend = " << *it1 << endl
   //      << "size = " << dq_sz;
 
-  long double i = 1;
-  int N = 10;
-  while (i <= N) {
-    std::cout << i << ".";
-    for (int j = 0; j < (N / 64) + 1; j++) {
-      std::cout << i + j * 4;
-    }
-    i++;
-    if (i <= N) {
-      std::cout << ",";
-    }
-  }
+  // long double i = 1;
+  // int N = 10;
+  // while (i <= N) {
+  //   std::cout << i << ".";
+  //   for (int j = 0; j < (N / 64) + 1; j++) {
+  //     std::cout << i + j * 4;
+  //   }
+  //   i++;
+  //   if (i <= N) {
+  //     std::cout << ",";
+  //   }
+  // }
+
 }
