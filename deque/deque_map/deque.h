@@ -36,11 +36,7 @@ public:
     T &operator*() const noexcept { return *_cur_elt; }
 
     Iterator &operator++() {
-      size_t chunk_capacity = 0;
-      size_t &ref_chunk_capacity = chunk_capacity;
-      GetChunkCapacity(ref_chunk_capacity);
-      T *end_of_chunk = *(_cur_chunk) + chunk_capacity - 1;
-      if (_cur_elt != end_of_chunk) {
+      if (_cur_elt != ) {
         _cur_elt++;
       } else { //@todo тут надо создавать новый чанк если нет места
         _cur_chunk++;
@@ -55,6 +51,8 @@ public:
       }
       _cur_chunk = o._cur_chunk;
       _cur_elt = o._cur_elt;
+      // _chunk_first = o._chunk_first;
+      // _chunk_last = o._chunk_last;
 
       return *this;
     }
@@ -65,24 +63,38 @@ public:
       }
       _cur_chunk = o._cur_chunk;
       _cur_elt = o._cur_elt;
+      // _chunk_first = o._chunk_first;
+      // _chunk_last = o._chunk_last;
 
       o._cur_chunk = nullptr;
       o._cur_elt = nullptr;
+      // o._chunk_first = nullptr;
+      // o._chunk_last = nullptr;
 
       return *this;
     }
 
     bool operator!=(const Iterator &o) {
-      return (_cur_chunk != o._cur_chunk || _cur_elt != o._cur_elt);
+      return (_cur_chunk != o._cur_chunk || _cur_elt != o._cur_elt
+              //  ||
+              //       _chunk_first != o._chunk_first || _chunk_last !=
+              //       o._chunk_last
+      );
     }
 
     bool operator==(const Iterator &o) {
-      return (_cur_chunk == o._cur_chunk && _cur_elt == o._cur_elt);
+      return (_cur_chunk == o._cur_chunk && _cur_elt == o._cur_elt
+              //  &&
+              //       _chunk_first != o._chunk_first && _chunk_last !=
+              //       o._chunk_last
+      );
     }
 
   private:
     T **_cur_chunk;
     T *_cur_elt;
+    // T *_chunk_first;
+    // T *_chunk_last;
   };
 
   /*--------→ CONSTRUCTORS ←-------------*/
