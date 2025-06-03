@@ -35,15 +35,15 @@ public:
     /*--------→ OPERATORS ←-------------*/
     T &operator*() const noexcept { return *_cur_elt; }
 
-    Iterator &operator++() {
-      if (_cur_elt != ) {
-        _cur_elt++;
-      } else { //@todo тут надо создавать новый чанк если нет места
-        _cur_chunk++;
-        _cur_elt = *_cur_chunk;
-      }
-      return *this;
-    }
+    // Iterator &operator++() {
+    //   if (_cur_elt !=) {
+    //     _cur_elt++;
+    //   } else { //@todo тут надо создавать новый чанк если нет места
+    //     _cur_chunk++;
+    //     _cur_elt = *_cur_chunk;
+    //   }
+    //   return *this;
+    // }
 
     Iterator &operator=(Iterator &o) {
       if (this == &o) {
@@ -100,8 +100,8 @@ public:
   /*--------→ CONSTRUCTORS ←-------------*/
 
   explicit Deque(const size_t Tp_qty = 0)
-      : _chunk_size(0), _chunk_map(nullptr), _start(), _finish() {
-    HandleDefCtorEx(Tp_qty);
+      : _map_size(0), _map(nullptr), _start(), _finish() {
+    HandleMaxSizeCtorEx(Tp_qty);
 
     if (!EqZero(Tp_qty)) {
       size_t chunk_capacity = 0;
@@ -112,9 +112,9 @@ public:
     }
   }
 
-  Deque(const size_t Tp_qty, T value)
-      : _chunk_size(0), _chunk_map(nullptr), _start(), _finish() {
-    HandleCtorEx(Tp_qty);
+  Deque(const size_t Tp_qty, T value) {
+    HandleZeroCtorEx(Tp_qty);
+    HandleMaxSizeCtorEx(Tp_qty);
 
     size_t chunk_capacity = 0;
     size_t &ref_chunk_capacity = chunk_capacity;
@@ -126,17 +126,14 @@ public:
   /** @brief
    * @param values initializer_list, которая передаёт данные в скобочках */
   Deque(const std::initializer_list<T> &values)
-      : _chunk_size(0), _chunk_map(nullptr), _start(), _finish() {
+      : _map_size(0), _map(nullptr), _start(), _finish() {
+    HandleMaxSizeCtorEx(values.size());
 
-    HandleCtorEx(values.size());
     if (!EqZero(values.size())) {
-
       size_t chunk_capacity = 0;
       size_t &ref_chunk_capacity = chunk_capacity;
       GetChunkCapacity(ref_chunk_capacity);
-
       DeqInit(values.size(), ref_chunk_capacity);
-
       BlocksFill(values);
     }
   }
@@ -189,10 +186,10 @@ public:
 private:
   friend class Iterator;
   /*--------→  VARIABLES ←-------------*/
-  size_t _chunk_size; // deque chunk size
-  T **_chunk_map;
-  Iterator _start;  // iterator
-  Iterator _finish; // iterator
+  size_t _map_size;
+  T **_map;
+  Iterator _start;
+  Iterator _finish;
 
   /*--------→ PRIVATE FUNCTIONS ←-------------*/
   /** @note Определения
@@ -212,35 +209,36 @@ private:
   }
 
   /** @brief Выделение памяти и инициализация итераторов */
-
   void DeqInit(const size_t Tp_qty, const size_t &chunk_capacity) {
-    _chunk_size = ((Tp_qty + chunk_capacity - 1) / chunk_capacity) + 1;
-    std::cout << "===== _chunk_size = " << _chunk_size << std::endl;
-    std::cout << "===== Tp_qty = " << Tp_qty << std::endl;
-    std::cout << "===== chunk_capacity = " << chunk_capacity << std::endl;
+    // округление в большую сторону без ceil ↓
+    _map_size = ((Tp_qty + chunk_capacity - 1) / chunk_capacity) + 1;
+    // std::cout << "===== _map_size = " << _map_size << std::endl;
+    // std::cout << "===== Tp_qty = " << Tp_qty << std::endl;
+    // std::cout << "===== chunk_capacity = " << chunk_capacity << std::endl;
 
-    _chunk_map = new T *[_chunk_size];
-    for (size_t i = 0; i < _chunk_size; i++) {
-      _chunk_map[i] = new T[chunk_capacity];
+    _map = new T *[_map_size];
+    for (size_t i = 0; i < _map_size; i++) {
+      _map[i] = new T[chunk_capacity];
       // @todo проверка на выделение памяти //
     }
-    _start = Iterator(&_chunk_map[0], &_chunk_map[0][0]);
+    _start = Iterator(&_map[0], &_map[0][0]);
 
-    _finish = Iterator(
-        &_chunk_map[_chunk_size - 2],
-        &_chunk_map[_chunk_size - 2][(Tp_qty - 1) % chunk_capacity] + 1);
+    if (Tp_qty % chunk_capacity)
+      _finish =
+          Iterator(&_map[_map_size - 2],
+                   &_map[_map_size - 2][(Tp_qty - 1) % chunk_capacity] + 1);
     // взятие остатка(то есть порядок внутри чанка) ↑
   }
 
   /** @brief Освобождение памяти, используется в конструкторах */
-  void MemFree() {
-    for (size_t i = 0; i < _chunk_size; i++) {
-      delete[] _chunk_map[i];
-      _chunk_map[i] = nullptr;
+  void MemFree() noexcept {
+    for (size_t i = 0; i < _map_size; i++) {
+      delete[] _map[i];
+      _map[i] = nullptr;
     }
-    delete[] _chunk_map;
+    delete[] _map;
 
-    _chunk_map = nullptr;
+    _map = nullptr;
   }
 
   /** @brief Функция заполнения выделенной памяти стандартными значениями */
@@ -285,8 +283,9 @@ private:
     }
   }
 
-  /** @brief Обработчик исключений конструктора по умолчанию**/
-  void HandleDefCtorEx(const size_t &Tp_qty) {
+  /** @brief Обработчик исключений конструктора по умолчанию и конструктора по
+   * инит_листу**/
+  void HandleMaxSizeCtorEx(const size_t &Tp_qty) {
     try {
       TpqtyBiggerMaxSizeEx(Tp_qty);
     } catch (const std::invalid_argument &e) {
@@ -297,9 +296,8 @@ private:
 
   /** @brief Обработчик исключений конструктора с парой (кол-во эл-тов,
    * значение)**/
-  void HandleCtorEx(const size_t &Tp_qty) {
+  void HandleZeroCtorEx(const size_t &Tp_qty) {
     try {
-      TpqtyBiggerMaxSizeEx(Tp_qty);
       TpqtyEqZeroEx(Tp_qty);
     } catch (const std::invalid_argument &e) {
       std::cerr << e.what() << std::endl;
