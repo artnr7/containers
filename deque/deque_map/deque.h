@@ -50,9 +50,14 @@ public:
     Iterator &operator++() {
       ++_cur_el;
       if (_cur_el == _last_el) {
-        //@todo тут надо создавать новый чанк если нет места
-        _cur_chunk++;
+        size_t chunk_capacity = 0;
+        size_t &ref_chunk_capacity = chunk_capacity;
+        GetChunkCapacity(ref_chunk_capacity);
+        //@todo тут надо создавать новый чанк если нет места ИЛИ НЕТ
+        ++_cur_chunk;
         _cur_el = *_cur_chunk;
+        _first_el = *_cur_chunk;
+        _last_el = *_cur_chunk + chunk_capacity;
       }
       return *this;
     }
@@ -93,7 +98,7 @@ public:
 
     bool operator==(const Iterator &o) {
       return (_cur_chunk == o._cur_chunk && _cur_el == o._cur_el &&
-              _first_el != o._first_el && _last_el != o._last_el);
+              _first_el == o._first_el && _last_el == o._last_el);
     }
 
     T **_cur_chunk;
@@ -107,7 +112,6 @@ public:
   explicit Deque(const size_t Tp_qty = 0)
       : _map_size(0), _map(nullptr), _start(), _finish() {
     HandleMaxSizeCtorEx(Tp_qty);
-
     if (!EqZero(Tp_qty)) {
       size_t chunk_capacity = 0;
       size_t &ref_chunk_capacity = chunk_capacity;
@@ -172,8 +176,10 @@ public:
   /** @brief Вычисляет размер deque */
   size_t Size() noexcept {
     size_t size = 0;
-    for (Iterator it = Begin(); it != End(); ++it) {
-      size++;
+    if (_map != nullptr) {
+      for (Iterator it = Begin(); it != End(); ++it) {
+        size++;
+      }
     }
     return size;
   }
@@ -218,24 +224,32 @@ private:
   void DeqInit(const size_t Tp_qty, const size_t &chunk_capacity) {
     size_t chunks_qty = Tp_qty / chunk_capacity + 1;
     _map_size = chunks_qty + 2 * RESERVE_SHIFT;
-    // std::cout << "===== _map_size = " << _map_size << std::endl;
-    // std::cout << "===== Tp_qty = " << Tp_qty << std::endl;
-    // std::cout << "===== chunk_capacity = " << chunk_capacity << std::endl;
 
     try {
       _map = new T *[_map_size];
-      for (size_t i = 0; i < chunks_qty; i++) {
+      for (size_t i = 0; i < chunks_qty; ++i) {
         _map[i + RESERVE_SHIFT] = new T[chunk_capacity];
       }
     } catch (const std::bad_alloc &e) {
       std::cerr << e.what() << std::endl;
       std::terminate();
     }
+    std::cout << "===== chunks_qty = " << chunks_qty << std::endl;
+    std::cout << "===== _map_size = " << _map_size << std::endl;
+    std::cout << "===== _map = " << _map << std::endl;
+    std::cout << "===== Tp_qty = " << Tp_qty << std::endl;
+    std::cout << "===== chunk_capacity = " << chunk_capacity << std::endl;
 
     _start._cur_chunk = _map + RESERVE_SHIFT;
     _start._cur_el = _map[RESERVE_SHIFT];
     _start._first_el = _map[RESERVE_SHIFT];
     _start._last_el = _map[RESERVE_SHIFT] + chunk_capacity;
+
+    // std::cout << "===== _start._cur_chunk = " << _start._cur_chunk <<
+    // std::endl; std::cout << "===== _start._cur_el = " << _start._cur_el <<
+    // std::endl; std::cout << "===== _start._first_el = " << _start._first_el
+    // << std::endl; std::cout << "===== _start._last_el = " << _start._last_el
+    // << std::endl;
 
     size_t finish_ind = RESERVE_SHIFT + chunks_qty - 1;
     _finish._cur_chunk = _map + finish_ind;
@@ -243,17 +257,26 @@ private:
     _finish._cur_el = _map[finish_ind] + Tp_qty % chunk_capacity;
     _finish._first_el = _map[finish_ind];
     _finish._last_el = _map[finish_ind] + chunk_capacity;
+
+    // std::cout << "===== finish_ind = " << finish_ind << std::endl;
+    // std::cout << "===== _finish._cur_chunk = " << _finish._cur_chunk
+    //           << std::endl;
+    // std::cout << "===== _finish._cur_el = " << _finish._cur_el << std::endl;
+    // std::cout << "===== _finish._first_el = " << _finish._first_el <<
+    // std::endl; std::cout << "===== _finish._last_el = " << _finish._last_el
+    // << std::endl;
   }
 
   /** @brief Освобождение памяти, используется в конструкторах */
   void MemFree() noexcept {
-    for (size_t i = 0; i < _map_size; i++) {
-      delete[] _map[i];
-      _map[i] = nullptr;
+    if (_map != nullptr) {
+      for (auto pt = Begin()._cur_chunk; pt <= End()._cur_chunk; ++pt) {
+        delete[] *pt;
+        *pt = nullptr;
+      }
+      delete[] _map;
+      _map = nullptr;
     }
-    delete[] _map;
-
-    _map = nullptr;
   }
 
   /** @brief Функция заполнения выделенной памяти стандартными значениями */

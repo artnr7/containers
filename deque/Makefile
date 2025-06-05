@@ -32,7 +32,7 @@ MAIN_EXE := main.exe
 T_EXE := t.exe
 
 r: clean cl $(DEQUE_H_FILE)
-	@$(GPP) $(T_DIR)/main.cc -o $(T_DIR)/$(MAIN_EXE) $(DEQUE_H_FILE)
+	@$(GPP) $(T_DIR)/main.cc $(DEQUE_H_FILE) -o $(T_DIR)/$(MAIN_EXE)
 	@echo main running...
 	@./$(T_DIR)/$(MAIN_EXE)
 
