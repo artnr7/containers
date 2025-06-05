@@ -6,7 +6,9 @@ TEST(long_double_constructors, default_constructor_1) {
   s21::Deque<long double> d1(5);
   EXPECT_EQ(d1.Size(), 5);
   auto itE = d1.End();
+  int i = 0;
   for (auto itB = d1.Begin(); itB != itE; ++itB) {
+    std::cout << ++i;
     EXPECT_EQ(*itB, 0);
   }
 }

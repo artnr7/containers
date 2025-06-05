@@ -12,47 +12,59 @@ public:
   class Iterator {
   public:
     /*--------→ CONSTRUCTORS ←-------------*/
-    Iterator() noexcept : _cur_chunk(nullptr), _cur_elt(nullptr) {}
-    Iterator(T **cur_chunk,
-             T *cur_elt) noexcept // ← не знаю как сделать с помощью const чтобы
-                                  // нельзя изменить что-то внутри конструктора
-        : _cur_chunk(cur_chunk), _cur_elt(cur_elt) {}
+    Iterator() noexcept
+        : _cur_chunk(nullptr), _cur_el(nullptr), _first_el(nullptr),
+          _last_el(nullptr) {}
+    // не знаю как сделать с помощью const чтобы нельзя изменить что-то внутри
+    // конструктора ↓
+    Iterator(T **cur_chunk, T *cur_elt, T *first_el, T *last_el) noexcept
+        : _cur_chunk(cur_chunk), _cur_el(cur_elt), _first_el(first_el),
+          _last_el(last_el) {}
 
     Iterator(const Iterator &o) {
       _cur_chunk = o._cur_chunk;
-      _cur_elt = o._cur_elt;
+      _cur_el = o._cur_el;
+      _first_el = o._first_el;
+      _last_el = o._last_el;
     }
 
     Iterator(const Iterator &&o) {
       _cur_chunk = o._cur_chunk;
-      _cur_elt = o._cur_elt;
+      _cur_el = o._cur_el;
+      _first_el = o._first_el;
+      _last_el = o._last_el;
 
       o._cur_chunk = nullptr;
-      o._cur_elt = nullptr;
+      o._cur_el = nullptr;
+      o._first_el = nullptr;
+      o._last_el = nullptr;
     }
-    ~Iterator() { _cur_chunk = nullptr, _cur_elt = nullptr; }
+    ~Iterator() {
+      _cur_chunk = nullptr, _cur_el = nullptr, _first_el = nullptr,
+      _last_el = nullptr;
+    }
 
     /*--------→ OPERATORS ←-------------*/
-    T &operator*() const noexcept { return *_cur_elt; }
+    T &operator*() const noexcept { return *_cur_el; }
 
-    // Iterator &operator++() {
-    //   if (_cur_elt !=) {
-    //     _cur_elt++;
-    //   } else { //@todo тут надо создавать новый чанк если нет места
-    //     _cur_chunk++;
-    //     _cur_elt = *_cur_chunk;
-    //   }
-    //   return *this;
-    // }
+    Iterator &operator++() {
+      ++_cur_el;
+      if (_cur_el == _last_el) {
+        //@todo тут надо создавать новый чанк если нет места
+        _cur_chunk++;
+        _cur_el = *_cur_chunk;
+      }
+      return *this;
+    }
 
     Iterator &operator=(Iterator &o) {
       if (this == &o) {
         return *this;
       }
       _cur_chunk = o._cur_chunk;
-      _cur_elt = o._cur_elt;
-      // _chunk_first = o._chunk_first;
-      // _chunk_last = o._chunk_last;
+      _cur_el = o._cur_el;
+      _first_el = o._first_el;
+      _last_el = o._last_el;
 
       return *this;
     }
@@ -62,39 +74,32 @@ public:
         return *this;
       }
       _cur_chunk = o._cur_chunk;
-      _cur_elt = o._cur_elt;
-      // _chunk_first = o._chunk_first;
-      // _chunk_last = o._chunk_last;
+      _cur_el = o._cur_el;
+      _first_el = o._first_el;
+      _last_el = o._last_el;
 
       o._cur_chunk = nullptr;
-      o._cur_elt = nullptr;
-      // o._chunk_first = nullptr;
-      // o._chunk_last = nullptr;
+      o._cur_el = nullptr;
+      o._first_el = nullptr;
+      o._last_el = nullptr;
 
       return *this;
     }
 
     bool operator!=(const Iterator &o) {
-      return (_cur_chunk != o._cur_chunk || _cur_elt != o._cur_elt
-              //  ||
-              //       _chunk_first != o._chunk_first || _chunk_last !=
-              //       o._chunk_last
-      );
+      return (_cur_chunk != o._cur_chunk || _cur_el != o._cur_el ||
+              _first_el != o._first_el || _last_el != o._last_el);
     }
 
     bool operator==(const Iterator &o) {
-      return (_cur_chunk == o._cur_chunk && _cur_elt == o._cur_elt
-              //  &&
-              //       _chunk_first != o._chunk_first && _chunk_last !=
-              //       o._chunk_last
-      );
+      return (_cur_chunk == o._cur_chunk && _cur_el == o._cur_el &&
+              _first_el != o._first_el && _last_el != o._last_el);
     }
 
-  private:
     T **_cur_chunk;
-    T *_cur_elt;
-    // T *_chunk_first;
-    // T *_chunk_last;
+    T *_cur_el;
+    T *_first_el;
+    T *_last_el;
   };
 
   /*--------→ CONSTRUCTORS ←-------------*/
@@ -180,12 +185,13 @@ public:
 
   Iterator End() noexcept { return _finish; }
 
+private:
 #define CONTAINER_ELEM_MAX_QTY 4611686018427387903
   constexpr size_t MaxSize() noexcept { return CONTAINER_ELEM_MAX_QTY; }
-
-private:
   friend class Iterator;
+
   /*--------→  VARIABLES ←-------------*/
+  // ↓ кол-во указателей, которые доступны, а не кол-во чанков под данные
   size_t _map_size;
   T **_map;
   Iterator _start;
@@ -198,7 +204,6 @@ private:
 #define BUF_SIZE 512 // ← в байтах
   /** @brief Нахождение максимально возможно количества вмещенных ШТ в
    * BUF_SIZE*/
-
   static void GetChunkCapacity(size_t &chunk_capacity) noexcept {
     /* Если размер ШТ < BUF_SIZE, то вычисляем какое кол-во их можно вместить  в
      * одном чанке
@@ -208,26 +213,36 @@ private:
         sizeof(T) < BUF_SIZE ? size_t(BUF_SIZE / sizeof(T)) : size_t(1);
   }
 
+#define RESERVE_SHIFT 1 // ← кол-во запасных указателей, != 0
   /** @brief Выделение памяти и инициализация итераторов */
   void DeqInit(const size_t Tp_qty, const size_t &chunk_capacity) {
-    // округление в большую сторону без ceil ↓
-    _map_size = ((Tp_qty + chunk_capacity - 1) / chunk_capacity) + 1;
+    size_t chunks_qty = Tp_qty / chunk_capacity + 1;
+    _map_size = chunks_qty + 2 * RESERVE_SHIFT;
     // std::cout << "===== _map_size = " << _map_size << std::endl;
     // std::cout << "===== Tp_qty = " << Tp_qty << std::endl;
     // std::cout << "===== chunk_capacity = " << chunk_capacity << std::endl;
 
-    _map = new T *[_map_size];
-    for (size_t i = 0; i < _map_size; i++) {
-      _map[i] = new T[chunk_capacity];
-      // @todo проверка на выделение памяти //
+    try {
+      _map = new T *[_map_size];
+      for (size_t i = 0; i < chunks_qty; i++) {
+        _map[i + RESERVE_SHIFT] = new T[chunk_capacity];
+      }
+    } catch (const std::bad_alloc &e) {
+      std::cerr << e.what() << std::endl;
+      std::terminate();
     }
-    _start = Iterator(&_map[0], &_map[0][0]);
 
-    if (Tp_qty % chunk_capacity)
-      _finish =
-          Iterator(&_map[_map_size - 2],
-                   &_map[_map_size - 2][(Tp_qty - 1) % chunk_capacity] + 1);
-    // взятие остатка(то есть порядок внутри чанка) ↑
+    _start._cur_chunk = _map + RESERVE_SHIFT;
+    _start._cur_el = _map[RESERVE_SHIFT];
+    _start._first_el = _map[RESERVE_SHIFT];
+    _start._last_el = _map[RESERVE_SHIFT] + chunk_capacity;
+
+    size_t finish_ind = RESERVE_SHIFT + chunks_qty - 1;
+    _finish._cur_chunk = _map + finish_ind;
+    // взятие остатка(то есть порядок внутри чанка)↓
+    _finish._cur_el = _map[finish_ind] + Tp_qty % chunk_capacity;
+    _finish._first_el = _map[finish_ind];
+    _finish._last_el = _map[finish_ind] + chunk_capacity;
   }
 
   /** @brief Освобождение памяти, используется в конструкторах */
