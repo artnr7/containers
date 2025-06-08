@@ -12,7 +12,9 @@ INST_DIR := install_dir
 
 # файлы для компиляции
 H_FILES := deque_map/deque.h
-TEST_FILES := $(shell find $(TEST_DIR) -name '*.cc')
+# TEST_FILES := $(shell find $(TEST_DIR) -name '*.cc')
+DC_TD = $(TEST_DIR)/deque_constructors/
+TEST_FILES := $(TEST_DIR)/test_main.cc $(DC_TD)/long_double.cc $(DC_TD)/BigData.cc $(DC_TD)/integer.cc 
 OBJ_FILES := $(patsubst %.cc, $(INST_DIR)/%.o, $(CC_FILES))
 
 # скомпилированные файлы

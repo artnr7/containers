@@ -1,12 +1,11 @@
 #include "../test_main.h"
-// #include <deque>
+#include <deque>
 
 /*---------→ DEFAULT ←---------------*/
 TEST(long_double_constructors, default_constructor_1) {
   s21::Deque<long double> d1(5);
   EXPECT_EQ(d1.Size(), 5);
-  auto itE = d1.End();
-  for (auto itB = d1.Begin(); itB != itE; ++itB) {
+  for (auto itB = d1.Begin(); itB != d1.End(); ++itB) {
     std::cout << *itB;
     EXPECT_EQ(*itB, 0);
   }
@@ -15,6 +14,7 @@ TEST(long_double_constructors, default_constructor_1) {
 TEST(long_double_constructors, default_constructor_2) {
   s21::Deque<long double> d1(0);
   EXPECT_EQ(d1.Size(), 0);
+  EXPECT_EQ(d1.Begin() == d1.End(), 1);
 }
 
 TEST(long_double_constructors, default_constructor_3) {
@@ -24,6 +24,25 @@ TEST(long_double_constructors, default_constructor_3) {
 }
 
 TEST(long_double_constructors, default_constructor_4) {
+  s21::Deque<long double> test;
+  size_t deq_max_size = test.MaxSize();
+  EXPECT_DEATH(s21::Deque<long double> d1(deq_max_size + 1),
+               "To use this constructor Tp_qty must be less than MaxSize()");
+}
+
+TEST(long_double_constructors, default_constructor_5) {
+  s21::Deque<long double> test;
+  size_t deq_max_size = test.MaxSize();
+  EXPECT_DEATH(s21::Deque<long double> d1(deq_max_size), "std::bad_alloc");
+}
+
+TEST(long_double_constructors, default_constructor_6) {
+  s21::Deque<long double> test;
+  size_t deq_max_size = test.MaxSize();
+  EXPECT_DEATH(s21::Deque<long double> d1(deq_max_size - 1), "std::bad_alloc");
+}
+
+TEST(long_double_constructors, default_constructor_7) {
   EXPECT_DEATH(s21::Deque<long double> d1(-2),
                "To use this constructor Tp_qty must be less than MaxSize()");
 }

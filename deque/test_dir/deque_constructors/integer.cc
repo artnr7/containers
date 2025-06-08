@@ -4,8 +4,7 @@
 TEST(integer_constructors, default_constructor_1) {
   s21::Deque<int> d1(5);
   EXPECT_EQ(d1.Size(), 5);
-  auto itE = d1.End();
-  for (auto itB = d1.Begin(); itB != itE; ++itB) {
+  for (auto itB = d1.Begin(); itB != d1.End(); ++itB) {
     EXPECT_EQ(*itB, 0);
   }
 }
@@ -13,10 +12,7 @@ TEST(integer_constructors, default_constructor_1) {
 TEST(integer_constructors, default_constructor_2) {
   s21::Deque<int> d1(0);
   EXPECT_EQ(d1.Size(), 0);
-  auto itE = d1.End();
-  for (auto itB = d1.Begin(); itB != itE; ++itB) {
-    EXPECT_EQ(*itB, 0);
-  }
+  EXPECT_EQ(d1.Begin() == d1.End(), 1);
 }
 
 TEST(integer_constructors, default_constructor_3) {
@@ -26,6 +22,25 @@ TEST(integer_constructors, default_constructor_3) {
 }
 
 TEST(integer_constructors, default_constructor_4) {
+  s21::Deque<int> test;
+  size_t deq_max_size = test.MaxSize();
+  EXPECT_DEATH(s21::Deque<int> d1(deq_max_size + 1),
+               "To use this constructor Tp_qty must be less than MaxSize()");
+}
+
+TEST(integer_constructors, default_constructor_5) {
+  s21::Deque<int> test;
+  size_t deq_max_size = test.MaxSize();
+  EXPECT_DEATH(s21::Deque<int> d1(deq_max_size), "std::bad_alloc");
+}
+
+TEST(integer_constructors, default_constructor_6) {
+  s21::Deque<int> test;
+  size_t deq_max_size = test.MaxSize();
+  EXPECT_DEATH(s21::Deque<int> d1(deq_max_size - 1), "std::bad_alloc");
+}
+
+TEST(integer_constructors, default_constructor_7) {
   EXPECT_DEATH(s21::Deque<int> d1(-2),
                "To use this constructor Tp_qty must be less than MaxSize()");
 }

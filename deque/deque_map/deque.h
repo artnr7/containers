@@ -2,8 +2,6 @@
 #define __DEQUE__
 
 #include <algorithm>
-#include <cmath>
-#include <deque>
 #include <iostream>
 namespace s21 {
 template <typename T> class Deque {
@@ -21,19 +19,13 @@ public:
         : _cur_chunk(cur_chunk), _cur_el(cur_elt), _first_el(first_el),
           _last_el(last_el) {}
 
-    Iterator(const Iterator &o) {
-      _cur_chunk = o._cur_chunk;
-      _cur_el = o._cur_el;
-      _first_el = o._first_el;
-      _last_el = o._last_el;
-    }
+    Iterator(const Iterator &o)
+        : _cur_chunk(o._cur_chunk), _cur_el(o._cur_el), _first_el(o._first_el),
+          _last_el(o._last_el) {}
 
-    Iterator(const Iterator &&o) {
-      _cur_chunk = o._cur_chunk;
-      _cur_el = o._cur_el;
-      _first_el = o._first_el;
-      _last_el = o._last_el;
-
+    Iterator(const Iterator &&o) noexcept
+        : _cur_chunk(o._cur_chunk), _cur_el(o._cur_el), _first_el(o._first_el),
+          _last_el(o._last_el) {
       o._cur_chunk = nullptr;
       o._cur_el = nullptr;
       o._first_el = nullptr;
@@ -50,14 +42,10 @@ public:
     Iterator &operator++() {
       ++_cur_el;
       if (_cur_el == _last_el) {
-        size_t chunk_capacity = 0;
-        size_t &ref_chunk_capacity = chunk_capacity;
-        GetChunkCapacity(ref_chunk_capacity);
-        //@todo тут надо создавать новый чанк если нет места ИЛИ НЕТ
         ++_cur_chunk;
         _cur_el = *_cur_chunk;
         _first_el = *_cur_chunk;
-        _last_el = *_cur_chunk + chunk_capacity;
+        _last_el = *_cur_chunk + GetChunkCapacity();
       }
       return *this;
     }
@@ -108,58 +96,79 @@ public:
   };
 
   /*--------→ CONSTRUCTORS ←-------------*/
-
+  /** @brief Конструктор по умолчанию, а также по кол-ву значений
+   * @param value значение ШТ */
   explicit Deque(const size_t Tp_qty = 0)
       : _map_size(0), _map(nullptr), _start(), _finish() {
     HandleMaxSizeCtorEx(Tp_qty);
+
     if (!EqZero(Tp_qty)) {
-      size_t chunk_capacity = 0;
-      size_t &ref_chunk_capacity = chunk_capacity;
-      GetChunkCapacity(ref_chunk_capacity);
-      DeqInit(Tp_qty, ref_chunk_capacity);
+      DeqInit(Tp_qty);
       BlocksFill();
     }
   }
 
+  /** @brief Конструктор из пары (кол-во значений, значение)
+   * @param value значение ШТ */
   Deque(const size_t Tp_qty, T value) {
     HandleZeroCtorEx(Tp_qty);
     HandleMaxSizeCtorEx(Tp_qty);
 
-    size_t chunk_capacity = 0;
-    size_t &ref_chunk_capacity = chunk_capacity;
-    GetChunkCapacity(ref_chunk_capacity);
-    DeqInit(Tp_qty, ref_chunk_capacity);
+    DeqInit(Tp_qty);
     BlocksFill(value);
   }
 
-  /** @brief
+  /** @brief Конструктор из initializer_list
    * @param values initializer_list, которая передаёт данные в скобочках */
   Deque(const std::initializer_list<T> &values)
       : _map_size(0), _map(nullptr), _start(), _finish() {
     HandleMaxSizeCtorEx(values.size());
 
     if (!EqZero(values.size())) {
-      size_t chunk_capacity = 0;
-      size_t &ref_chunk_capacity = chunk_capacity;
-      GetChunkCapacity(ref_chunk_capacity);
-      DeqInit(values.size(), ref_chunk_capacity);
+      DeqInit(values.size());
       BlocksFill(values);
     }
   }
 
-  Deque(const Deque &other);
-  Deque(Deque &&other);
-  ~Deque() { MemFree(); }
-
-  /*--------→ OPERATORS ←-------------*/
-  Deque<T> &operator=(const Deque<T> &other) {
-    if (this == &other) {
-      return *this;
+  /** @brief Конструктор копирования */
+  Deque(const Deque &o)
+      : _map_size(o._map_size), _map(o._map), _start(o._start),
+        _finish(o._finish) {
+    if (!EqZero(o.Size())) {
+      // ЗДЕСЬ ИТЕРАТОРЫ И МАП САЙЗ ВЫЧИСЛЯЮТСЯ ЗАНОВО!!!
+      // здесь надо просто выделять память
+      DeqInit(o.Size());
+      auto thisitB = Begin();
+      for (auto itB = o.Begin(); itB != o.End(); ++itB, ++thisitB) {
+        *thisitB = *itB;
+      }
     }
   }
 
-  Deque<T> &operator=(Deque<T> &&other) noexcept {
-    if (this == &other) {
+  /** @brief Конструктор перемешщения */
+  Deque(Deque &&o) noexcept
+      : _map_size(o._map_size), _map(o._map), _start(o._start),
+        _finish(o._finish) {
+    o._map_size = 0;
+    o._map = nullptr;
+    o._start = Iterator();
+    o._finish = Iterator();
+  }
+
+  /** @brief Деструктор */
+  ~Deque() { Mdealloc(); }
+
+  /*--------→ OPERATORS ←-------------*/
+  Deque<T> &operator=(const Deque<T> &o) {
+    if (this == &o) {
+      return *this;
+    }
+    _map_size = o._map_size;
+    // _map
+  }
+
+  Deque<T> &operator=(Deque<T> &&o) noexcept {
+    if (this == &o) {
       return *this;
     }
   }
@@ -174,7 +183,7 @@ public:
   // }
 
   /** @brief Вычисляет размер deque */
-  size_t Size() noexcept {
+  size_t Size() const noexcept {
     size_t size = 0;
     if (_map != nullptr) {
       for (Iterator it = Begin(); it != End(); ++it) {
@@ -185,15 +194,16 @@ public:
   }
 
   /** @brief Узнаёт является ли deque пустым */
-  bool Empty() noexcept { return !Size(); }
+  bool Empty() const noexcept { return !Size(); }
 
-  Iterator Begin() noexcept { return _start; }
+  Iterator Begin() const noexcept { return _start; }
 
-  Iterator End() noexcept { return _finish; }
+  Iterator End() const noexcept { return _finish; }
+
+#define CONTAINER_ELEM_MAX_QTY 4611686018427387903 // ← в элементах
+  constexpr size_t MaxSize() noexcept { return CONTAINER_ELEM_MAX_QTY; }
 
 private:
-#define CONTAINER_ELEM_MAX_QTY 4611686018427387903
-  constexpr size_t MaxSize() noexcept { return CONTAINER_ELEM_MAX_QTY; }
   friend class Iterator;
 
   /*--------→  VARIABLES ←-------------*/
@@ -210,35 +220,27 @@ private:
 #define BUF_SIZE 512 // ← в байтах
   /** @brief Нахождение максимально возможно количества вмещенных ШТ в
    * BUF_SIZE*/
-  static void GetChunkCapacity(size_t &chunk_capacity) noexcept {
+  static size_t GetChunkCapacity() noexcept {
     /* Если размер ШТ < BUF_SIZE, то вычисляем какое кол-во их можно вместить  в
      * одном чанке
      * Если размер > (1/2 * BUF_SIZE), то кол-во ШТ в одном чанке будет равно 1
      */
-    chunk_capacity =
-        sizeof(T) < BUF_SIZE ? size_t(BUF_SIZE / sizeof(T)) : size_t(1);
+    return sizeof(T) < BUF_SIZE ? size_t(BUF_SIZE / sizeof(T)) : size_t(1);
   }
 
 #define RESERVE_SHIFT 1 // ← кол-во запасных указателей, != 0
   /** @brief Выделение памяти и инициализация итераторов */
-  void DeqInit(const size_t Tp_qty, const size_t &chunk_capacity) {
-    size_t chunks_qty = Tp_qty / chunk_capacity + 1;
+  void DeqInit(const size_t Tp_qty) {
+    const size_t &chunk_capacity = GetChunkCapacity();
+    const size_t &chunks_qty = Tp_qty / chunk_capacity + 1;
     _map_size = chunks_qty + 2 * RESERVE_SHIFT;
+    Malloc(chunk_capacity, chunks_qty);
+    // std::cout << "===== Tp_qty = " << Tp_qty << std::endl;
+    // std::cout << "===== chunks_qty = " << chunks_qty << std::endl;
+    // std::cout << "===== chunk_capacity = " << chunk_capacity << std::endl;
+    // std::cout << "===== _map_size = " << _map_size << std::endl;
 
-    try {
-      _map = new T *[_map_size];
-      for (size_t i = 0; i < chunks_qty; ++i) {
-        _map[i + RESERVE_SHIFT] = new T[chunk_capacity];
-      }
-    } catch (const std::bad_alloc &e) {
-      std::cerr << e.what() << std::endl;
-      std::terminate();
-    }
-    std::cout << "===== chunks_qty = " << chunks_qty << std::endl;
-    std::cout << "===== _map_size = " << _map_size << std::endl;
-    std::cout << "===== _map = " << _map << std::endl;
-    std::cout << "===== Tp_qty = " << Tp_qty << std::endl;
-    std::cout << "===== chunk_capacity = " << chunk_capacity << std::endl;
+    // std::cout << "===== _map = " << _map << std::endl;
 
     _start._cur_chunk = _map + RESERVE_SHIFT;
     _start._cur_el = _map[RESERVE_SHIFT];
@@ -248,7 +250,8 @@ private:
     // std::cout << "===== _start._cur_chunk = " << _start._cur_chunk <<
     // std::endl; std::cout << "===== _start._cur_el = " << _start._cur_el <<
     // std::endl; std::cout << "===== _start._first_el = " << _start._first_el
-    // << std::endl; std::cout << "===== _start._last_el = " << _start._last_el
+    // << std::endl; std::cout << "===== _start._last_el = " <<
+    // _start._last_el
     // << std::endl;
 
     size_t finish_ind = RESERVE_SHIFT + chunks_qty - 1;
@@ -261,14 +264,25 @@ private:
     // std::cout << "===== finish_ind = " << finish_ind << std::endl;
     // std::cout << "===== _finish._cur_chunk = " << _finish._cur_chunk
     //           << std::endl;
-    // std::cout << "===== _finish._cur_el = " << _finish._cur_el << std::endl;
-    // std::cout << "===== _finish._first_el = " << _finish._first_el <<
-    // std::endl; std::cout << "===== _finish._last_el = " << _finish._last_el
+    // std::cout << "===== _finish._cur_el = " << _finish._cur_el <<
+    // std::endl; std::cout << "===== _finish._first_el = " <<
+    // _finish._first_el << std::endl; std::cout << "===== _finish._last_el =
+    // " << _finish._last_el
     // << std::endl;
   }
-
+  void Malloc(const size_t &chunk_capacity, const size_t &chunks_qty) {
+    try {
+      _map = new T *[_map_size];
+      for (size_t i = 0; i < chunks_qty; ++i) {
+        _map[i + RESERVE_SHIFT] = new T[chunk_capacity];
+      }
+    } catch (const std::bad_alloc &e) {
+      std::cerr << e.what() << std::endl;
+      std::terminate();
+    }
+  }
   /** @brief Освобождение памяти, используется в конструкторах */
-  void MemFree() noexcept {
+  void Mdealloc() noexcept {
     if (_map != nullptr) {
       for (auto pt = Begin()._cur_chunk; pt <= End()._cur_chunk; ++pt) {
         delete[] *pt;
