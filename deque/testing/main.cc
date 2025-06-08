@@ -10,7 +10,7 @@ int main() {
   //   }
   // }
 
-  s21::Deque<long double> d2(std::move(d1));
+  s21::Deque<long double> d2(d1);
   for (auto itB2 = d2.Begin(); itB2 != d2.End(); ++itB2) {
     std::cout << *itB2 << std::endl;
   }

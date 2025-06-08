@@ -135,9 +135,7 @@ public:
       : _map_size(o._map_size), _map(o._map), _start(o._start),
         _finish(o._finish) {
     if (!EqZero(o.Size())) {
-      // ЗДЕСЬ ИТЕРАТОРЫ И МАП САЙЗ ВЫЧИСЛЯЮТСЯ ЗАНОВО!!!
-      // здесь надо просто выделять память
-      DeqInit(o.Size());
+      Malloc(GetChunkCapacity(), o.Size() / GetChunkCapacity() + 1);
       auto thisitB = Begin();
       for (auto itB = o.Begin(); itB != o.End(); ++itB, ++thisitB) {
         *thisitB = *itB;
@@ -164,23 +162,52 @@ public:
       return *this;
     }
     _map_size = o._map_size;
-    // _map
+    _start = o._start;
+    _finish = o._finish;
+
+    Mdealloc();
+
+    if (!EqZero(o.Size())) {
+      /** @note типо надо через временные объекты выделять и всё такое */
+      Malloc(GetChunkCapacity(), o.Size() / GetChunkCapacity() + 1);
+      auto thisitB = Begin();
+      for (auto itB = o.Begin(); itB != o.End(); ++itB, ++thisitB) {
+        *thisitB = *itB;
+      }
+    } else {
+      _map = o._map;
+    }
+    return *this;
   }
 
   Deque<T> &operator=(Deque<T> &&o) noexcept {
     if (this == &o) {
       return *this;
     }
+
+    _map_size = o._map_size;
+    _start = o._start;
+    _finish = o._finish;
+
+    Mdealloc();
+    _map = o._map;
   }
 
   /*--------→ METHODS  ←-----------*/
-  // bool PushFront() noexcept {}
-  // void PushBack(int value) { int mem_blocks_qty = MemBlocksQty(elems_qty_); }
-  // bool PushBack(const T &value) noexcept {
-  //   T *end_of_chunk = *_cur_chunk + (chunk_capacity - 1);
-  //   if (_finish)
-  //     *(++_finish) = value;
+  // void PushFront(const T &value) {
+  //   _map
   // }
+  // void PushFront(T &&value) {}
+
+  void PushBack(const T &value) {
+    using cur_el = End()._cur_el;
+    using last_el = End()._last_el;
+
+    if (cur_el == last_el)
+      *(End()._cur_el) = value;
+  }
+
+  void PushBack(T &&value) { End()._cur_el = value; }
 
   /** @brief Вычисляет размер deque */
   size_t Size() const noexcept {
@@ -193,7 +220,7 @@ public:
     return size;
   }
 
-  /** @brief Узнаёт является ли deque пустым */
+  /** @brief Является ли deque пустым */
   bool Empty() const noexcept { return !Size(); }
 
   Iterator Begin() const noexcept { return _start; }
@@ -221,9 +248,9 @@ private:
   /** @brief Нахождение максимально возможно количества вмещенных ШТ в
    * BUF_SIZE*/
   static size_t GetChunkCapacity() noexcept {
-    /* Если размер ШТ < BUF_SIZE, то вычисляем какое кол-во их можно вместить  в
-     * одном чанке
-     * Если размер > (1/2 * BUF_SIZE), то кол-во ШТ в одном чанке будет равно 1
+    /* Если размер ШТ < BUF_SIZE, то вычисляем какое кол-во их можно
+     * вместить  в одном чанке Если размер > (1/2 * BUF_SIZE), то кол-во ШТ
+     * в одном чанке будет равно 1
      */
     return sizeof(T) < BUF_SIZE ? size_t(BUF_SIZE / sizeof(T)) : size_t(1);
   }
@@ -237,8 +264,9 @@ private:
     Malloc(chunk_capacity, chunks_qty);
     // std::cout << "===== Tp_qty = " << Tp_qty << std::endl;
     // std::cout << "===== chunks_qty = " << chunks_qty << std::endl;
-    // std::cout << "===== chunk_capacity = " << chunk_capacity << std::endl;
-    // std::cout << "===== _map_size = " << _map_size << std::endl;
+    // std::cout << "===== chunk_capacity = " << chunk_capacity <<
+    // std::endl; std::cout << "===== _map_size = " << _map_size <<
+    // std::endl;
 
     // std::cout << "===== _map = " << _map << std::endl;
 
@@ -248,8 +276,9 @@ private:
     _start._last_el = _map[RESERVE_SHIFT] + chunk_capacity;
 
     // std::cout << "===== _start._cur_chunk = " << _start._cur_chunk <<
-    // std::endl; std::cout << "===== _start._cur_el = " << _start._cur_el <<
-    // std::endl; std::cout << "===== _start._first_el = " << _start._first_el
+    // std::endl; std::cout << "===== _start._cur_el = " << _start._cur_el
+    // << std::endl; std::cout << "===== _start._first_el = " <<
+    // _start._first_el
     // << std::endl; std::cout << "===== _start._last_el = " <<
     // _start._last_el
     // << std::endl;
@@ -266,8 +295,8 @@ private:
     //           << std::endl;
     // std::cout << "===== _finish._cur_el = " << _finish._cur_el <<
     // std::endl; std::cout << "===== _finish._first_el = " <<
-    // _finish._first_el << std::endl; std::cout << "===== _finish._last_el =
-    // " << _finish._last_el
+    // _finish._first_el << std::endl; std::cout << "===== _finish._last_el
+    // = " << _finish._last_el
     // << std::endl;
   }
   void Malloc(const size_t &chunk_capacity, const size_t &chunks_qty) {
@@ -335,8 +364,8 @@ private:
     }
   }
 
-  /** @brief Обработчик исключений конструктора по умолчанию и конструктора по
-   * инит_листу**/
+  /** @brief Обработчик исключений конструктора по умолчанию и конструктора
+   * по инит_листу**/
   void HandleMaxSizeCtorEx(const size_t &Tp_qty) {
     try {
       TpqtyBiggerMaxSizeEx(Tp_qty);
