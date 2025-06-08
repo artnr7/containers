@@ -83,7 +83,7 @@ public:
       return (_cur_chunk != o._cur_chunk || _cur_el != o._cur_el ||
               _first_el != o._first_el || _last_el != o._last_el);
     }
-
+    /** @todo сделать как отрицание operator!= */
     bool operator==(const Iterator &o) {
       return (_cur_chunk == o._cur_chunk && _cur_el == o._cur_el &&
               _first_el == o._first_el && _last_el == o._last_el);
@@ -200,14 +200,30 @@ public:
   // void PushFront(T &&value) {}
 
   void PushBack(const T &value) {
-    using cur_el = End()._cur_el;
-    using last_el = End()._last_el;
+    if (_map == nullptr) {
+      DeqInit(1);
+      *(Begin()._cur_el) = value;
+    }
 
-    if (cur_el == last_el)
-      *(End()._cur_el) = value;
+    // using f_cur_el = End()._cur_el;
+    // using f_last_el = End()._last_el;
+    auto itB = End()._cur_el;
+
+    if (itB == End()._last_el) {
+
+      *(itB) = value;
+    } else {
+      ++_cur_chunk;
+      _cur_el = *_cur_chunk;
+      _first_el = *_cur_chunk;
+      _last_el = *_cur_chunk + GetChunkCapacity();
+      *itB = value;
+    }
+    /** @todo функция, которая сравнивает _map_size и кол-во выделенных блоков,
+     * чтобы при их малом количестве выделялся блок памяти */
   }
 
-  void PushBack(T &&value) { End()._cur_el = value; }
+  // void PushBack(T &&value) { End()._cur_el = value; }
 
   /** @brief Вычисляет размер deque */
   size_t Size() const noexcept {
@@ -227,7 +243,7 @@ public:
 
   Iterator End() const noexcept { return _finish; }
 
-#define CONTAINER_ELEM_MAX_QTY 4611686018427387903 // ← в элементах
+#define CONTAINER_ELEM_MAX_QTY 4611686018427387903 // ← в элементах 2^62
   constexpr size_t MaxSize() noexcept { return CONTAINER_ELEM_MAX_QTY; }
 
 private:
