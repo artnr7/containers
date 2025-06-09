@@ -210,10 +210,7 @@ public:
     auto itB = _finish._cur_el;
 
     if (itB == _finish._last_el) {
-      ++_cur_chunk;
-      _finish._cur_el = *_cur_chunk;
-      _finish._first_el = *_cur_chunk;
-      _finish._last_el = *_cur_chunk + GetChunkCapacity();
+      SetNextChunk();
     }
     *itB = value;
     /** @todo функция, которая сравнивает _map_size и кол-во выделенных блоков,
@@ -274,6 +271,8 @@ private:
     const size_t &chunk_capacity = GetChunkCapacity();
     const size_t &chunks_qty = Tp_qty / chunk_capacity + 1;
     _map_size = chunks_qty + 2 * RESERVE_SHIFT;
+    _map[0] = nullptr;
+    _map[_map_size - 1] = nullptr;
     Malloc(chunk_capacity, chunks_qty);
     // std::cout << "===== Tp_qty = " << Tp_qty << std::endl;
     // std::cout << "===== chunks_qty = " << chunks_qty << std::endl;
@@ -333,6 +332,35 @@ private:
       delete[] _map;
       _map = nullptr;
     }
+  }
+
+
+
+void SetNextChunk() noexcept {
+    auto next_chunk = *(_cur_chunk + 1);
+    size_t &chunk_capacity = GetChunkCapacity();
+    // если след.чанк == nullptr, а не указывает на выделенную память ↓
+    if (next_chunk == nullptr) {
+      next_chunk = new T[chunk_capacity];
+      ++_cur_chunk;
+      _finish._cur_el = *_cur_chunk;
+      _finish._first_el = *_cur_chunk;
+      _finish._last_el = *_cur_chunk + chunk_capacity;
+    }
+    std::cout << &next_chunk - _map << std::endl;
+    if (&next_chunk - _map > _map_size - 1) {
+    }
+    ++_cur_chunk;
+    _finish._cur_el = *_cur_chunk;
+    _finish._first_el = *_cur_chunk;
+    _finish._last_el = *_cur_chunk + chunk_capacity;
+  }
+
+ void SetPrevChunk() noexcept {
+    --_cur_chunk;
+    _start._cur_el = *_cur_chunk + chunk_capacity - 1;
+    _start._first_el = *_cur_chunk;
+    _start._last_el = *_cur_chunk + chunk_capacity;
   }
 
   /** @brief Функция заполнения выделенной памяти стандартными значениями */
