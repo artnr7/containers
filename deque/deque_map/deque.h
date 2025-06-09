@@ -207,18 +207,15 @@ public:
 
     // using f_cur_el = End()._cur_el;
     // using f_last_el = End()._last_el;
-    auto itB = End()._cur_el;
+    auto itB = _finish._cur_el;
 
-    if (itB == End()._last_el) {
-
-      *(itB) = value;
-    } else {
+    if (itB == _finish._last_el) {
       ++_cur_chunk;
-      _cur_el = *_cur_chunk;
-      _first_el = *_cur_chunk;
-      _last_el = *_cur_chunk + GetChunkCapacity();
-      *itB = value;
+      _finish._cur_el = *_cur_chunk;
+      _finish._first_el = *_cur_chunk;
+      _finish._last_el = *_cur_chunk + GetChunkCapacity();
     }
+    *itB = value;
     /** @todo функция, которая сравнивает _map_size и кол-во выделенных блоков,
      * чтобы при их малом количестве выделялся блок памяти */
   }
