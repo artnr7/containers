@@ -204,19 +204,12 @@ public:
       DeqInit(1);
       *(Begin()._cur_el) = value;
     }
-
-    // using f_cur_el = End()._cur_el;
-    // using f_last_el = End()._last_el;
-    auto itB = _finish._cur_el;
-
-    if (itB == _finish._last_el) {
+    if (_finish._cur_el + 1 == _finish._last_el) {
       // SetNextChunk();
+    } else { // тут случай когда след. элемент добавляется внутри чанка}
     }
     *itB = value;
-    /** @todo функция, которая сравнивает _map_size и кол-во выделенных блоков,
-     * чтобы при их малом количестве выделялся блок памяти */
   }
-
   // void PushBack(T &&value) { End()._cur_el = value; }
 
   /** @brief Вычисляет количество элементов, содержащихся в deque */
@@ -338,55 +331,64 @@ private:
     }
   }
 
-  // void SetNextChunk() {
-  //   T &next_chunk = *(_cur_chunk + 1);
-  //   size_t &chunk_capacity = GetChunkCapacity();
-  //   ExpandMapDown(next_chunk);
-  //   ExpandMapsize(next_chunk, chunk_capacity);
+  void SetNextChunk() {
+    T &next_chunk = *(_finish._cur_chunk + 1);
+    size_t &chunk_capacity = GetChunkCapacity();
+    ExpandMapDown(next_chunk, chunk_capacity);
+    ExpandMapsize(next_chunk, chunk_capacity);
 
-  //   ++_cur_chunk;
-  //   _finish._cur_el = *_cur_chunk;
-  //   _finish._first_el = *_cur_chunk;
-  //   _finish._last_el = *_cur_chunk + chunk_capacity;
-  // }
+    ++_finish._cur_chunk;
+    _finish._cur_el = *_finish._cur_chunk;
+    _finish._first_el = *_finish._cur_chunk;
+    _finish._last_el = *_finish._cur_chunk + chunk_capacity;
+  }
 
-  // void ExpandMapDown(T &next_chunk) {
-  //   // если след.чанк == nullptr, а не указывает на выделенную память ↓
-  //   if (next_chunk == nullptr) {
-  //     next_chunk = new T[GetChunkCapacity()];
-  //   }
-  // }
+  void ExpandMapDown(T &next_chunk, size_t &chunk_capacity) {
+    // если след.чанк == nullptr, а не указывает на выделенную память ↓
+    if (next_chunk == nullptr) {
+      next_chunk = new T[chunk_capacity];
+    }
+  }
 
-  // /** @brief Функция увеличения размера _map_size в два раза, и перенос
-  //  * старого массива указателей в середину нового
-  //  * @test здесь надо будет тестировать те случаи, где выделяются блоки
-  //  памяти,
-  //  * кол-во которых будет нечетное кол-во, например 1,2,3,4,5(какие-нибудь
-  //  * простые числа)*/
-  // void ExpandMapsize(T &next_chunk, size_t &chunk_capacity) {
-  //   std::cout << &next_chunk - _map << std::endl;
+  /** @brief Функция увеличения размера _map_size в два раза, и перенос
+   * старого массива указателей в середину нового
+   * @test здесь надо будет тестировать те случаи, где выделяются блоки
+   памяти,
+   * кол-во которых будет нечетное, например 1,2,3,4,5(какие-нибудь
+   * простые числа)*/
+  void ExpandMapsize(T &next_chunk, size_t &chunk_capacity) {
+    std::cout << &next_chunk - _map << std::endl;
 
-  //   if (&next_chunk - _map >= _map_size) {
-  //     size_t half_map_size = _map_size / 2, deque_el_qty = Size();
+    if (&next_chunk - _map >= _map_size) {
+      size_t half_map_size = _map_size / 2, deque_el_qty = Size(),
+             start_cur_el = _start._cur_el - _start._cur_chunk,
+             finish_cur_el = _finish._cur_el - _finish._cur_chunk;
 
-  //     // порядок начала нового _map это _map_size / 2
-  //     T **tmp_map = new T *[_map_size * 2];
-  //     for (size_t i = 0; i < _map_size; ++i) {
-  //       tmp_map[half_map_size + i] = _map[i];
-  //     }
-  //     Mdealloc();
-  //     _map = tmp_map;
-  //     _map_size *= 2;
-  //     // ExpandMapDown(next_chunk+1); условно, надо разобраться как работают
-  //     // ссылки
-  //     T *finish_i = (_finish._cur_chunk - *_map) + half_map_size;
-  //     _finish._cur_chunk = _map + finish_i;
-  //     // взятие остатка(то есть порядок внутри чанка)↓
-  //     _finish._cur_el = _map[finish_i] + deque_el_qty % chunk_capacity;
-  //     _finish._first_el = _map[finish_i];
-  //     _finish._last_el = _map[finish_i] + chunk_capacity;
-  //   }
-  // }
+      // порядок начала нового _map это _map_size / 2
+      T **tmp_map = new T *[_map_size * 2];
+      for (size_t i = 0; i < _map_size; ++i) {
+        tmp_map[half_map_size + i] = _map[i];
+      }
+      Mdealloc();
+      _map = tmp_map;
+
+      // ExpandMapDown(next_chunk+1); условно, надо разобраться как работают
+      // ссылки
+
+      _start._cur_chunk = _map + half_map_size;
+      _start._cur_el = _map[half_map_size] + start_cur_el;
+      _start._first_el = _map[half_map_size];
+      _start._last_el = _map[half_map_size] + chunk_capacity;
+
+      T *finish_i = (_finish._cur_chunk - *_map) + half_map_size;
+      _finish._cur_chunk = _map + finish_i;
+      _finish._cur_el = _map[finish_i] + finish_cur_el;
+      _finish._first_el = _map[finish_i];
+      _finish._last_el = _map[finish_i] + chunk_capacity;
+
+      _map_size *= 2;
+    }
+  }
 
   // void SetPrevChunk() noexcept {
   //   --_cur_chunk;
