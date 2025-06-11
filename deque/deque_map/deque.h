@@ -202,10 +202,22 @@ public:
   void PushBack(const T &value) {
     if (_map == nullptr) {
       DeqInit(1);
-      *(Begin()._cur_el) = value;
+      *(_start._cur_el) = value;
+      // тут надо бы посмотреть другие значения _start и _finish
     }
-    if (_finish._cur_el + 1 == _finish._last_el) {
-      // SetNextChunk();
+    Iterator tmp_finish(_finish);
+    ++tmp_finish;
+
+    if (tmp_finish._cur_chunk == nullptr) {
+      *tmp_finish._cur_chunk = new T[chunk_capacity];
+    }
+    if (tmp_finish._cur_chunk - _map >= _map_size) {
+    }
+
+    ExpandMapDown(*_finish._cur_chunk, GetChunkCapacity());
+
+    if () {
+      SetNextChunk();
     } else { // тут случай когда след. элемент добавляется внутри чанка}
     }
     *itB = value;
@@ -332,7 +344,7 @@ private:
   }
 
   void SetNextChunk() {
-    T &next_chunk = *(_finish._cur_chunk + 1);
+    T &next_chunk = *(_finish._cur_chunk);
     size_t &chunk_capacity = GetChunkCapacity();
     ExpandMapDown(next_chunk, chunk_capacity);
     ExpandMapsize(next_chunk, chunk_capacity);
@@ -343,10 +355,10 @@ private:
     _finish._last_el = *_finish._cur_chunk + chunk_capacity;
   }
 
-  void ExpandMapDown(T &next_chunk, size_t &chunk_capacity) {
+  void ExpandMapDown(Iterator &finish, size_t &chunk_capacity) {
     // если след.чанк == nullptr, а не указывает на выделенную память ↓
-    if (next_chunk == nullptr) {
-      next_chunk = new T[chunk_capacity];
+    if (tmp_finish._cur_chunk == nullptr) {
+      tmp_finish._cur_chunk = new T[chunk_capacity];
     }
   }
 
