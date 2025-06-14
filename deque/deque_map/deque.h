@@ -50,6 +50,18 @@ public:
       return *this;
     }
 
+    Iterator &operator--() {
+      if (_cur_el == _first_el) {
+        --_cur_chunk;
+        _cur_el = *_cur_chunk + GetChunkCapacity() - 1;
+        _first_el = *_cur_chunk;
+        _last_el = *_cur_chunk + GetChunkCapacity();
+      } else {
+        --_cur_el;
+      }
+      return *this;
+    }
+
     Iterator &operator=(Iterator &o) {
       if (this == &o) {
         return *this;
@@ -198,11 +210,11 @@ public:
   // void PushFront(const T &value) {
   //   _map
   // }
-  // void PushFront(T &&value) {}
+
   template <typename U> void PushBack(U &&value) {
     if (_map == nullptr) {
       DeqInit(1);
-      *(_start._cur_el) = value;
+      *(_start._cur_el) = std::forward<U>(value);
     } else {
       const size_t &chunk_capacity = GetChunkCapacity();
       ExpandMapDown(chunk_capacity);
@@ -230,6 +242,48 @@ public:
       //           << std::endl;
       // std::cout << "===== _finish._last_el = " << _finish._last_el << "\n\n"
       //           << std::endl;
+    }
+  }
+
+  template <typename U> void PushFront(U &&value) {
+    const size_t &chunk_capacity = GetChunkCapacity();
+    if (_map == nullptr) {
+
+      DeqInit(1);
+    } else {
+      ExpandMapUp(chunk_capacity);
+      --_start;
+    }
+    *(_start._cur_el) = std::forward<U>(value);
+    ExpandMapsize(chunk_capacity);
+    // std::cout << "===== _map_size = " << _map_size << "\n" << std::endl;
+
+    // std::cout << "===== _start._cur_chunk = " << _start._cur_chunk - _map
+    //           << std::endl;
+    // std::cout << "===== _start._cur_el = " << _start._cur_el -
+    // _start._first_el
+    //           << std::endl;
+    // std::cout << "===== _start._first_el = " << _start._first_el <<
+    // std::endl; std::cout << "===== _start._last_el = " << _start._last_el <<
+    // std::endl;
+
+    // std::cout << "===== _finish._cur_chunk = " << _finish._cur_chunk - _map
+    //           << std::endl;
+    // std::cout << "===== _finish._cur_el = "
+    //           << _finish._cur_el - _finish._first_el << std::endl;
+    // std::cout << "===== _finish._first_el = " << _finish._first_el <<
+    // std::endl; std::cout << "===== _finish._last_el = " << _finish._last_el
+    // << "\n\n"
+    //           << std::endl;
+  }
+
+  void ExpandMapUp(const size_t &chunk_capacity) {
+    Iterator tmp_start(_start);
+    --tmp_start;
+    if (*(tmp_start._cur_chunk) == nullptr) {
+      --_start._cur_chunk;
+      *(_start._cur_chunk) = new T[chunk_capacity];
+      ++_start._cur_chunk;
     }
   }
   /** @brief Вычисляет количество элементов, содержащихся в deque */
@@ -323,12 +377,11 @@ private:
   }
   void Malloc(const size_t &chunk_capacity, const size_t &chunks_qty) {
     try {
-      _map = new T *[_map_size];
+      _map = new T *[_map_size] {};
       for (size_t i = 0; i < chunks_qty; ++i) {
         _map[i + RESERVE_SHIFT] = new T[chunk_capacity];
       }
-      _map[0] = nullptr;
-      _map[_map_size - 1] = nullptr;
+
     } catch (const std::bad_alloc &e) {
       std::cerr << e.what() << std::endl;
       std::terminate();
@@ -349,7 +402,6 @@ private:
       _map = nullptr;
     }
   }
-
 
   void ExpandMapDown(const size_t &chunk_capacity) {
     // static size_t i = 0;
@@ -385,29 +437,51 @@ private:
   void ExpandMapsize(const size_t &chunk_capacity) {
     // если это последний чанк и последний элемент
     // еще можно добавить условие, что если следующий курчанк не равен нуллптр
-    if (size_t(_finish._cur_chunk - _map) == _map_size - 1 &&
-        _finish._cur_el == _finish._last_el - 1) {
+    if ((size_t(_finish._cur_chunk - _map) == _map_size - 1 &&
+         _finish._cur_el == _finish._last_el - 1) ||
+        (_start._cur_chunk == _map && _start._cur_el == *_map)) {
       // std::cout << "===_cur = " << _finish._cur_chunk - _map << std::endl;
       // std::cout << "===== _map_size = " << _map_size << std::endl;
       // std::cout << "===== half_map_size = " << half_map_size << std::endl;
       size_t expanded_map_size = _map_size * 2, half_map_size = _map_size / 2,
              start_cur_el_i = _start._cur_el - _start._first_el,
              finish_cur_el_i = _finish._cur_el - _finish._first_el,
-             start_i = half_map_size + (_start._cur_chunk - _map);
+             start_i = half_map_size + (_start._cur_chunk - _map),
+             finish_i = half_map_size + size_t(_finish._cur_chunk - _map);
+      // std::cout << "===== start_cur_el_i = " << start_cur_el_i << std::endl;
+      // std::cout << "===== finish_cur_el_i = " << finish_cur_el_i <<
+      // std::endl;
+
+      // std::cout << "===== _map_size = " << _map_size << "\n" << std::endl;
+
+      // std::cout << "===== _start._cur_chunk = " << _start._cur_chunk - _map
+      //           << std::endl;
+      // std::cout << "===== _start._cur_el = "
+      //           << _start._cur_el - _start._first_el << std::endl;
+      // std::cout << "===== _start._first_el = " << _start._first_el <<
+      // std::endl; std::cout << "===== _start._last_el = " << _start._last_el
+      // << std::endl;
+
+      // std::cout << "===== _finish._cur_chunk = " << _finish._cur_chunk - _map
+      //           << std::endl;
+      // std::cout << "===== _finish._cur_el = "
+      //           << _finish._cur_el - _finish._first_el << std::endl;
+      // std::cout << "===== _finish._first_el = " << _finish._first_el
+      //           << std::endl;
+      // std::cout << "===== _finish._last_el = " << _finish._last_el << "\n\n"
+      //           << std::endl;
       // порядок начала нового _map это _map_size / 2
       T **tmp_map = new T *[expanded_map_size] {};
       for (size_t i = 0; i < _map_size; ++i) {
         tmp_map[half_map_size + i] = _map[i];
       }
-      // Mdealloc();
+      delete[] _map;
       _map = tmp_map;
 
       _start._cur_chunk = _map + start_i;
       _start._cur_el = _map[start_i] + start_cur_el_i;
       _start._first_el = _map[start_i];
       _start._last_el = _map[start_i] + chunk_capacity;
-      //_finish._cur_chunk - _map↓
-      size_t finish_i = half_map_size + (_map_size - 1);
 
       // std::cout << "===== _map = " << _map << std::endl;
       // std::cout << "===== finish_i = " << finish_i << std::endl;
