@@ -3,6 +3,7 @@
 #include <deque>
 #include <iostream>
 #include <memory>
+#include <queue>
 
 // #define BUF_SIZE 32768
 
@@ -59,7 +60,7 @@ int main() {
 
   // cout << "begin = " << *it2 << "\tend = " << *it1 << endl
   //      << "size = " << dq_sz;
-
+  std::queue<int> q1;
   long double i = 1;
   int N = 129;
   while (i <= N) {

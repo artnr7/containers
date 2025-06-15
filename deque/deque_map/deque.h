@@ -24,8 +24,8 @@ public:
           _last_el(o._last_el) {}
 
     Iterator(const Iterator &&o) noexcept
-        : _cur_chunk(o._cur_chunk), _cur_el(o._cur_el), _first_el(o._first_el),
-          _last_el(o._last_el) {
+        : _cur_chunk(std::move(o._cur_chunk)), _cur_el(std::move(o._cur_el)),
+          _first_el(std::move(o._first_el)), _last_el(std::move(o._last_el)) {
       o._cur_chunk = nullptr;
       o._cur_el = nullptr;
       o._first_el = nullptr;
@@ -106,6 +106,10 @@ public:
     T *_first_el;
     T *_last_el;
   };
+  using value_type = T;
+  using reference = T &;
+  using const_reference = const T &;
+  using size_type = size_t;
 
   /*--------→ CONSTRUCTORS ←-------------*/
   /** @brief Конструктор по умолчанию, а также по кол-ву значений
@@ -156,8 +160,8 @@ public:
 
   /** @brief Конструктор перемешщения */
   Deque(Deque &&o) noexcept
-      : _map_size(o._map_size), _map(o._map), _start(o._start),
-        _finish(o._finish) {
+      : _map_size(std::move(o._map_size)), _map(std::move(o._map)),
+        _start(std::move(o._start)), _finish(std::move(o._finish)) {
     o._map_size = 0;
     o._map = nullptr;
     o._start = Iterator();
@@ -165,9 +169,7 @@ public:
   }
 
   /** @brief Деструктор */
-  ~Deque() {
-    // Mdealloc();
-  }
+  ~Deque() { Mdealloc(); }
 
   /*--------→ OPERATORS ←-------------*/
   Deque<T> &operator=(const Deque<T> &o) {
@@ -207,48 +209,51 @@ public:
   }
 
   /*--------→ METHODS  ←-----------*/
-  // void PushFront(const T &value) {
-  //   _map
-  // }
+  reference Front() { return _start._cur_el; }
+  const_reference Front() const { return _start._cur_el; }
+
+  reference Back(){
+    Iterator tmp_finish(_finish);
+    --tmp_finish;
+    return tmp_finish._cur_el;
+  }
+  const_reference Back(){
+    Iterator tmp_finish(_finish);
+    --tmp_finish;
+    return tmp_finish._cur_el;
+  }
+
+  void PopBack() { // удаление последнего элемента
+    if (Size()) {
+      --_finish;
+      *_finish._cur_el = T{};
+    }
+  }
+
+  void PopFront() { // удаление последнего элемента
+    if (Size()) {
+      *_start._cur_el = T{};
+      ++_start;
+    }
+  }
 
   template <typename U> void PushBack(U &&value) {
+    const size_t &chunk_capacity = GetChunkCapacity();
     if (_map == nullptr) {
       DeqInit(1);
       *(_start._cur_el) = std::forward<U>(value);
     } else {
-      const size_t &chunk_capacity = GetChunkCapacity();
       ExpandMapDown(chunk_capacity);
-      // static int i = 0;
-      // if (i++ == 129) {
-      //   std::exit(12);
-      // }
+
       *(_finish._cur_el) = std::forward<U>(value);
       ++_finish;
-      ExpandMapsize(chunk_capacity);
-      // std::cout << "===== _map_size = " << _map_size << "\n" << std::endl;
-
-      // std::cout << "===== _start._cur_chunk = " << _start._cur_chunk - _map
-      //           << std::endl;
-      // std::cout << "===== _start._cur_el = " << _start._cur_el << std::endl;
-      // std::cout << "===== _start._first_el = " << _start._first_el <<
-      // std::endl; std::cout << "===== _start._last_el = " << _start._last_el
-      // << std::endl;
-
-      // std::cout << "===== _finish._cur_chunk = " << *_finish._cur_chunk
-      //           << std::endl;
-      // std::cout << "===== _finish._cur_el = " << _finish._cur_el <<
-      // std::endl; std::cout << "===== _finish._first_el = " <<
-      // _finish._first_el
-      //           << std::endl;
-      // std::cout << "===== _finish._last_el = " << _finish._last_el << "\n\n"
-      //           << std::endl;
     }
+    ExpandMapsize(chunk_capacity);
   }
 
   template <typename U> void PushFront(U &&value) {
     const size_t &chunk_capacity = GetChunkCapacity();
     if (_map == nullptr) {
-
       DeqInit(1);
     } else {
       ExpandMapUp(chunk_capacity);
@@ -277,15 +282,6 @@ public:
     //           << std::endl;
   }
 
-  void ExpandMapUp(const size_t &chunk_capacity) {
-    Iterator tmp_start(_start);
-    --tmp_start;
-    if (*(tmp_start._cur_chunk) == nullptr) {
-      --_start._cur_chunk;
-      *(_start._cur_chunk) = new T[chunk_capacity];
-      ++_start._cur_chunk;
-    }
-  }
   /** @brief Вычисляет количество элементов, содержащихся в deque */
   size_t Size() const noexcept {
     size_t size = 0;
@@ -379,7 +375,7 @@ private:
     try {
       _map = new T *[_map_size] {};
       for (size_t i = 0; i < chunks_qty; ++i) {
-        _map[i + RESERVE_SHIFT] = new T[chunk_capacity];
+        _map[i + RESERVE_SHIFT] = new T[chunk_capacity]{};
       }
 
     } catch (const std::bad_alloc &e) {
@@ -390,13 +386,9 @@ private:
   /** @brief Освобождение памяти, используется в конструкторах */
   void Mdealloc() noexcept {
     if (_map != nullptr) {
-      // for (size_t i = 0; i < _map_size; ++i) {
-      //   delete[] _map[i];
-      //   _map[i] = nullptr;
-      // }
-      for (auto pt = Begin()._cur_chunk; pt <= End()._cur_chunk; ++pt) {
-        delete[] *pt;
-        *pt = nullptr;
+      for (size_t i = 0; i < _map_size; ++i) {
+        delete[] _map[i];
+        _map[i] = nullptr;
       }
       delete[] _map;
       _map = nullptr;
@@ -420,6 +412,16 @@ private:
       ++_finish._cur_chunk;
       *(_finish._cur_chunk) = new T[chunk_capacity];
       --_finish._cur_chunk;
+    }
+  }
+
+  void ExpandMapUp(const size_t &chunk_capacity) {
+    Iterator tmp_start(_start);
+    --tmp_start;
+    if (*(tmp_start._cur_chunk) == nullptr) {
+      --_start._cur_chunk;
+      *(_start._cur_chunk) = new T[chunk_capacity];
+      ++_start._cur_chunk;
     }
   }
 

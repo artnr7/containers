@@ -100,10 +100,3 @@ cl:
 	@clang-format -i $(FILES_TO_CLANG)
 	@echo clang done
 
-###--------→ сборка и пользовательские обезьяние тесты ←-------------------------------------------###
-
-# t: 
-# 	clang-format -i $(T_DIR)/t.cc
-# 	g++ -Wall -Werror -Wextra $(T_DIR)/t.cc -o $(T_DIR)/t.exe
-# 	./$(T_DIR)/t.exe
-
