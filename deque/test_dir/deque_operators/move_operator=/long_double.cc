@@ -1,14 +1,15 @@
 #include "../../test_main.h"
 #include <deque>
+#define N 32
 
-TEST(copy_assignment_operator_long_double, long_double_1) {
+TEST(move_assignment_operator_long_double, long_double_1) {
   s21::Deque<long double> d1;
   s21::Deque<long double> d2{5.423};
   d2 = std::move(d1);
   EXPECT_EQ(d2.Empty(), 1);
 }
 
-TEST(copy_assignment_operator_long_double, long_double_2) {
+TEST(move_assignment_operator_long_double, long_double_2) {
   s21::Deque<long double> d1{1.4324, 2.432634534643, 3.85678456, 4.53455754,
                              5.6343453};
   s21::Deque<long double> d2{5.423};
@@ -23,7 +24,7 @@ TEST(copy_assignment_operator_long_double, long_double_2) {
   }
 }
 
-TEST(copy_assignment_operator_long_double, long_double_3) {
+TEST(move_assignment_operator_long_double, long_double_3) {
   s21::Deque<long double> d1{1.4324, 2.432634534643, 3.85678456, 4.53455754,
                              5.6343453};
   s21::Deque<long double> d2;
@@ -38,7 +39,7 @@ TEST(copy_assignment_operator_long_double, long_double_3) {
   }
 }
 
-TEST(copy_assignment_operator_long_double, long_double_4) {
+TEST(move_assignment_operator_long_double, long_double_4) {
   s21::Deque<long double> d1;
   s21::Deque<long double> d2;
   d2 = std::move(d1);

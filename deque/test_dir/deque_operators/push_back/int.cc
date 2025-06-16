@@ -2,7 +2,7 @@
 #define N 128
 
 /*---------→ COPY ←---------------*/
-TEST(operators_push_back_integer, empty_copy_1) {
+TEST(operators_push_back_int, empty_copy_1) {
   s21::Deque<int> d1;
   for (int i = 0; i < N - 1; ++i) {
     d1.PushBack(i);
@@ -13,7 +13,8 @@ TEST(operators_push_back_integer, empty_copy_1) {
     EXPECT_EQ(*it, i++);
   }
 }
-TEST(operators_push_back_integer, empty_copy_2) {
+
+TEST(operators_push_back_int, empty_copy_2) {
   s21::Deque<int> d1;
   for (int i = 0; i < N; ++i) {
     d1.PushBack(i);
@@ -23,7 +24,8 @@ TEST(operators_push_back_integer, empty_copy_2) {
     EXPECT_EQ(*it, i++);
   }
 }
-TEST(operators_push_back_integer, empty_copy_3) {
+
+TEST(operators_push_back_int, empty_copy_3) {
   s21::Deque<int> d1;
   for (int i = 0; i < N * 3; ++i) {
     d1.PushBack(i);
@@ -34,7 +36,7 @@ TEST(operators_push_back_integer, empty_copy_3) {
   }
 }
 
-TEST(operators_push_back_integer, filled_copy_1) {
+TEST(operators_push_back_int, filled_copy_1) {
   s21::Deque<int> d1{
       1,   2,   3,   4,   5,   6,   7,   8,   9,   10,  11,  12,  13,  14,  15,
       16,  17,  18,  19,  20,  21,  22,  23,  24,  25,  26,  27,  28,  29,  30,
@@ -55,7 +57,8 @@ TEST(operators_push_back_integer, filled_copy_1) {
     EXPECT_EQ(*it, i++);
   }
 }
-TEST(operators_push_back_integer, filled_copy_2) {
+
+TEST(operators_push_back_int, filled_copy_2) {
   s21::Deque<int> d1{
       1,   2,   3,   4,   5,   6,   7,   8,   9,   10,  11,  12,  13,  14,  15,
       16,  17,  18,  19,  20,  21,  22,  23,  24,  25,  26,  27,  28,  29,  30,
@@ -77,7 +80,7 @@ TEST(operators_push_back_integer, filled_copy_2) {
   }
 }
 
-TEST(operators_push_back_integer, filled_copy_3) {
+TEST(operators_push_back_int, filled_copy_3) {
   s21::Deque<int> d1{
       1,    2,    3,    4,    5,    6,    7,    8,    9,    10,   11,   12,
       13,   14,   15,   16,   17,   18,   19,   20,   21,   22,   23,   24,

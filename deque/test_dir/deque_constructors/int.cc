@@ -1,7 +1,9 @@
 #include "../test_main.h"
+// доделать конструктор биг дата и привести к общему виду пуш и сделать мув
+// версию
 
 /*---------→ DEFAULT ←---------------*/
-TEST(integer_constructors, default_constructor_1) {
+TEST(int_constructors, def_constructor_1) {
   s21::Deque<int> d1(5);
   EXPECT_EQ(d1.Size(), 5);
   for (auto itB = d1.Begin(); itB != d1.End(); ++itB) {
@@ -9,44 +11,44 @@ TEST(integer_constructors, default_constructor_1) {
   }
 }
 
-TEST(integer_constructors, default_constructor_2) {
+TEST(int_constructors, def_constructor_small_size_1) {
   s21::Deque<int> d1(0);
   EXPECT_EQ(d1.Size(), 0);
   EXPECT_EQ(d1.Begin() == d1.End(), 1);
 }
 
-TEST(integer_constructors, default_constructor_3) {
+TEST(int_constructors, def_constructor_small_size_2) {
   s21::Deque<int> d1;
   EXPECT_EQ(d1.Size(), 0);
   EXPECT_EQ(d1.Begin() == d1.End(), 1);
 }
 
-TEST(integer_constructors, default_constructor_4) {
+TEST(int_constructors, def_constructor_small_size_3) {
+  EXPECT_DEATH(s21::Deque<int> d1(-2),
+               "To use this constructor Tp_qty must be less than MaxSize()");
+}
+
+TEST(int_constructors, def_constructor_big_size_1) {
   s21::Deque<int> test;
   size_t deq_max_size = test.MaxSize();
   EXPECT_DEATH(s21::Deque<int> d1(deq_max_size + 1),
                "To use this constructor Tp_qty must be less than MaxSize()");
 }
 
-TEST(integer_constructors, default_constructor_5) {
+TEST(int_constructors, def_constructor_big_size_2) {
   s21::Deque<int> test;
   size_t deq_max_size = test.MaxSize();
   EXPECT_DEATH(s21::Deque<int> d1(deq_max_size), "std::bad_alloc");
 }
 
-TEST(integer_constructors, default_constructor_6) {
+TEST(int_constructors, def_constructor_big_size_3) {
   s21::Deque<int> test;
   size_t deq_max_size = test.MaxSize();
   EXPECT_DEATH(s21::Deque<int> d1(deq_max_size - 1), "std::bad_alloc");
 }
 
-TEST(integer_constructors, default_constructor_7) {
-  EXPECT_DEATH(s21::Deque<int> d1(-2),
-               "To use this constructor Tp_qty must be less than MaxSize()");
-}
-
 /*---------→ VALUE ←---------------*/
-TEST(integer_constructors, value_constructor_1) {
+TEST(int_constructors, value_constructor_1) {
   s21::Deque<int> d1(5, 2);
   EXPECT_EQ(d1.Size(), 5);
   auto itE = d1.End();
@@ -55,41 +57,42 @@ TEST(integer_constructors, value_constructor_1) {
   }
 }
 
-TEST(integer_constructors, value_constructor_2) {
+TEST(int_constructors, value_constructor_2) {
   EXPECT_DEATH(s21::Deque<int> d1(0, 2),
                "To use this constructor Tp_qty must be greater than 0");
 }
 
-TEST(integer_constructors, value_constructor_3) {
+TEST(int_constructors, value_constructor_3) {
   EXPECT_DEATH(s21::Deque<int> d1(-1, 2),
                "To use this constructor Tp_qty must be less than MaxSize()");
 }
 
-TEST(integer_constructors, value_constructor_4) {
+TEST(int_constructors, value_constructor_4) {
   EXPECT_DEATH(s21::Deque<int> d1(-2, 2),
                "To use this constructor Tp_qty must be less than MaxSize()");
 }
 
-TEST(integer_constructors, value_constructor_5) {
+TEST(int_constructors, value_constructor_5) {
   EXPECT_DEATH(s21::Deque<int> d1(-2222, 2),
                "To use this constructor Tp_qty must be less than MaxSize()");
 }
-/*---------→ VALUE ←---------------*/
-TEST(integer_constructors, init_list_constructor_1) {
+/*---------→ INIT_LIST ←---------------*/
+TEST(int_constructors, init_list_constructor_1) {
   s21::Deque<int> d1{};
   EXPECT_EQ(d1.Size(), 0);
   EXPECT_EQ(d1.Begin() == d1.End(), 1);
 }
 
-TEST(integer_constructors, init_list_constructor_2) {
+TEST(int_constructors, init_list_constructor_2) {
   s21::Deque<int> d1{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+  EXPECT_EQ(d1.Size(), 10);
   int i = 1;
   for (auto itB = d1.Begin(); itB != d1.End(); ++itB) {
     EXPECT_EQ(*itB, i++);
   }
 }
 
-TEST(integer_constructors, init_list_constructor_3) {
+TEST(int_constructors, init_list_constructor_3) {
   s21::Deque<int> d1{
       1,   2,   3,   4,   5,   6,   7,   8,   9,   10,  11,  12,  13,  14,  15,
       16,  17,  18,  19,  20,  21,  22,  23,  24,  25,  26,  27,  28,  29,  30,
@@ -100,13 +103,15 @@ TEST(integer_constructors, init_list_constructor_3) {
       91,  92,  93,  94,  95,  96,  97,  98,  99,  100, 101, 102, 103, 104, 105,
       106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120,
       121, 122, 123, 124, 125, 126, 127};
+  EXPECT_EQ(d1.Size(), 127);
+
   int i = 1;
   for (auto itB = d1.Begin(); itB != d1.End(); ++itB) {
     EXPECT_EQ(*itB, i++);
   }
 }
 
-TEST(integer_constructors, init_list_constructor_4) {
+TEST(int_constructors, init_list_constructor_4) {
   s21::Deque<int> d1{
       1,   2,   3,   4,   5,   6,   7,   8,   9,   10,  11,  12,  13,  14,  15,
       16,  17,  18,  19,  20,  21,  22,  23,  24,  25,  26,  27,  28,  29,  30,
@@ -117,13 +122,15 @@ TEST(integer_constructors, init_list_constructor_4) {
       91,  92,  93,  94,  95,  96,  97,  98,  99,  100, 101, 102, 103, 104, 105,
       106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120,
       121, 122, 123, 124, 125, 126, 127, 128};
+  EXPECT_EQ(d1.Size(), 128);
+
   int i = 1;
   for (auto itB = d1.Begin(); itB != d1.End(); ++itB) {
     EXPECT_EQ(*itB, i++);
   }
 }
 
-TEST(integer_constructors, init_list_constructor_5) {
+TEST(int_constructors, init_list_constructor_5) {
   s21::Deque<int> d1{
       1,   2,   3,   4,   5,   6,   7,   8,   9,   10,  11,  12,  13,  14,  15,
       16,  17,  18,  19,  20,  21,  22,  23,  24,  25,  26,  27,  28,  29,  30,
@@ -134,13 +141,15 @@ TEST(integer_constructors, init_list_constructor_5) {
       91,  92,  93,  94,  95,  96,  97,  98,  99,  100, 101, 102, 103, 104, 105,
       106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120,
       121, 122, 123, 124, 125, 126, 127, 128, 129};
+  EXPECT_EQ(d1.Size(), 129);
+
   int i = 1;
   for (auto itB = d1.Begin(); itB != d1.End(); ++itB) {
     EXPECT_EQ(*itB, i++);
   }
 }
 
-TEST(integer_constructors, init_list_constructor_6) {
+TEST(int_constructors, init_list_constructor_6) {
   s21::Deque<int> d1{
       1,    2,    3,    4,    5,    6,    7,    8,    9,    10,   11,   12,
       13,   14,   15,   16,   17,   18,   19,   20,   21,   22,   23,   24,
@@ -228,6 +237,8 @@ TEST(integer_constructors, init_list_constructor_6) {
       997,  998,  999,  1000, 1001, 1002, 1003, 1004, 1005, 1006, 1007, 1008,
       1009, 1010, 1011, 1012, 1013, 1014, 1015, 1016, 1017, 1018, 1019, 1020,
       1021, 1022, 1023, 1024};
+  EXPECT_EQ(d1.Size(), 1024);
+
   int i = 1;
   for (auto itB = d1.Begin(); itB != d1.End(); ++itB) {
     EXPECT_EQ(*itB, i++);

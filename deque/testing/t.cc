@@ -62,12 +62,13 @@ int main() {
   //      << "size = " << dq_sz;
   std::queue<int> q1;
   long double i = 1;
-  int N = 129;
+  int N = 2048;
   while (i <= N) {
-    std::cout << i << ".";
-    for (int j = 0; j < (N / 64) + 1; j++) {
-      std::cout << i + j * 4;
-    }
+    // std::cout << i << ".";
+    std::cout << i << " ";
+    // for (int j = 0; j < (N / 32) + 1; j++) {
+    //   std::cout << i + j * 4;
+    // }
     i++;
     if (i <= N) {
       std::cout << ",";

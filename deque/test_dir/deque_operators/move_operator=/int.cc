@@ -1,13 +1,13 @@
 #include "../../test_main.h"
 
-TEST(copy_assignment_operator_integer, integer_1) {
+TEST(move_assignment_operator_integer, integer_1) {
   s21::Deque<int> d1;
   s21::Deque<int> d2{5};
   d2 = std::move(d1);
   EXPECT_EQ(d2.Empty(), 1);
 }
 
-TEST(copy_assignment_operator_integer, integer_2) {
+TEST(move_assignment_operator_integer, integer_2) {
   s21::Deque<int> d1{1, 2, 3, 4, 5};
   s21::Deque<int> d2{5};
   d2 = std::move(d1);
@@ -17,7 +17,7 @@ TEST(copy_assignment_operator_integer, integer_2) {
   }
 }
 
-TEST(copy_assignment_operator_integer, integer_3) {
+TEST(move_assignment_operator_integer, integer_3) {
   s21::Deque<int> d1{1, 2, 3, 4, 5};
   s21::Deque<int> d2;
   d2 = std::move(d1);
@@ -27,7 +27,7 @@ TEST(copy_assignment_operator_integer, integer_3) {
   }
 }
 
-TEST(copy_assignment_operator_integer, integer_4) {
+TEST(move_assignment_operator_integer, integer_4) {
   s21::Deque<int> d1;
   s21::Deque<int> d2;
   d2 = std::move(d1);

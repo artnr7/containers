@@ -1,5 +1,6 @@
 #include "../../test_main.h"
 #include <deque>
+#define N 32
 
 TEST(copy_assignment_operator_long_double, long_double_1) {
   s21::Deque<long double> d1;

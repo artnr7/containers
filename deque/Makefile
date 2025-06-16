@@ -15,10 +15,11 @@ H_FILES := deque_map/deque.h
 # TEST_FILES := $(shell find $(TEST_DIR) -name '*.cc')
 
 TEST_FILES := $(TEST_DIR)/test_main.cc \
- $(TEST_DIR)/deque_operators/move_operator=/*.cc
-#  $(TEST_DIR)/deque_operators/copy_operator=/*.cc
-#  $(TEST_DIR)/deque_operators/push_front/integer.cc
-#  $(TEST_DIR)/deque_constructors/*.cc
+ $(TEST_DIR)/deque_operators/push_front/int.cc
+#  $(TEST_DIR)/deque_operators/push_back/*.cc
+#  $(TEST_DIR)/deque_constructors/*.cc\
+#  $(TEST_DIR)/deque_operators/move_operator=/*.cc\
+#  $(TEST_DIR)/deque_operators/copy_operator=/*.cc\
 OBJ_FILES := $(patsubst %.cc, $(INST_DIR)/%.o, $(CC_FILES))
 
 # скомпилированные файлы

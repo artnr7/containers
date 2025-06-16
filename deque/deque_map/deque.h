@@ -242,6 +242,9 @@ public:
       ++_start;
     }
   }
+  template <typename... Args> void AppendRange(Args &&...args) {
+    (PushBack(std::forward<Args>(args)), ...);
+  }
 
   template <typename U> void PushBack(U &&value) {
     const size_t &chunk_capacity = GetChunkCapacity();

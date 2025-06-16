@@ -17,16 +17,7 @@ int main() {
 
   // s21::Deque<long double> d1{1, 2, 3, 4, 5};
   s21::Deque<long double> d1;
-  d1.PushBack(6);
-  d1.PushBack(7);
-  d1.PushBack(8);
-  d1.PopFront();
-  d1.PopFront();
-  d1.PopFront();
-  d1.PopFront();
-  d1.PopFront();
-  d1.PopFront();
-  d1.PopFront();
+  d1.AppendRange(1, 2, 3, 4);
   for (auto it = d1.Begin(); it != d1.End(); ++it) {
     std::cout << *it << std::endl;
   }

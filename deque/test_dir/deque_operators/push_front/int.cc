@@ -19,8 +19,8 @@ TEST(operators_push_back_integer, empty_copy_2) {
     d1.PushFront(i);
   }
   int i = N;
-  for (auto it = d1.Begin(); it != d1.End(); ++it) {
-    EXPECT_EQ(*it, i--);
+  for (auto it = d1.Begin(); it != d1.End(); ++it, --i) {
+    EXPECT_EQ(*it, i);
   }
 }
 TEST(operators_push_back_integer, empty_copy_3) {
@@ -29,8 +29,8 @@ TEST(operators_push_back_integer, empty_copy_3) {
     d1.PushFront(i);
   }
   int i = N * 3 - 1;
-  for (auto it = d1.Begin(); it != d1.End(); ++it) {
-    EXPECT_EQ(*it, i--);
+  for (auto it = d1.Begin(); it != d1.End(); ++it, --i) {
+    EXPECT_EQ(*it, i);
   }
 }
 
@@ -51,12 +51,12 @@ TEST(operators_push_back_integer, filled_copy_1) {
   }
 
   int i = N * 5 - 1;
-  for (auto it = d1.Begin(); it != d1.End(); ++it) {
-    EXPECT_EQ(*it, i--);
+  for (auto it = d1.Begin(); it != d1.End(); ++it, --i) {
+    EXPECT_EQ(*it, i);
   }
 }
 
-TEST(operators_push_back_integer, filled_copy_3) {
+TEST(operators_push_back_integer, filled_copy_2) {
   s21::Deque<int> d1{
       1024, 1023, 1022, 1021, 1020, 1019, 1018, 1017, 1016, 1015, 1014, 1013,
       1012, 1011, 1010, 1009, 1008, 1007, 1006, 1005, 1004, 1003, 1002, 1001,
@@ -148,7 +148,7 @@ TEST(operators_push_back_integer, filled_copy_3) {
     d1.PushFront(i);
   }
   int i = N * 20 - 1;
-  for (auto it = d1.Begin(); it != d1.End(); ++it) {
-    EXPECT_EQ(*it, i--);
+  for (auto it = d1.Begin(); it != d1.End(); ++it, --i) {
+    EXPECT_EQ(*it, i);
   }
 }
