@@ -7,14 +7,18 @@ namespace s21 {
 template <typename T> class Deque {
 
 public:
+  using value_type = T;
+  using reference = T &;
+  using const_reference = const T &;
+  using size_type = size_t;
   class Iterator {
   public:
     /*--------→ CONSTRUCTORS ←-------------*/
     Iterator() noexcept
         : _cur_chunk(nullptr), _cur_el(nullptr), _first_el(nullptr),
           _last_el(nullptr) {}
-    // не знаю как сделать с помощью const чтобы нельзя изменить что-то внутри
-    // конструктора ↓
+    // @todo не знаю как сделать с помощью const чтобы нельзя изменить что-то
+    // внутри конструктора ↓
     Iterator(T **cur_chunk, T *cur_elt, T *first_el, T *last_el) noexcept
         : _cur_chunk(cur_chunk), _cur_el(cur_elt), _first_el(first_el),
           _last_el(last_el) {}
@@ -37,7 +41,7 @@ public:
     }
 
     /*--------→ OPERATORS ←-------------*/
-    T &operator*() const noexcept { return *_cur_el; }
+    reference operator*() const noexcept { return *_cur_el; }
 
     Iterator &operator++() {
       ++_cur_el;
@@ -62,7 +66,7 @@ public:
       return *this;
     }
 
-    Iterator &operator=(Iterator &o) {
+    Iterator &operator=(const Iterator &o) {
       if (this == &o) {
         return *this;
       }
@@ -106,10 +110,6 @@ public:
     T *_first_el;
     T *_last_el;
   };
-  using value_type = T;
-  using reference = T &;
-  using const_reference = const T &;
-  using size_type = size_t;
 
   /*--------→ CONSTRUCTORS ←-------------*/
   /** @brief Конструктор по умолчанию, а также по кол-ву значений
@@ -176,11 +176,11 @@ public:
     if (this == &o) {
       return *this;
     }
+    Mdealloc();
+
     _map_size = o._map_size;
     _start = o._start;
     _finish = o._finish;
-
-    Mdealloc();
 
     if (!EqZero(o.Size())) {
       /** @note типо надо через временные объекты выделять и всё такое */
@@ -199,25 +199,31 @@ public:
     if (this == &o) {
       return *this;
     }
-
-    _map_size = o._map_size;
-    _start = o._start;
-    _finish = o._finish;
-
     Mdealloc();
-    _map = o._map;
+
+    _map_size = std::move(o._map_size);
+    _start = std::move(o._start);
+    _finish = std::move(o._finish);
+    _map = std::move(o._map);
+
+    o._map_size = 0;
+    o._map = nullptr;
+    o._start = Iterator();
+    o._finish = Iterator();
+
+    return *this;
   }
 
   /*--------→ METHODS  ←-----------*/
   reference Front() { return _start._cur_el; }
   const_reference Front() const { return _start._cur_el; }
 
-  reference Back(){
+  reference Back() {
     Iterator tmp_finish(_finish);
     --tmp_finish;
     return tmp_finish._cur_el;
   }
-  const_reference Back(){
+  const_reference Back() const {
     Iterator tmp_finish(_finish);
     --tmp_finish;
     return tmp_finish._cur_el;
