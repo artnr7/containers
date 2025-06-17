@@ -14,6 +14,7 @@ TEST(big_data_constructors, def_constructor_normal_size_1) {
   }
   EXPECT_EQ(bd_deque_size, deq_size * bd_template_size);
 }
+
 TEST(big_data_constructors, def_constructor_normal_size_2) {
   const int deq_size = 5;
   const size_t bd_template_size = BUF_SIZE / 2;
@@ -26,6 +27,7 @@ TEST(big_data_constructors, def_constructor_normal_size_2) {
   }
   EXPECT_EQ(bd_deque_size, deq_size * bd_template_size);
 }
+
 TEST(big_data_constructors, def_constructor_normal_size_3) {
   const int deq_size = 5;
   const size_t bd_template_size = BUF_SIZE / 2 + 1;
@@ -51,6 +53,7 @@ TEST(big_data_constructors, def_constructor_normal_size_4) {
   }
   EXPECT_EQ(bd_deque_size, deq_size * bd_template_size);
 }
+
 TEST(big_data_constructors, def_constructor_normal_size_5) {
   const int deq_size = 5;
   const size_t bd_template_size = BUF_SIZE - 1;
@@ -63,6 +66,7 @@ TEST(big_data_constructors, def_constructor_normal_size_5) {
   }
   EXPECT_EQ(bd_deque_size, deq_size * bd_template_size);
 }
+
 TEST(big_data_constructors, def_constructor_normal_size_6) {
   const int deq_size = 5;
   const size_t bd_template_size = BUF_SIZE + 1;
@@ -121,11 +125,15 @@ TEST(big_data_constructors, value_constructor_1) {
   int value = 1;
   s21::Deque<BigData<256>> d1(5, value);
   EXPECT_EQ(d1.Size(), 5);
+
+  size_t bd_deque_size = 0;
   for (auto itB = d1.Begin(); itB != d1.End(); ++itB) {
+    bd_deque_size += (*itB).Size();
     for (size_t i = 0; i < 256; ++i) {
       EXPECT_EQ((*itB).ValueProof(value), 1);
     }
   }
+  EXPECT_EQ(bd_deque_size, 5 * 256);
 }
 
 TEST(big_data_constructors, value_constructor_2) {
@@ -160,9 +168,93 @@ TEST(big_data_constructors, init_list_constructor_2) {
   EXPECT_EQ(d1.Size(), 5);
   int j = 1;
 
+  size_t bd_deque_size = 0;
   for (auto itB = d1.Begin(); itB != d1.End(); ++itB, ++j) {
+    bd_deque_size += (*itB).Size();
     for (size_t i = 0; i < 256; ++i) {
       EXPECT_EQ((*itB).ValueProof(j), 1);
     }
   }
+
+  EXPECT_EQ(bd_deque_size, 5 * 256);
+}
+
+TEST(big_data_constructors, init_list_constructor_3) {
+  s21::Deque<BigData<255>> d1{1, 2, 3, 4, 5};
+  EXPECT_EQ(d1.Size(), 5);
+  int j = 1;
+
+  size_t bd_deque_size = 0;
+  for (auto itB = d1.Begin(); itB != d1.End(); ++itB, ++j) {
+    bd_deque_size += (*itB).Size();
+    for (size_t i = 0; i < 255; ++i) {
+      EXPECT_EQ((*itB).ValueProof(j), 1);
+    }
+  }
+
+  EXPECT_EQ(bd_deque_size, 5 * 255);
+}
+
+TEST(big_data_constructors, init_list_constructor_4) {
+  s21::Deque<BigData<257>> d1{1, 2, 3, 4, 5};
+  EXPECT_EQ(d1.Size(), 5);
+  int j = 1;
+
+  size_t bd_deque_size = 0;
+  for (auto itB = d1.Begin(); itB != d1.End(); ++itB, ++j) {
+    bd_deque_size += (*itB).Size();
+    for (size_t i = 0; i < 257; ++i) {
+      EXPECT_EQ((*itB).ValueProof(j), 1);
+    }
+  }
+
+  EXPECT_EQ(bd_deque_size, 5 * 257);
+}
+
+TEST(big_data_constructors, init_list_constructor_5) {
+  s21::Deque<BigData<512>> d1{1, 2, 3, 4, 5};
+  EXPECT_EQ(d1.Size(), 5);
+  int j = 1;
+
+  size_t bd_deque_size = 0;
+  for (auto itB = d1.Begin(); itB != d1.End(); ++itB, ++j) {
+    bd_deque_size += (*itB).Size();
+    for (size_t i = 0; i < 512; ++i) {
+      EXPECT_EQ((*itB).ValueProof(j), 1);
+    }
+  }
+
+  EXPECT_EQ(bd_deque_size, 5 * 512);
+}
+
+TEST(big_data_constructors, init_list_constructor_6) {
+  s21::Deque<BigData<511>> d1{1, 2, 3, 4, 5};
+  EXPECT_EQ(d1.Size(), 5);
+  int j = 1;
+
+  size_t bd_deque_size = 0;
+  for (auto itB = d1.Begin(); itB != d1.End(); ++itB, ++j) {
+    bd_deque_size += (*itB).Size();
+    for (size_t i = 0; i < 511; ++i) {
+      EXPECT_EQ((*itB).ValueProof(j), 1);
+    }
+  }
+
+  EXPECT_EQ(bd_deque_size, 5 * 511);
+}
+
+TEST(big_data_constructors, init_list_constructor_7) {
+  s21::Deque<BigData<513>> d1{1, 2, 3, 4, 5};
+  EXPECT_EQ(d1.Size(), 5);
+  int j = 1;
+
+  size_t bd_deque_size = 0;
+  for (auto itB = d1.Begin(); itB != d1.End(); ++itB, ++j) {
+    bd_deque_size += (*itB).Size();
+    for (size_t i = 0; i < 513; ++i) {
+      EXPECT_EQ((*itB).ValueProof(j), 1);
+    }
+  }
+
+  EXPECT_EQ(bd_deque_size, 5 * 513);
 }
