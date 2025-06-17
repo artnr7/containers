@@ -28,7 +28,7 @@ public:
         : _cur_chunk(o._cur_chunk), _cur_el(o._cur_el), _first_el(o._first_el),
           _last_el(o._last_el) {}
 
-    Iterator(const Iterator &&o) noexcept
+    Iterator(Iterator &&o) noexcept
         : _cur_chunk(std::move(o._cur_chunk)), _cur_el(std::move(o._cur_el)),
           _first_el(std::move(o._first_el)), _last_el(std::move(o._last_el)) {
       o._cur_chunk = nullptr;

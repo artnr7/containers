@@ -258,3 +258,79 @@ TEST(big_data_constructors, init_list_constructor_7) {
 
   EXPECT_EQ(bd_deque_size, 5 * 513);
 }
+
+/*---------→ COPY ←---------------*/
+TEST(big_data_constructors, copy_1) {
+  s21::Deque<BigData<256>> d1{};
+  s21::Deque<BigData<256>> d2(d1);
+
+  EXPECT_EQ(d2.Size(), 0);
+  EXPECT_EQ(d2.Begin() == d2.End(), 1);
+}
+
+TEST(big_data_constructors, copy_2) {
+  s21::Deque<BigData<256>> d1(5, 2);
+  s21::Deque<BigData<256>> d2(d1);
+
+  EXPECT_EQ(d2.Size(), 5);
+
+  for (auto itB = d1.Begin(); itB != d1.End(); ++itB) {
+    for (size_t i = 0; i < 256; ++i) {
+      EXPECT_EQ((*itB).ValueProof(2), 1);
+    }
+  }
+}
+
+TEST(big_data_constructors, copy_3) {
+  s21::Deque<BigData<256>> d1{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+
+  s21::Deque<BigData<256>> d2(d1);
+
+  EXPECT_EQ(d2.Size(), 10);
+
+  int j = 1;
+
+  for (auto itB = d1.Begin(); itB != d1.End(); ++itB, ++j) {
+    for (size_t i = 0; i < 256; ++i) {
+      EXPECT_EQ((*itB).ValueProof(j), 1);
+    }
+  }
+}
+
+/*---------→ MOVE ←---------------*/
+TEST(big_data_constructors, move_1) {
+  s21::Deque<BigData<256>> d1{};
+  s21::Deque<BigData<256>> d2(std::move(d1));
+
+  EXPECT_EQ(d2.Size(), 0);
+  EXPECT_EQ(d2.Begin() == d2.End(), 1);
+}
+
+TEST(big_data_constructors, move_2) {
+  s21::Deque<BigData<256>> d1(5, 2);
+  s21::Deque<BigData<256>> d2(std::move(d1));
+
+  EXPECT_EQ(d2.Size(), 5);
+
+  for (auto itB = d1.Begin(); itB != d1.End(); ++itB) {
+    for (size_t i = 0; i < 256; ++i) {
+      EXPECT_EQ((*itB).ValueProof(2), 1);
+    }
+  }
+}
+
+TEST(big_data_constructors, move_3) {
+  s21::Deque<BigData<256>> d1{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+
+  s21::Deque<BigData<256>> d2(std::move(d1));
+
+  EXPECT_EQ(d2.Size(), 10);
+
+  int j = 1;
+
+  for (auto itB = d1.Begin(); itB != d1.End(); ++itB, ++j) {
+    for (size_t i = 0; i < 256; ++i) {
+      EXPECT_EQ((*itB).ValueProof(j), 1);
+    }
+  }
+}

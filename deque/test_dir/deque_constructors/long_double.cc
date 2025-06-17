@@ -47,7 +47,7 @@ TEST(long_double_constructors, def_ctor_big_size_3) {
   EXPECT_DEATH(s21::Deque<long double> d1(deq_max_size - 1), "std::bad_alloc");
 }
 
-/*---------→ INIT_LIST ←---------------*/
+/*---------→ VALUE ←---------------*/
 TEST(long_double_constructors, value_constructor_1) {
   s21::Deque<long double> d1(5, 2.5345432534523);
   EXPECT_EQ(d1.Size(), 5);
@@ -76,7 +76,7 @@ TEST(long_double_constructors, value_constructor_5) {
   EXPECT_DEATH(s21::Deque<long double> d1(-2222, 2.75347456462345645),
                "To use this constructor Tp_qty must be less than MaxSize()");
 }
-/*---------→ VALUE ←---------------*/
+/*---------→ INIT_LIST ←---------------*/
 TEST(long_double_constructors, init_list_constructor_1) {
   s21::Deque<long double> d1{};
   EXPECT_EQ(d1.Size(), 0);
@@ -2350,6 +2350,79 @@ TEST(long_double_constructors, init_list_constructor_6) {
 
   auto itB2 = d2.begin();
   for (auto itB1 = d1.Begin(); itB1 != d1.End(); ++itB1, ++itB2) {
+    EXPECT_FLOAT_EQ(*itB1, *itB2);
+  }
+}
+
+/*---------→ COPY ←---------------*/
+TEST(long_double_constructors, copy_1) {
+  s21::Deque<long double> d1{};
+  s21::Deque<long double> d2(d1);
+
+  EXPECT_EQ(d2.Size(), 0);
+  EXPECT_EQ(d2.Begin() == d2.End(), 1);
+}
+
+TEST(long_double_constructors, copy_2) {
+  s21::Deque<long double> d1(5, 2.5345432534523);
+  s21::Deque<long double> d2(d1);
+
+  EXPECT_EQ(d2.Size(), 5);
+  for (auto itB = d1.Begin(); itB != d1.End(); ++itB) {
+    EXPECT_FLOAT_EQ(*itB, 2.5345432534523);
+  }
+}
+
+TEST(long_double_constructors, copy_3) {
+  s21::Deque<long double> d1{1.1, 2.2, 3.3, 4.4, 5.5,
+                             6.6, 7.7, 8.8, 9.9, 10.10};
+
+  std::deque<long double> d2{1.1, 2.2, 3.3, 4.4, 5.5,
+                             6.6, 7.7, 8.8, 9.9, 10.10};
+
+  s21::Deque<long double> d3(d1);
+
+  EXPECT_EQ(d3.Size(), 10);
+
+  auto itB2 = d2.begin();
+  for (auto itB1 = d3.Begin(); itB1 != d3.End(); ++itB1, ++itB2) {
+    EXPECT_FLOAT_EQ(*itB1, *itB2);
+  }
+}
+
+/*---------→ MOVE ←---------------*/
+TEST(long_double_constructors, move_1) {
+  s21::Deque<long double> d1{};
+  s21::Deque<long double> d2(std::move(d1));
+
+  EXPECT_EQ(d2.Size(), 0);
+  EXPECT_EQ(d2.Begin() == d2.End(), 1);
+}
+
+TEST(long_double_constructors, move_2) {
+  s21::Deque<long double> d1(5, 2.5345432534523);
+  s21::Deque<long double> d2(std::move(d1));
+
+  EXPECT_EQ(d2.Size(), 5);
+
+  for (auto itB = d1.Begin(); itB != d1.End(); ++itB) {
+    EXPECT_FLOAT_EQ(*itB, 2.5345432534523);
+  }
+}
+
+TEST(long_double_constructors, move_3) {
+  s21::Deque<long double> d1{1.1, 2.2, 3.3, 4.4, 5.5,
+                             6.6, 7.7, 8.8, 9.9, 10.10};
+
+  std::deque<long double> d2{1.1, 2.2, 3.3, 4.4, 5.5,
+                             6.6, 7.7, 8.8, 9.9, 10.10};
+
+  s21::Deque<long double> d3(std::move(d1));
+
+  EXPECT_EQ(d3.Size(), 10);
+
+  auto itB2 = d2.begin();
+  for (auto itB1 = d3.Begin(); itB1 != d3.End(); ++itB1, ++itB2) {
     EXPECT_FLOAT_EQ(*itB1, *itB2);
   }
 }

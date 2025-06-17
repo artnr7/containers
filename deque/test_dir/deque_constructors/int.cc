@@ -242,3 +242,66 @@ TEST(int_constructors, init_list_constructor_6) {
     EXPECT_EQ(*itB, i++);
   }
 }
+
+/*---------→ COPY ←---------------*/
+TEST(int_constructors, copy_1) {
+  s21::Deque<int> d1{};
+  s21::Deque<int> d2(d1);
+
+  EXPECT_EQ(d2.Size(), 0);
+  EXPECT_EQ(d2.Begin() == d2.End(), 1);
+}
+
+TEST(int_constructors, copy_2) {
+  s21::Deque<int> d1(5, 2);
+  s21::Deque<int> d2(d1);
+
+  EXPECT_EQ(d2.Size(), 5);
+  for (auto itB = d1.Begin(); itB != d1.End(); ++itB) {
+    EXPECT_FLOAT_EQ(*itB, 2);
+  }
+}
+
+TEST(int_constructors, copy_3) {
+  s21::Deque<int> d1{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+
+  s21::Deque<int> d2(d1);
+
+  EXPECT_EQ(d2.Size(), 10);
+
+  int i = 1;
+  for (auto itB = d2.Begin(); itB != d2.End(); ++itB, ++i) {
+    EXPECT_FLOAT_EQ(*itB, i);
+  }
+}
+/*---------→ MOVE ←---------------*/
+TEST(int_constructors, move_1) {
+  s21::Deque<int> d1{};
+  s21::Deque<int> d2(std::move(d1));
+
+  EXPECT_EQ(d2.Size(), 0);
+  EXPECT_EQ(d2.Begin() == d2.End(), 1);
+}
+
+TEST(int_constructors, move_2) {
+  s21::Deque<int> d1(5, 2);
+  s21::Deque<int> d2(std::move(d1));
+
+  EXPECT_EQ(d2.Size(), 5);
+  for (auto itB = d1.Begin(); itB != d1.End(); ++itB) {
+    EXPECT_FLOAT_EQ(*itB, 2);
+  }
+}
+
+TEST(int_constructors, move_3) {
+  s21::Deque<int> d1{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+
+  s21::Deque<int> d2(std::move(d1));
+
+  EXPECT_EQ(d2.Size(), 10);
+
+  int i = 1;
+  for (auto itB = d2.Begin(); itB != d2.End(); ++itB, ++i) {
+    EXPECT_FLOAT_EQ(*itB, i);
+  }
+}
