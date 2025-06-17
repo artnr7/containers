@@ -106,6 +106,9 @@ public:
               _first_el == o._first_el && _last_el == o._last_el);
     }
 
+  private:
+    friend class Deque<T>;
+
     T **_cur_chunk;
     T *_cur_el;
     T *_first_el;

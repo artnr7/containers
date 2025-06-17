@@ -9,7 +9,6 @@ TEST(operators_push_back_int, empty_copy_1) {
   }
   int i = 0;
   for (auto it = d1.Begin(); it != d1.End(); ++it) {
-
     EXPECT_EQ(*it, i++);
   }
 }
