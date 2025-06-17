@@ -11,6 +11,7 @@ public:
   using reference = T &;
   using const_reference = const T &;
   using size_type = size_t;
+
   class Iterator {
   public:
     /*--------→ CONSTRUCTORS ←-------------*/
@@ -215,18 +216,18 @@ public:
   }
 
   /*--------→ METHODS  ←-----------*/
-  reference Front() { return _start._cur_el; }
-  const_reference Front() const { return _start._cur_el; }
+  reference Front() { return *_start._cur_el; }
+  const_reference Front() const { return *_start._cur_el; }
 
   reference Back() {
     Iterator tmp_finish(_finish);
     --tmp_finish;
-    return tmp_finish._cur_el;
+    return *tmp_finish._cur_el;
   }
   const_reference Back() const {
     Iterator tmp_finish(_finish);
     --tmp_finish;
-    return tmp_finish._cur_el;
+    return *tmp_finish._cur_el;
   }
 
   void PopBack() { // удаление последнего элемента

@@ -1,0 +1,6 @@
+push_back
+push_front
+size
+empty
+front
+back
