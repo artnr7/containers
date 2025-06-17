@@ -15,7 +15,10 @@ H_FILES := deque_map/deque.h
 # TEST_FILES := $(shell find $(TEST_DIR) -name '*.cc')
 
 TEST_FILES := $(TEST_DIR)/test_main.cc \
- $(TEST_DIR)/deque_constructors/*.cc
+$(shell find $(TEST_DIR)/deque_methods -name '*.cc')\
+$(shell find $(TEST_DIR)/deque_constructors -name '*.cc')\
+$(shell find $(TEST_DIR)/deque_operators -name '*.cc')
+#  $(TEST_DIR)/deque_constructors/*.cc
 #  $(TEST_DIR)/deque_methods/begin/*.cc
 
 #  $(TEST_DIR)/deque_operators/push_front/*.cc
@@ -78,8 +81,8 @@ test_valgrind: clean cl $(TEST_EXE_FILE)
 	valgrind --tool=memcheck --leak-check=full ./$(TEST_EXE_FILE)
 
 $(TEST_EXE_FILE): 
-	$(GPP) $(TEST_FILES) $(DEQUE_H_FILE) -o $@ $(VALGRIND_FLAGS)
-
+	@echo "test is compiling..."
+	@$(GPP) $(TEST_FILES) $(DEQUE_H_FILE) -o $@ $(VALGRIND_FLAGS)
 
 ###--------→ покрытие кода ←--------------------------------------------------------------------###
 TETRIS_GCOV_DIRS := coverage_report gcov_report_dir coverage.info

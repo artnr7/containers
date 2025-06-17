@@ -15,7 +15,7 @@ TEST(append_range_method, big_data_1) {
   }
 }
 
-TEST(back_method, big_data_2) {
+TEST(append_range_method, big_data_2) {
   s21::Deque<BigData<256>> d1{1, 2, 3};
   d1.AppendRange(4, 5, 6);
 
