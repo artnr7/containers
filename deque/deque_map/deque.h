@@ -176,6 +176,7 @@ public:
   ~Deque() { Mdealloc(); }
 
   /*--------→ OPERATORS ←-------------*/
+  /*--------→ ASSIGNMENT ←-------------*/
   Deque<T> &operator=(const Deque<T> &o) {
     if (this == &o) {
       return *this;
@@ -246,6 +247,7 @@ public:
       ++_start;
     }
   }
+
   template <typename... Args> void AppendRange(Args &&...args) {
     (PushBack(std::forward<Args>(args)), ...);
   }
