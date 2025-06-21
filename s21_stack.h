@@ -1,5 +1,10 @@
-#include "../../deque/deque_map/deque.h"
+#ifndef S21_STACK_H
+#define S21_STACK_H
+
+#include "./s21_deque.h"
+
 namespace s21 {
+
 template <typename T, typename Container = Deque<T>> class Stack {
 public:
   using value_type = Container::value_type;
@@ -26,6 +31,6 @@ public:
   bool Empty() const { return c.Empty(); }
   size_type Size() const { return c.Size(); }
 };
-} // namespace s21
+}  // namespace s21
 
-// stack() = default;
+#endif  // S21_STACK_H

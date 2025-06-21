@@ -1,6 +1,10 @@
-#include "../../deque/deque_map/deque.h"
+#ifndef S21_QUEUE_H
+#define S21_QUEUE_H
+
+#include "./s21_deque.h"
 
 namespace s21 {
+
 template <typename T, typename Container = Deque<T>> class Queue {
 public:
   using value_type = Container::value_type;
@@ -29,6 +33,7 @@ public:
   bool Empty() const { return c.Empty(); }
   size_type Size() const { return c.Size(); }
 };
-} // namespace s21
 
-// Queue() = default;
+}  // namespace s21
+
+#endif  // S21_QUEUE_H
