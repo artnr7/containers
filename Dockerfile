@@ -1,9 +1,10 @@
 FROM ubuntu
 
 # Устанавливаем базовые зависимости одной командой
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && apt-get upgrade && apt-get install -y \
     build-essential \
     gcc \
+    g++ \
     valgrind \
     make \
     vim \
@@ -14,6 +15,7 @@ RUN apt-get update && apt-get install -y \
     curl \
     zsh \
     cmake \
+    cmake-format \
     gdb \
     wget \
     gnupg \
@@ -32,7 +34,8 @@ RUN apt-get update && \
     ln -s /usr/bin/clang-tidy-18 /usr/bin/clang-tidy
 
 # Устанавливаем Google Test
-RUN apt-get update && apt-get install -y libgtest-dev && \
+RUN apt-get update && apt-get install -y\
+    libgtest-dev && \
     cd /usr/src/gtest && \
     cmake CMakeLists.txt && \
     make && \
