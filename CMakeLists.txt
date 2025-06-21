@@ -69,7 +69,38 @@ foreach(CONTAINER ${CONTAINERS})
 endforeach()
 
 
+file(GLOB_RECURSE DEQUE_SOURCES "${CMAKE_SOURCE_DIR}/tests/test_dir/*.cc")
 
+# Имя тестового исполняемого файла
+set(TEST_NAME "s21_test_deque")
+    
+# Создание исполняемого файла
+add_executable(${TEST_NAME} ${DEQUE_SOURCES})
+    
+# Подключение зависимостей
+target_link_libraries(${TEST_NAME}
+    PRIVATE 
+    GTest::GTest
+    GTest::Main
+    Threads::Threads
+)
+    
+# Добавление в CTest
+add_test(NAME ${TEST_NAME} COMMAND ${TEST_NAME})
+    
+# Создание цели для запуска
+add_custom_target(run_${TEST_NAME}
+    COMMAND ./${TEST_NAME}
+    DEPENDS ${TEST_NAME}
+    COMMENT "Running ${TEST_NAME} tests"
+    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+)
+    
+target_compile_options(${TEST_NAME} PRIVATE
+    -Wall
+    -Wextra
+    -Werror
+)
 
 
 # Поиск clang-tidy и настройка анализа

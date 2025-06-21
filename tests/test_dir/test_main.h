@@ -3,6 +3,6 @@
 
 #include <gtest/gtest.h>
 
-#include "../deque_map/deque.h"
+#include "../../s21_deque.h"
 
 #endif
