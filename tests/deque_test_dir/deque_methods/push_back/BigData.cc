@@ -11,9 +11,7 @@ TEST(operators_push_back_big_data, empty_copy_1) {
   int j = 1;
 
   for (auto itB = d1.Begin(); itB != d1.End(); ++itB, ++j) {
-    for (size_t i = 0; i < 256; ++i) {
       EXPECT_EQ((*itB).ValueProof(j), 1);
-    }
   }
 }
 
@@ -25,9 +23,8 @@ TEST(operators_push_back_big_data, empty_copy_2) {
   int j = 1;
 
   for (auto itB = d1.Begin(); itB != d1.End(); ++itB, ++j) {
-    for (size_t i = 0; i < 256; ++i) {
       EXPECT_EQ((*itB).ValueProof(j), 1);
-    }
+    
   }
 }
 
@@ -41,9 +38,9 @@ TEST(operators_push_back_big_data, filled_copy_1) {
   int j = 1;
 
   for (auto itB = d1.Begin(); itB != d1.End(); ++itB, ++j) {
-    for (size_t i = 0; i < 256; ++i) {
+
       EXPECT_EQ((*itB).ValueProof(j), 1);
-    }
+
   }
 }
 
@@ -56,9 +53,9 @@ TEST(operators_push_back_big_data, empty_move_1) {
   int j = 1;
 
   for (auto itB = d1.Begin(); itB != d1.End(); ++itB, ++j) {
-    for (size_t i = 0; i < 256; ++i) {
+
       EXPECT_EQ((*itB).ValueProof(j), 1);
-    }
+
   }
 }
 
@@ -70,9 +67,9 @@ TEST(operators_push_back_big_data, empty_move_2) {
   int j = 1;
 
   for (auto itB = d1.Begin(); itB != d1.End(); ++itB, ++j) {
-    for (size_t i = 0; i < 256; ++i) {
+
       EXPECT_EQ((*itB).ValueProof(j), 1);
-    }
+
   }
 }
 
@@ -86,8 +83,8 @@ TEST(operators_push_back_big_data, filled_move_1) {
   int j = 1;
 
   for (auto itB = d1.Begin(); itB != d1.End(); ++itB, ++j) {
-    for (size_t i = 0; i < 256; ++i) {
+
       EXPECT_EQ((*itB).ValueProof(j), 1);
-    }
+
   }
 }

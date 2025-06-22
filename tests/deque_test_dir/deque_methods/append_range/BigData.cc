@@ -9,9 +9,7 @@ TEST(append_range_method, big_data_1) {
   int j = 1;
 
   for (auto itB = d1.Begin(); itB != d1.End(); ++itB, ++j) {
-    for (size_t i = 0; i < 256; ++i) {
       EXPECT_EQ((*itB).ValueProof(j), 1);
-    }
   }
 }
 
@@ -22,8 +20,6 @@ TEST(append_range_method, big_data_2) {
   int j = 1;
 
   for (auto itB = d1.Begin(); itB != d1.End(); ++itB, ++j) {
-    for (size_t i = 0; i < 256; ++i) {
       EXPECT_EQ((*itB).ValueProof(j), 1);
-    }
   }
 }

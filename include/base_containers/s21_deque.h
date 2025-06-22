@@ -175,7 +175,7 @@ public:
   /** @brief Деструктор */
   ~Deque() { Mdealloc(); }
 
-  /*--------→ OPERATORS ←-------------*/
+  /*==================→ OPERATORS ←=====================*/
   /*--------→ ASSIGNMENT ←-------------*/
   Deque<T> &operator=(const Deque<T> &o) {
     if (this == &o) {
@@ -386,6 +386,7 @@ private:
     // = " << _finish._last_el
     // << std::endl;
   }
+
   void Malloc(const size_t &chunk_capacity, const size_t &chunks_qty) {
     try {
       _map = new T *[_map_size] {};
@@ -398,6 +399,7 @@ private:
       std::terminate();
     }
   }
+
   /** @brief Освобождение памяти, используется в конструкторах */
   void Mdealloc() noexcept {
     if (_map != nullptr) {
@@ -530,6 +532,7 @@ private:
   void BlocksFill(const T value) { // @todo сделать const T& value
     std::fill(Begin(), End(), value);
   }
+
   /** @brief Функция заполнения выделенной памяти заданными значениями из
    * initializer_list */
   void BlocksFill(const std::initializer_list<T> values) {
@@ -540,28 +543,7 @@ private:
     }
   }
 
-  /*-----→ utils ←-------*/
-  /** @brief Равен ли объект типа нулю **/
-  bool EqZero(const size_t &sizet) { return sizet == 0; }
-
-  /** @brief Если объект типа равен нулю, то выбрасывается исключение
-   * недопустимого значения **/
-  void TpqtyEqZeroEx(const size_t &Tp_qty) {
-    if (EqZero(Tp_qty)) {
-      throw std::invalid_argument(
-          "To use this constructor Tp_qty must be greater than 0");
-    }
-  }
-
-  /** @brief Если объект типа больше чем CONTAINER_ELEM_MAX_QTY, то
-   * выбрасывается исключение недопустимого значения **/
-  void TpqtyBiggerMaxSizeEx(const size_t &Tp_qty) {
-    if (Tp_qty > MaxSize()) {
-      throw std::invalid_argument(
-          "To use this constructor Tp_qty must be less than MaxSize()");
-    }
-  }
-
+  /*---------------→ Exceptions ←------------------*/
   /** @brief Обработчик исключений конструктора по умолчанию и конструктора
    * по инит_листу**/
   void HandleMaxSizeCtorEx(const size_t &Tp_qty) {
@@ -581,6 +563,28 @@ private:
     } catch (const std::invalid_argument &e) {
       std::cerr << e.what() << std::endl;
       std::terminate();
+    }
+  }
+
+  /*---------------→ Utils ←------------------*/
+  /** @brief Равен ли объект типа нулю **/
+  bool EqZero(const size_t &sizet) { return sizet == 0; }
+
+  /** @brief Если объект типа равен нулю, то выбрасывается исключение
+   * недопустимого значения **/
+  void TpqtyEqZeroEx(const size_t &Tp_qty) {
+    if (EqZero(Tp_qty)) {
+      throw std::invalid_argument(
+          "To use this constructor Tp_qty must be greater than 0");
+    }
+  }
+
+  /** @brief Если объект типа больше чем CONTAINER_ELEM_MAX_QTY, то
+   * выбрасывается исключение недопустимого значения **/
+  void TpqtyBiggerMaxSizeEx(const size_t &Tp_qty) {
+    if (Tp_qty > MaxSize()) {
+      throw std::invalid_argument(
+          "To use this constructor Tp_qty must be less than MaxSize()");
     }
   }
 };

@@ -3,6 +3,6 @@
 
 #include <gtest/gtest.h>
 
-#include "../../include/base_containers/s21_deque.h"
+#include "../../include/base_containers/s21_stack.h"
 
 #endif

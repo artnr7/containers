@@ -19,7 +19,6 @@ public:
   explicit Stack() : c() {}
   Stack(const std::initializer_list<value_type> &values) : c{values} {}
 
-
   /*--------→ METHODS  ←-----------*/
   template <typename U> void Push(U &&value) { c.PushBack(value); }
   void Pop() { c.PopBack(); }
