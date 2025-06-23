@@ -24,12 +24,16 @@ public:
   void Pop() { c.PopBack(); }
   void Swap(Stack &o) { std::swap(c, o.c); }
 
+  template <typename... Args> void InsertManyBack(Args &&...args) {
+    (c.PushBack(std::forward<Args>(args)), ...);
+  }
+
   reference Top() { return c.Back(); }
   const_reference Top() const { return c.Back(); }
 
   bool Empty() const { return c.Empty(); }
   size_type Size() const { return c.Size(); }
 };
-}  // namespace s21
+} // namespace s21
 
-#endif  // S21_STACK_H
+#endif // S21_STACK_H

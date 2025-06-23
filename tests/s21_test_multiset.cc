@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "./../s21_multiset.h"
+#include "./../include/base_containers/s21_multiset.h"
 
 // TODO(root): Add test cases for multiset
 

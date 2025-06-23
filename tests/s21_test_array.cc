@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "./../s21_array.h"
+#include "./../include/base_containers/s21_array.h"
 
 // TODO(root): Add test cases for array
 

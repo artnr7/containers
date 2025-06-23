@@ -1,97 +1,23 @@
-#include "../test_main.h"
+#include "../../test_main.h"
 
-/*---------→ DEFAULT ←---------------*/
-TEST(int_constructors, def_constructor_small_size_1) {
-  s21::Stack<int> d1;
-  EXPECT_EQ(d1.Size(), 0);
-}
-
-/*---------→ INIT_LIST ←---------------*/
-TEST(int_constructors, init_list_constructor_1) {
+TEST(size_method, int_1) {
   s21::Stack<int> d1{};
   EXPECT_EQ(d1.Size(), 0);
 }
 
-TEST(int_constructors, init_list_constructor_2) {
-  s21::Stack<int> d1{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
-  EXPECT_EQ(d1.Size(), 10);
-
-  int j = 10;
-
-  while (d1.Size()) {
-    EXPECT_EQ(d1.Top(), j);
-    d1.Pop();
-    --j;
-  }
+TEST(size_method, int_2) {
+  s21::Stack<int> d1{};
+  d1.PushBack(1);
+  EXPECT_EQ(d1.Size(), 1);
 }
 
-TEST(int_constructors, init_list_constructor_3) {
-  s21::Stack<int> d1{
-      1,   2,   3,   4,   5,   6,   7,   8,   9,   10,  11,  12,  13,  14,  15,
-      16,  17,  18,  19,  20,  21,  22,  23,  24,  25,  26,  27,  28,  29,  30,
-      31,  32,  33,  34,  35,  36,  37,  38,  39,  40,  41,  42,  43,  44,  45,
-      46,  47,  48,  49,  50,  51,  52,  53,  54,  55,  56,  57,  58,  59,  60,
-      61,  62,  63,  64,  65,  66,  67,  68,  69,  70,  71,  72,  73,  74,  75,
-      76,  77,  78,  79,  80,  81,  82,  83,  84,  85,  86,  87,  88,  89,  90,
-      91,  92,  93,  94,  95,  96,  97,  98,  99,  100, 101, 102, 103, 104, 105,
-      106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120,
-      121, 122, 123, 124, 125, 126, 127};
-  EXPECT_EQ(d1.Size(), 127);
-
-  int j = 127;
-
-  while (d1.Size()) {
-    EXPECT_EQ(d1.Top(), j);
-    d1.Pop();
-    --j;
-  }
+TEST(size_method, int_3) {
+  s21::Stack<int> d1{};
+  d1.PushFront(1);
+  EXPECT_EQ(d1.Size(), 1);
 }
 
-TEST(int_constructors, init_list_constructor_4) {
-  s21::Stack<int> d1{
-      1,   2,   3,   4,   5,   6,   7,   8,   9,   10,  11,  12,  13,  14,  15,
-      16,  17,  18,  19,  20,  21,  22,  23,  24,  25,  26,  27,  28,  29,  30,
-      31,  32,  33,  34,  35,  36,  37,  38,  39,  40,  41,  42,  43,  44,  45,
-      46,  47,  48,  49,  50,  51,  52,  53,  54,  55,  56,  57,  58,  59,  60,
-      61,  62,  63,  64,  65,  66,  67,  68,  69,  70,  71,  72,  73,  74,  75,
-      76,  77,  78,  79,  80,  81,  82,  83,  84,  85,  86,  87,  88,  89,  90,
-      91,  92,  93,  94,  95,  96,  97,  98,  99,  100, 101, 102, 103, 104, 105,
-      106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120,
-      121, 122, 123, 124, 125, 126, 127, 128};
-  EXPECT_EQ(d1.Size(), 128);
-
-  int j = 128;
-
-  while (d1.Size()) {
-    EXPECT_EQ(d1.Top(), j);
-    d1.Pop();
-    --j;
-  }
-}
-
-TEST(int_constructors, init_list_constructor_5) {
-  s21::Stack<int> d1{
-      1,   2,   3,   4,   5,   6,   7,   8,   9,   10,  11,  12,  13,  14,  15,
-      16,  17,  18,  19,  20,  21,  22,  23,  24,  25,  26,  27,  28,  29,  30,
-      31,  32,  33,  34,  35,  36,  37,  38,  39,  40,  41,  42,  43,  44,  45,
-      46,  47,  48,  49,  50,  51,  52,  53,  54,  55,  56,  57,  58,  59,  60,
-      61,  62,  63,  64,  65,  66,  67,  68,  69,  70,  71,  72,  73,  74,  75,
-      76,  77,  78,  79,  80,  81,  82,  83,  84,  85,  86,  87,  88,  89,  90,
-      91,  92,  93,  94,  95,  96,  97,  98,  99,  100, 101, 102, 103, 104, 105,
-      106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120,
-      121, 122, 123, 124, 125, 126, 127, 128, 129};
-  EXPECT_EQ(d1.Size(), 129);
-
-  int j = 129;
-
-  while (d1.Size()) {
-    EXPECT_EQ(d1.Top(), j);
-    d1.Pop();
-    --j;
-  }
-}
-
-TEST(int_constructors, init_list_constructor_6) {
+TEST(size_method, int_4) {
   s21::Stack<int> d1{
       1,    2,    3,    4,    5,    6,    7,    8,    9,    10,   11,   12,
       13,   14,   15,   16,   17,   18,   19,   20,   21,   22,   23,   24,
@@ -180,60 +106,4 @@ TEST(int_constructors, init_list_constructor_6) {
       1009, 1010, 1011, 1012, 1013, 1014, 1015, 1016, 1017, 1018, 1019, 1020,
       1021, 1022, 1023, 1024};
   EXPECT_EQ(d1.Size(), 1024);
-
-  int j = 1024;
-
-  while (d1.Size()) {
-    EXPECT_EQ(d1.Top(), j);
-    d1.Pop();
-    --j;
-  }
-}
-
-/*---------→ COPY ←---------------*/
-TEST(int_constructors, copy_1) {
-  s21::Stack<int> d1{};
-  s21::Stack<int> d2(d1);
-
-  EXPECT_EQ(d2.Size(), 0);
-}
-
-TEST(int_constructors, copy_2) {
-  s21::Stack<int> d1{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
-
-  s21::Stack<int> d2(d1);
-
-  EXPECT_EQ(d2.Size(), 10);
-
-  int j = 10;
-
-  while (d2.Size()) {
-    EXPECT_EQ(d2.Top(), j);
-    d2.Pop();
-    --j;
-  }
-}
-
-/*---------→ MOVE ←---------------*/
-TEST(int_constructors, move_1) {
-  s21::Stack<int> d1{};
-  s21::Stack<int> d2(std::move(d1));
-
-  EXPECT_EQ(d2.Size(), 0);
-}
-
-TEST(int_constructors, move_2) {
-  s21::Stack<int> d1{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
-
-  s21::Stack<int> d2(std::move(d1));
-
-  EXPECT_EQ(d2.Size(), 10);
-
-  int j = 10;
-
-  while (d2.Size()) {
-    EXPECT_EQ(d2.Top(), j);
-    d2.Pop();
-    --j;
-  }
 }

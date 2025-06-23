@@ -4,7 +4,7 @@
 #define N 32
 
 /*---------→ DEFAULT ←---------------*/
-TEST(long_double_constructors, def_ctor_small_size_2) {
+TEST(long_double_constructors, def_ctor_small_size_1) {
   s21::Stack<long double> d1;
   EXPECT_EQ(d1.Size(), 0);
 }
@@ -2308,7 +2308,7 @@ TEST(long_double_constructors, copy_1) {
   EXPECT_EQ(d2.Size(), 0);
 }
 
-TEST(long_double_constructors, copy_3) {
+TEST(long_double_constructors, copy_2) {
   s21::Stack<long double> d1{1.1, 2.2, 3.3, 4.4, 5.5,
                              6.6, 7.7, 8.8, 9.9, 10.10};
 
@@ -2329,3 +2329,29 @@ TEST(long_double_constructors, copy_3) {
 }
 
 /*---------→ MOVE ←---------------*/
+TEST(long_double_constructors, move_1) {
+  s21::Stack<long double> d1{};
+  s21::Stack<long double> d2(std::move(d1));
+
+  EXPECT_EQ(d2.Size(), 0);
+}
+
+TEST(long_double_constructors, move_2) {
+  s21::Stack<long double> d1{1.1, 2.2, 3.3, 4.4, 5.5,
+                             6.6, 7.7, 8.8, 9.9, 10.10};
+
+  std::deque<long double> init_deque{1.1, 2.2, 3.3, 4.4, 5.5,
+                                     6.6, 7.7, 8.8, 9.9, 10.10};
+
+  std::stack<long double> d2(init_deque);
+
+  s21::Stack<long double> d3(std::move(d1));
+
+  EXPECT_EQ(d3.Size(), 10);
+
+  while (d3.Size()) {
+    EXPECT_FLOAT_EQ(d3.Top(), d2.top());
+    d3.Pop();
+    d2.pop();
+  }
+}

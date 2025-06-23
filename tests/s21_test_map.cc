@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "./../s21_map.h"
+#include "./../include/base_containers/s21_map.h"
 
 // TODO(root): Add test cases for map
 

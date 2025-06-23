@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "./../s21_vector.h"
+#include "./../include/base_containers/s21_vector.h"
 
 // TODO(root): Add test cases for vector
 
