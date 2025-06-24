@@ -205,12 +205,12 @@ TEST(int_constructors, copy_2) {
 
   EXPECT_EQ(d2.Size(), 10);
 
-  int j = 10;
+  int j = 1;
 
   while (d2.Size()) {
     EXPECT_EQ(d2.Front(), j);
     d2.Pop();
-    --j;
+    ++j;
   }
 }
 
@@ -229,11 +229,11 @@ TEST(int_constructors, move_2) {
 
   EXPECT_EQ(d2.Size(), 10);
 
-  int j = 10;
+  int j = 1;
 
   while (d2.Size()) {
     EXPECT_EQ(d2.Front(), j);
     d2.Pop();
-    --j;
+    ++j;
   }
 }

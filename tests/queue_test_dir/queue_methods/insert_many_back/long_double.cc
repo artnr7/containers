@@ -26,7 +26,7 @@ TEST(insert_many_back_method, long_double_1) {
   EXPECT_EQ(d1.Size(), 31);
 
   while (d1.Size()) {
-    EXPECT_FLOAT_EQ(d1.Back(), d2.back());
+    EXPECT_FLOAT_EQ(d1.Front(), d2.front());
     d1.Pop();
     d2.pop();
   }
@@ -555,7 +555,7 @@ TEST(insert_many_back_method, long_double_2) {
   EXPECT_EQ(d1.Size(), 256);
 
   while (d1.Size()) {
-    EXPECT_FLOAT_EQ(d1.Back(), d2.back());
+    EXPECT_FLOAT_EQ(d1.Front(), d2.front());
     d1.Pop();
     d2.pop();
   }

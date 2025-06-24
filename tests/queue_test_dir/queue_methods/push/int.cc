@@ -61,7 +61,7 @@ TEST(operators_push_int, filled_copy_1) {
     d1.Push(i);
   }
 
-  int j = 0;
+  int j = 1;
 
   while (d1.Size()) {
     EXPECT_EQ(d1.Front(), j);
@@ -86,7 +86,7 @@ TEST(operators_push_int, filled_copy_2) {
     d1.Push(i);
   }
 
-  int j = 129;
+  int j = 1;
 
   while (d1.Size()) {
     EXPECT_EQ(d1.Front(), j);
@@ -186,7 +186,7 @@ TEST(operators_push_int, filled_copy_3) {
   for (int i = 1025; i < N * 20; ++i) {
     d1.Push(i);
   }
-  int j = 0;
+  int j = 1;
 
   while (d1.Size()) {
     EXPECT_EQ(d1.Front(), j);
@@ -199,7 +199,7 @@ TEST(operators_push_int, filled_copy_3) {
 TEST(operators_push_int, empty_move_1) {
   s21::Queue<int> d1;
   for (int i = 0; i < N - 1; ++i) {
-d1.Push(std::move(i));
+    d1.Push(std::move(i));
   }
   int j = 0;
 
@@ -213,7 +213,7 @@ d1.Push(std::move(i));
 TEST(operators_push_int, empty_move_2) {
   s21::Queue<int> d1;
   for (int i = 0; i < N; ++i) {
-d1.Push(std::move(i));
+    d1.Push(std::move(i));
   }
 
   int j = 0;
@@ -228,7 +228,7 @@ d1.Push(std::move(i));
 TEST(operators_push_int, empty_move_3) {
   s21::Queue<int> d1;
   for (int i = 0; i < N * 3; ++i) {
-d1.Push(std::move(i));
+    d1.Push(std::move(i));
   }
   int j = 0;
 
@@ -252,10 +252,10 @@ TEST(operators_push_int, filled_move_1) {
       121, 122, 123, 124, 125, 126, 127};
 
   for (int i = 128; i < N * 5; ++i) {
-d1.Push(std::move(i));
+    d1.Push(std::move(i));
   }
 
-  int j = 128;
+  int j = 1;
 
   while (d1.Size()) {
     EXPECT_EQ(d1.Front(), j);
@@ -277,10 +277,10 @@ TEST(operators_push_int, filled_move_2) {
       121, 122, 123, 124, 125, 126, 127, 128};
 
   for (int i = 129; i < N * 6; ++i) {
-d1.Push(std::move(i));
+    d1.Push(std::move(i));
   }
 
-  int j = 129;
+  int j = 1;
 
   while (d1.Size()) {
     EXPECT_EQ(d1.Front(), j);
@@ -378,9 +378,9 @@ TEST(operators_push_int, filled_move_3) {
       1009, 1010, 1011, 1012, 1013, 1014, 1015, 1016, 1017, 1018, 1019, 1020,
       1021, 1022, 1023, 1024};
   for (int i = 1025; i < N * 20; ++i) {
-d1.Push(std::move(i));
+    d1.Push(std::move(i));
   }
-  int j = 1025;
+  int j = 1;
 
   while (d1.Size()) {
     EXPECT_EQ(d1.Front(), j);

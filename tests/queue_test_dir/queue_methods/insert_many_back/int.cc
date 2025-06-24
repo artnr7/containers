@@ -5,14 +5,13 @@ TEST(insert_many_back_method, int_1) {
 
   d1.InsertManyBack(1, 2, 3, 4);
 
-  int j = 4;
+  int j = 1;
 
   while (d1.Size()) {
-    EXPECT_EQ(d1.Back(), j);
+    EXPECT_EQ(d1.Front(), j);
     d1.Pop();
-    --j;
+    ++j;
   }
-
 }
 
 TEST(insert_many_back_method, int_2) {
@@ -38,11 +37,11 @@ TEST(insert_many_back_method, int_2) {
       234, 235, 236, 237, 238, 239, 240, 241, 242, 243, 244, 245, 246, 247, 248,
       249, 250, 251, 252, 253, 254, 255, 256);
 
-  int j = 256;
+  int j = 1;
 
   while (d1.Size()) {
-    EXPECT_EQ(d1.Back(), j);
+    EXPECT_EQ(d1.Front(), j);
     d1.Pop();
-    --j;
+    ++j;
   }
 }

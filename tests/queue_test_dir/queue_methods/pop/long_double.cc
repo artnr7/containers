@@ -7,7 +7,7 @@ TEST(pop_method, long_double_1) {
   d1.Pop();
 
   EXPECT_EQ(d1.Size(), 2);
-  EXPECT_EQ(d1.Back(), 2.423432);
+  EXPECT_EQ(d1.Front(), 2.423432);
 }
 
 TEST(pop_method, long_double_2) {
@@ -17,5 +17,5 @@ TEST(pop_method, long_double_2) {
   d1.Pop();
 
   EXPECT_EQ(d1.Size(), 1);
-  EXPECT_EQ(d1.Back(), 1.534534);
+  EXPECT_EQ(d1.Front(), 3.534534);
 }

@@ -6,17 +6,17 @@ TEST(insert_many_back_method, big_data_1) {
   s21::Queue<BigData<256>> d1{};
   d1.InsertManyBack(1, 2, 3);
 
-  int j = 3;
+  int j = 1;
 
   size_t bd_deque_size = 0;
 
   while (d1.Size()) {
-    bd_deque_size += (d1.Back()).Size();
+    bd_deque_size += (d1.Front()).Size();
 
-    EXPECT_EQ((d1.Back()).ValueProof(j), 1);
+    EXPECT_EQ((d1.Front()).ValueProof(j), 1);
 
     d1.Pop();
-    --j;
+    ++j;
   }
   EXPECT_EQ(bd_deque_size, 3 * 256);
 }
@@ -25,17 +25,17 @@ TEST(insert_many_back_method, big_data_2) {
   s21::Queue<BigData<256>> d1{1, 2, 3};
   d1.InsertManyBack(4, 5, 6);
 
-  int j = 6;
+  int j = 1;
 
   size_t bd_deque_size = 0;
 
   while (d1.Size()) {
-    bd_deque_size += (d1.Back()).Size();
+    bd_deque_size += (d1.Front()).Size();
 
-    EXPECT_EQ((d1.Back()).ValueProof(j), 1);
+    EXPECT_EQ((d1.Front()).ValueProof(j), 1);
 
     d1.Pop();
-    --j;
+    ++j;
   }
   EXPECT_EQ(bd_deque_size, 6 * 256);
 }
