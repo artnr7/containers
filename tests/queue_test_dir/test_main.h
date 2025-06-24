@@ -3,6 +3,6 @@
 
 #include <gtest/gtest.h>
 
-#include "../../include/base_containers/s21_stack.h"
+#include "../../include/base_containers/s21_queue.h"
 
 #endif

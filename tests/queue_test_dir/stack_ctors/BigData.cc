@@ -22,8 +22,8 @@ TEST(big_data_constructors, init_list_constructor_2) {
 
   size_t bd_deque_size = 0;
   while (d1.Size()) {
-    bd_deque_size += (d1.Front()).Size();
-    EXPECT_EQ((d1.Front()).ValueProof(j), 1);
+    bd_deque_size += (d1.Top()).Size();
+    EXPECT_EQ((d1.Top()).ValueProof(j), 1);
     d1.Pop();
     --j;
   }
@@ -39,9 +39,9 @@ TEST(big_data_constructors, init_list_constructor_3) {
 
   size_t bd_deque_size = 0;
   while (d1.Size()) {
-    bd_deque_size += (d1.Front()).Size();
+    bd_deque_size += (d1.Top()).Size();
 
-    EXPECT_EQ((d1.Front()).ValueProof(j), 1);
+    EXPECT_EQ((d1.Top()).ValueProof(j), 1);
 
     d1.Pop();
     --j;
@@ -58,8 +58,8 @@ TEST(big_data_constructors, init_list_constructor_4) {
 
   size_t bd_deque_size = 0;
   while (d1.Size()) {
-    bd_deque_size += (d1.Front()).Size();
-    EXPECT_EQ((d1.Front()).ValueProof(j), 1);
+    bd_deque_size += (d1.Top()).Size();
+    EXPECT_EQ((d1.Top()).ValueProof(j), 1);
 
     d1.Pop();
     --j;
@@ -76,9 +76,9 @@ TEST(big_data_constructors, init_list_constructor_5) {
 
   size_t bd_deque_size = 0;
   while (d1.Size()) {
-    bd_deque_size += (d1.Front()).Size();
+    bd_deque_size += (d1.Top()).Size();
 
-    EXPECT_EQ((d1.Front()).ValueProof(j), 1);
+    EXPECT_EQ((d1.Top()).ValueProof(j), 1);
 
     d1.Pop();
     --j;
@@ -95,9 +95,9 @@ TEST(big_data_constructors, init_list_constructor_6) {
 
   size_t bd_deque_size = 0;
   while (d1.Size()) {
-    bd_deque_size += (d1.Front()).Size();
+    bd_deque_size += (d1.Top()).Size();
 
-    EXPECT_EQ((d1.Front()).ValueProof(j), 1);
+    EXPECT_EQ((d1.Top()).ValueProof(j), 1);
 
     d1.Pop();
     --j;
@@ -115,9 +115,9 @@ TEST(big_data_constructors, init_list_constructor_7) {
 
   size_t bd_deque_size = 0;
   while (d1.Size()) {
-    bd_deque_size += (d1.Front()).Size();
+    bd_deque_size += (d1.Top()).Size();
 
-    EXPECT_EQ((d1.Front()).ValueProof(j), 1);
+    EXPECT_EQ((d1.Top()).ValueProof(j), 1);
 
     d1.Pop();
     --j;
@@ -145,9 +145,9 @@ TEST(big_data_constructors, copy_2) {
   size_t bd_deque_size = 0;
 
   while (d2.Size()) {
-    bd_deque_size += (d2.Front()).Size();
+    bd_deque_size += (d2.Top()).Size();
 
-    EXPECT_EQ((d2.Front()).ValueProof(j), 1);
+    EXPECT_EQ((d2.Top()).ValueProof(j), 1);
 
     d2.Pop();
     --j;
@@ -175,9 +175,9 @@ TEST(big_data_constructors, move_2) {
   size_t bd_deque_size = 0;
 
   while (d2.Size()) {
-    bd_deque_size += (d2.Front()).Size();
+    bd_deque_size += (d2.Top()).Size();
 
-    EXPECT_EQ((d2.Front()).ValueProof(j), 1);
+    EXPECT_EQ((d2.Top()).ValueProof(j), 1);
 
     d2.Pop();
     --j;

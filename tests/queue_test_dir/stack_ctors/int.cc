@@ -19,7 +19,7 @@ TEST(int_constructors, init_list_constructor_2) {
   int j = 10;
 
   while (d1.Size()) {
-    EXPECT_EQ(d1.Front(), j);
+    EXPECT_EQ(d1.Top(), j);
     d1.Pop();
     --j;
   }
@@ -41,7 +41,7 @@ TEST(int_constructors, init_list_constructor_3) {
   int j = 127;
 
   while (d1.Size()) {
-    EXPECT_EQ(d1.Front(), j);
+    EXPECT_EQ(d1.Top(), j);
     d1.Pop();
     --j;
   }
@@ -63,7 +63,7 @@ TEST(int_constructors, init_list_constructor_4) {
   int j = 128;
 
   while (d1.Size()) {
-    EXPECT_EQ(d1.Front(), j);
+    EXPECT_EQ(d1.Top(), j);
     d1.Pop();
     --j;
   }
@@ -85,7 +85,7 @@ TEST(int_constructors, init_list_constructor_5) {
   int j = 129;
 
   while (d1.Size()) {
-    EXPECT_EQ(d1.Front(), j);
+    EXPECT_EQ(d1.Top(), j);
     d1.Pop();
     --j;
   }
@@ -184,7 +184,7 @@ TEST(int_constructors, init_list_constructor_6) {
   int j = 1024;
 
   while (d1.Size()) {
-    EXPECT_EQ(d1.Front(), j);
+    EXPECT_EQ(d1.Top(), j);
     d1.Pop();
     --j;
   }
@@ -208,7 +208,7 @@ TEST(int_constructors, copy_2) {
   int j = 10;
 
   while (d2.Size()) {
-    EXPECT_EQ(d2.Front(), j);
+    EXPECT_EQ(d2.Top(), j);
     d2.Pop();
     --j;
   }
@@ -232,7 +232,7 @@ TEST(int_constructors, move_2) {
   int j = 10;
 
   while (d2.Size()) {
-    EXPECT_EQ(d2.Front(), j);
+    EXPECT_EQ(d2.Top(), j);
     d2.Pop();
     --j;
   }

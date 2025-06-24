@@ -2073,7 +2073,7 @@ TEST(long_double_constructors, init_list_constructor_2) {
   EXPECT_EQ(d1.Size(), 1024);
 
   while (d1.Size()) {
-    EXPECT_FLOAT_EQ(d1.Front(), d2.front());
+    EXPECT_FLOAT_EQ(d1.Top(), d2.top());
     d1.Pop();
     d2.pop();
   }
@@ -2140,7 +2140,7 @@ TEST(long_double_constructors, init_list_constructor_3) {
   EXPECT_EQ(d1.Size(), 128);
 
   while (d1.Size()) {
-    EXPECT_FLOAT_EQ(d1.Front(), d2.front());
+    EXPECT_FLOAT_EQ(d1.Top(), d2.top());
     d1.Pop();
     d2.pop();
   }
@@ -2208,7 +2208,7 @@ TEST(long_double_constructors, init_list_constructor_4) {
   EXPECT_EQ(d1.Size(), 127);
 
   while (d1.Size()) {
-    EXPECT_FLOAT_EQ(d1.Front(), d2.front());
+    EXPECT_FLOAT_EQ(d1.Top(), d2.top());
     d1.Pop();
     d2.pop();
   }
@@ -2276,7 +2276,7 @@ TEST(long_double_constructors, init_list_constructor_5) {
   EXPECT_EQ(d1.Size(), 129);
 
   while (d1.Size()) {
-    EXPECT_FLOAT_EQ(d1.Front(), d2.front());
+    EXPECT_FLOAT_EQ(d1.Top(), d2.top());
     d1.Pop();
     d2.pop();
   }
@@ -2294,7 +2294,7 @@ TEST(long_double_constructors, init_list_constructor_6) {
   EXPECT_EQ(d1.Size(), 10);
 
   while (d1.Size()) {
-    EXPECT_FLOAT_EQ(d1.Front(), d2.front());
+    EXPECT_FLOAT_EQ(d1.Top(), d2.top());
     d1.Pop();
     d2.pop();
   }
@@ -2322,7 +2322,7 @@ TEST(long_double_constructors, copy_2) {
   EXPECT_EQ(d3.Size(), 10);
 
   while (d3.Size()) {
-    EXPECT_FLOAT_EQ(d3.Front(), d2.front());
+    EXPECT_FLOAT_EQ(d3.Top(), d2.top());
     d3.Pop();
     d2.pop();
   }
@@ -2350,7 +2350,7 @@ TEST(long_double_constructors, move_2) {
   EXPECT_EQ(d3.Size(), 10);
 
   while (d3.Size()) {
-    EXPECT_FLOAT_EQ(d3.Front(), d2.front());
+    EXPECT_FLOAT_EQ(d3.Top(), d2.top());
     d3.Pop();
     d2.pop();
   }

@@ -24,6 +24,10 @@ public:
   void Pop() { c.PopFront(); }
   void Swap(Queue &o) { std::swap(c, o.c); }
 
+  template <typename... Args> void InsertManyBack(Args &&...args) {
+    (c.PushBack(std::forward<Args>(args)), ...);
+  }
+
   reference Front() { return c.Front(); }
   const_reference Front() const { return c.Front(); }
 
