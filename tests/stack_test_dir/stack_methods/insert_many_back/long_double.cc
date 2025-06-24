@@ -3,7 +3,7 @@
 #include <stack>
 #define N 32
 
-TEST(append_range_method, long_double_1) {
+TEST(insert_many_back_method, long_double_1) {
   s21::Stack<long double> d1{};
 
   d1.InsertManyBack(1.159, 2.2610, 3.3711, 4.4812, 5.5913, 6.61014, 7.71115,
@@ -30,11 +30,9 @@ TEST(append_range_method, long_double_1) {
     d1.Pop();
     d2.pop();
   }
-
-  EXPECT_EQ(d1.Size(), 31);
 }
 
-TEST(append_range_method, long_double_2) {
+TEST(insert_many_back_method, long_double_2) {
   s21::Stack<long double> d1{
       1.1591317212529333741454953576165,
       2.26101418222630343842465054586266,
@@ -554,13 +552,11 @@ TEST(append_range_method, long_double_2) {
 
   std::stack<long double> d2(init_deque);
 
-  EXPECT_EQ(d1.Size(), 31);
+  EXPECT_EQ(d1.Size(), 256);
 
   while (d1.Size()) {
     EXPECT_FLOAT_EQ(d1.Top(), d2.top());
     d1.Pop();
     d2.pop();
   }
-
-  EXPECT_EQ(d1.Size(), 256);
 }

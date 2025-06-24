@@ -1,6 +1,6 @@
 #include "../../test_main.h"
 
-TEST(pop_Top_method, int_1) {
+TEST(pop_method, int_1) {
   s21::Stack<int> d1{1, 2, 3};
 
   d1.Pop();
@@ -9,7 +9,7 @@ TEST(pop_Top_method, int_1) {
   EXPECT_EQ(d1.Top(), 2);
 }
 
-TEST(pop_Top_method, int_2) {
+TEST(pop_method, int_2) {
   s21::Stack<int> d1{1, 2, 3};
 
   d1.Pop();

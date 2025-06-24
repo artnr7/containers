@@ -1,7 +1,7 @@
 #include "../../test_main.h"
 #define N 32
 
-TEST(pop_Top_method, long_double_1) {
+TEST(pop_method, long_double_1) {
   s21::Stack<long double> d1{1.423432, 2.423432, 3.423423};
 
   d1.Pop();
@@ -10,7 +10,7 @@ TEST(pop_Top_method, long_double_1) {
   EXPECT_EQ(d1.Top(), 2.423432);
 }
 
-TEST(pop_Top_method, long_double_2) {
+TEST(pop_method, long_double_2) {
   s21::Stack<long double> d1{1.534534, 2.534543, 3.534534};
 
   d1.Pop();

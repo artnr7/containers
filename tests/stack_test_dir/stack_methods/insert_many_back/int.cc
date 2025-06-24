@@ -1,6 +1,6 @@
 #include "../../test_main.h"
 
-TEST(append_range_method, int_1) {
+TEST(insert_many_back_method, int_1) {
   s21::Stack<int> d1{};
 
   d1.InsertManyBack(1, 2, 3, 4);
@@ -15,7 +15,7 @@ TEST(append_range_method, int_1) {
 
 }
 
-TEST(append_range_method, int_2) {
+TEST(insert_many_back_method, int_2) {
   s21::Stack<int> d1{
       1,   2,   3,   4,   5,   6,   7,   8,   9,   10,  11,  12,  13,  14,  15,
       16,  17,  18,  19,  20,  21,  22,  23,  24,  25,  26,  27,  28,  29,  30,

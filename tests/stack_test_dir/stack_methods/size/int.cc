@@ -7,13 +7,13 @@ TEST(size_method, int_1) {
 
 TEST(size_method, int_2) {
   s21::Stack<int> d1{};
-  d1.PushBack(1);
+  d1.Push(1);
   EXPECT_EQ(d1.Size(), 1);
 }
 
 TEST(size_method, int_3) {
   s21::Stack<int> d1{};
-  d1.PushFront(1);
+  d1.Push(1);
   EXPECT_EQ(d1.Size(), 1);
 }
 

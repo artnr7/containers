@@ -8,13 +8,13 @@ TEST(size_method, long_double_1) {
 
 TEST(size_method, long_double_2) {
   s21::Stack<long double> d1{};
-  d1.PushBack(1);
+  d1.Push(1);
   EXPECT_EQ(d1.Size(), 1);
 }
 
 TEST(size_method, long_double_3) {
   s21::Stack<long double> d1{};
-  d1.PushFront(1);
+  d1.Push(1);
   EXPECT_EQ(d1.Size(), 1);
 }
 
@@ -28,7 +28,7 @@ TEST(size_method, long_double_4) {
       31.313539, 32.323640};
 
   for (int i = 33; i < N * 32 + 1; ++i) {
-    d1.PushBack(i);
+    d1.Push(i);
   }
 
   EXPECT_EQ(d1.Size(), 1024);

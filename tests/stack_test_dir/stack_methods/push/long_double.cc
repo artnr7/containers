@@ -4,13 +4,13 @@
 #define N 32
 
 /*---------→ COPY ←---------------*/
-TEST(operators_push_back_long_double, empty_copy_1) {
+TEST(operators_push_long_double, empty_copy_1) {
   s21::Stack<long double> d1;
   for (int i = 0; i < N - 1; ++i) {
     d1.Push(i);
   }
 
-  EXPECT_EQ(d1.Size(), N - 2);
+  EXPECT_EQ(d1.Size(), N - 1);
 
   int j = N - 2;
   while (d1.Size()) {
@@ -20,13 +20,13 @@ TEST(operators_push_back_long_double, empty_copy_1) {
   }
 }
 
-TEST(operators_push_back_long_double, empty_copy_2) {
+TEST(operators_push_long_double, empty_copy_2) {
   s21::Stack<long double> d1;
   for (int i = 0; i < N; ++i) {
     d1.Push(i);
   }
 
-  EXPECT_EQ(d1.Size(), N - 1);
+  EXPECT_EQ(d1.Size(), N);
 
   int j = N - 1;
   while (d1.Size()) {
@@ -36,13 +36,13 @@ TEST(operators_push_back_long_double, empty_copy_2) {
   }
 }
 
-TEST(operators_push_back_long_double, empty_copy_3) {
+TEST(operators_push_long_double, empty_copy_3) {
   s21::Stack<long double> d1;
   for (int i = 0; i < N * 3; ++i) {
     d1.Push(i);
   }
 
-  EXPECT_EQ(d1.Size(), N * 3 - 1);
+  EXPECT_EQ(d1.Size(), N * 3);
 
   int j = N * 3 - 1;
   while (d1.Size()) {
@@ -52,7 +52,7 @@ TEST(operators_push_back_long_double, empty_copy_3) {
   }
 }
 
-TEST(operators_push_back_long_double, filled_copy_1) {
+TEST(operators_push_long_double, filled_copy_1) {
   s21::Stack<long double> d1{
       1.159,     2.2610,    3.3711,    4.4812,    5.5913,    6.61014,
       7.71115,   8.81216,   9.91317,   10.101418, 11.111519, 12.121620,
@@ -89,7 +89,7 @@ TEST(operators_push_back_long_double, filled_copy_1) {
   }
 }
 
-TEST(operators_push_back_long_double, filled_copy_2) {
+TEST(operators_push_long_double, filled_copy_2) {
   s21::Stack<long double> d1{
       1.159,     2.2610,    3.3711,    4.4812,    5.5913,    6.61014,
       7.71115,   8.81216,   9.91317,   10.101418, 11.111519, 12.121620,
@@ -126,7 +126,7 @@ TEST(operators_push_back_long_double, filled_copy_2) {
   }
 }
 
-TEST(operators_push_back_long_double, filled_copy_3) {
+TEST(operators_push_long_double, filled_copy_3) {
   s21::Stack<long double> d1{
       1.1591317212529333741454953576165,
       2.26101418222630343842465054586266,
@@ -3219,13 +3219,13 @@ TEST(operators_push_back_long_double, filled_copy_3) {
 }
 
 /*---------→ MOVE ←---------------*/
-TEST(operators_push_back_long_double, empty_copy_1) {
+TEST(operators_push_long_double, empty_move_1) {
   s21::Stack<long double> d1;
   for (int i = 0; i < N - 1; ++i) {
     d1.Push(std::move(i));
   }
 
-  EXPECT_EQ(d1.Size(), N - 2);
+  EXPECT_EQ(d1.Size(), N - 1);
 
   int j = N - 2;
   while (d1.Size()) {
@@ -3235,13 +3235,13 @@ TEST(operators_push_back_long_double, empty_copy_1) {
   }
 }
 
-TEST(operators_push_back_long_double, empty_copy_2) {
+TEST(operators_push_long_double, empty_move_2) {
   s21::Stack<long double> d1;
   for (int i = 0; i < N; ++i) {
     d1.Push(std::move(i));
   }
 
-  EXPECT_EQ(d1.Size(), N - 1);
+  EXPECT_EQ(d1.Size(), N);
 
   int j = N - 1;
   while (d1.Size()) {
@@ -3251,13 +3251,13 @@ TEST(operators_push_back_long_double, empty_copy_2) {
   }
 }
 
-TEST(operators_push_back_long_double, empty_copy_3) {
+TEST(operators_push_long_double, empty_move_3) {
   s21::Stack<long double> d1;
   for (int i = 0; i < N * 3; ++i) {
     d1.Push(std::move(i));
   }
 
-  EXPECT_EQ(d1.Size(), N * 3 - 1);
+  EXPECT_EQ(d1.Size(), N * 3);
 
   int j = N * 3 - 1;
   while (d1.Size()) {
@@ -3267,7 +3267,7 @@ TEST(operators_push_back_long_double, empty_copy_3) {
   }
 }
 
-TEST(operators_push_back_long_double, filled_copy_1) {
+TEST(operators_push_long_double, filled_move_1) {
   s21::Stack<long double> d1{
       1.159,     2.2610,    3.3711,    4.4812,    5.5913,    6.61014,
       7.71115,   8.81216,   9.91317,   10.101418, 11.111519, 12.121620,
@@ -3304,7 +3304,7 @@ TEST(operators_push_back_long_double, filled_copy_1) {
   }
 }
 
-TEST(operators_push_back_long_double, filled_copy_2) {
+TEST(operators_push_long_double, filled_move_2) {
   s21::Stack<long double> d1{
       1.159,     2.2610,    3.3711,    4.4812,    5.5913,    6.61014,
       7.71115,   8.81216,   9.91317,   10.101418, 11.111519, 12.121620,
@@ -3341,7 +3341,7 @@ TEST(operators_push_back_long_double, filled_copy_2) {
   }
 }
 
-TEST(operators_push_back_long_double, filled_copy_3) {
+TEST(operators_push_long_double, filled_move_3) {
   s21::Stack<long double> d1{
       1.1591317212529333741454953576165,
       2.26101418222630343842465054586266,
