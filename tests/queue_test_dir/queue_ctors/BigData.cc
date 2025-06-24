@@ -18,14 +18,14 @@ TEST(big_data_constructors, init_list_constructor_2) {
 
   s21::Queue<BigData<bd_template_size>> d1{1, 2, 3, 4, 5};
   EXPECT_EQ(d1.Size(), 5);
-  int j = 5;
+  int j = 1;
 
   size_t bd_deque_size = 0;
   while (d1.Size()) {
-    bd_deque_size += (d1.Top()).Size();
-    EXPECT_EQ((d1.Top()).ValueProof(j), 1);
+    bd_deque_size += (d1.Front()).Size();
+    EXPECT_EQ((d1.Front()).ValueProof(j), 1);
     d1.Pop();
-    --j;
+    ++j;
   }
   EXPECT_EQ(bd_deque_size, 5 * bd_template_size);
 }
@@ -35,16 +35,16 @@ TEST(big_data_constructors, init_list_constructor_3) {
 
   s21::Queue<BigData<bd_template_size>> d1{1, 2, 3, 4, 5};
   EXPECT_EQ(d1.Size(), 5);
-  int j = 5;
+  int j = 1;
 
   size_t bd_deque_size = 0;
   while (d1.Size()) {
-    bd_deque_size += (d1.Top()).Size();
+    bd_deque_size += (d1.Front()).Size();
 
-    EXPECT_EQ((d1.Top()).ValueProof(j), 1);
+    EXPECT_EQ((d1.Front()).ValueProof(j), 1);
 
     d1.Pop();
-    --j;
+    ++j;
   }
   EXPECT_EQ(bd_deque_size, 5 * bd_template_size);
 }
@@ -54,15 +54,15 @@ TEST(big_data_constructors, init_list_constructor_4) {
 
   s21::Queue<BigData<bd_template_size>> d1{1, 2, 3, 4, 5};
   EXPECT_EQ(d1.Size(), 5);
-  int j = 5;
+  int j = 1;
 
   size_t bd_deque_size = 0;
   while (d1.Size()) {
-    bd_deque_size += (d1.Top()).Size();
-    EXPECT_EQ((d1.Top()).ValueProof(j), 1);
+    bd_deque_size += (d1.Front()).Size();
+    EXPECT_EQ((d1.Front()).ValueProof(j), 1);
 
     d1.Pop();
-    --j;
+    ++j;
   }
   EXPECT_EQ(bd_deque_size, 5 * bd_template_size);
 }
@@ -72,16 +72,16 @@ TEST(big_data_constructors, init_list_constructor_5) {
 
   s21::Queue<BigData<bd_template_size>> d1{1, 2, 3, 4, 5};
   EXPECT_EQ(d1.Size(), 5);
-  int j = 5;
+  int j = 1;
 
   size_t bd_deque_size = 0;
   while (d1.Size()) {
-    bd_deque_size += (d1.Top()).Size();
+    bd_deque_size += (d1.Front()).Size();
 
-    EXPECT_EQ((d1.Top()).ValueProof(j), 1);
+    EXPECT_EQ((d1.Front()).ValueProof(j), 1);
 
     d1.Pop();
-    --j;
+    ++j;
   }
   EXPECT_EQ(bd_deque_size, 5 * bd_template_size);
 }
@@ -91,16 +91,16 @@ TEST(big_data_constructors, init_list_constructor_6) {
 
   s21::Queue<BigData<bd_template_size>> d1{1, 2, 3, 4, 5};
   EXPECT_EQ(d1.Size(), 5);
-  int j = 5;
+  int j = 1;
 
   size_t bd_deque_size = 0;
   while (d1.Size()) {
-    bd_deque_size += (d1.Top()).Size();
+    bd_deque_size += (d1.Front()).Size();
 
-    EXPECT_EQ((d1.Top()).ValueProof(j), 1);
+    EXPECT_EQ((d1.Front()).ValueProof(j), 1);
 
     d1.Pop();
-    --j;
+    ++j;
   }
   EXPECT_EQ(bd_deque_size, 5 * bd_template_size);
 }
@@ -111,16 +111,16 @@ TEST(big_data_constructors, init_list_constructor_7) {
   s21::Queue<BigData<bd_template_size>> d1{1, 2, 3, 4, 5};
   EXPECT_EQ(d1.Size(), 5);
 
-  int j = 5;
+  int j = 1;
 
   size_t bd_deque_size = 0;
   while (d1.Size()) {
-    bd_deque_size += (d1.Top()).Size();
+    bd_deque_size += (d1.Front()).Size();
 
-    EXPECT_EQ((d1.Top()).ValueProof(j), 1);
+    EXPECT_EQ((d1.Front()).ValueProof(j), 1);
 
     d1.Pop();
-    --j;
+    ++j;
   }
   EXPECT_EQ(bd_deque_size, 5 * bd_template_size);
 }
@@ -140,17 +140,17 @@ TEST(big_data_constructors, copy_2) {
 
   EXPECT_EQ(d2.Size(), 10);
 
-  int j = 10;
+  int j = 1;
 
   size_t bd_deque_size = 0;
 
   while (d2.Size()) {
-    bd_deque_size += (d2.Top()).Size();
+    bd_deque_size += (d2.Front()).Size();
 
-    EXPECT_EQ((d2.Top()).ValueProof(j), 1);
+    EXPECT_EQ((d2.Front()).ValueProof(j), 1);
 
     d2.Pop();
-    --j;
+    ++j;
   }
   EXPECT_EQ(bd_deque_size, 10 * 256);
 }
@@ -170,17 +170,17 @@ TEST(big_data_constructors, move_2) {
 
   EXPECT_EQ(d2.Size(), 10);
 
-  int j = 10;
+  int j = 1;
 
   size_t bd_deque_size = 0;
 
   while (d2.Size()) {
-    bd_deque_size += (d2.Top()).Size();
+    bd_deque_size += (d2.Front()).Size();
 
-    EXPECT_EQ((d2.Top()).ValueProof(j), 1);
+    EXPECT_EQ((d2.Front()).ValueProof(j), 1);
 
     d2.Pop();
-    --j;
+    ++j;
   }
   EXPECT_EQ(bd_deque_size, 10 * 256);
 }

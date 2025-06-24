@@ -8,7 +8,7 @@ TEST(pop_method, big_data_1) {
   d1.Pop();
 
   EXPECT_EQ(d1.Size(), 2);
-  EXPECT_EQ((d1.Top()).ValueProof(2), 1);
+  EXPECT_EQ((d1.Back()).ValueProof(2), 1);
 }
 
 TEST(pop_method, big_data_2) {
@@ -19,5 +19,5 @@ TEST(pop_method, big_data_2) {
 
   EXPECT_EQ(d1.Size(), 1);
 
-  EXPECT_EQ((d1.Top()).ValueProof(1), 1);
+  EXPECT_EQ((d1.Back()).ValueProof(1), 1);
 }

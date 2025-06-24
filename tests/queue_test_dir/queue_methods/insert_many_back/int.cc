@@ -8,7 +8,7 @@ TEST(insert_many_back_method, int_1) {
   int j = 4;
 
   while (d1.Size()) {
-    EXPECT_EQ(d1.Top(), j);
+    EXPECT_EQ(d1.Back(), j);
     d1.Pop();
     --j;
   }
@@ -41,7 +41,7 @@ TEST(insert_many_back_method, int_2) {
   int j = 256;
 
   while (d1.Size()) {
-    EXPECT_EQ(d1.Top(), j);
+    EXPECT_EQ(d1.Back(), j);
     d1.Pop();
     --j;
   }

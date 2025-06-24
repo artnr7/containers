@@ -11,13 +11,13 @@ TEST(copy_assignment_operator_integer, integer_2) {
   s21::Queue<int> d1{1, 2, 3, 4, 5};
   s21::Queue<int> d2{5};
   d2 = d1;
-  
-  int j = 5;
+
+  int j = 1;
 
   while (d2.Size()) {
-    EXPECT_EQ(d2.Top(), j);
+    EXPECT_EQ(d2.Front(), j);
     d2.Pop();
-    --j;
+    ++j;
   }
 }
 
@@ -26,12 +26,12 @@ TEST(copy_assignment_operator_integer, integer_3) {
   s21::Queue<int> d2;
   d2 = d1;
 
-  int j = 5;
+  int j = 1;
 
   while (d2.Size()) {
-    EXPECT_EQ(d2.Top(), j);
+    EXPECT_EQ(d2.Front(), j);
     d2.Pop();
-    --j;
+    ++j;
   }
 }
 

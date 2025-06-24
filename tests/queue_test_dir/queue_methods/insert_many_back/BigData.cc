@@ -11,9 +11,9 @@ TEST(insert_many_back_method, big_data_1) {
   size_t bd_deque_size = 0;
 
   while (d1.Size()) {
-    bd_deque_size += (d1.Top()).Size();
+    bd_deque_size += (d1.Back()).Size();
 
-    EXPECT_EQ((d1.Top()).ValueProof(j), 1);
+    EXPECT_EQ((d1.Back()).ValueProof(j), 1);
 
     d1.Pop();
     --j;
@@ -30,9 +30,9 @@ TEST(insert_many_back_method, big_data_2) {
   size_t bd_deque_size = 0;
 
   while (d1.Size()) {
-    bd_deque_size += (d1.Top()).Size();
+    bd_deque_size += (d1.Back()).Size();
 
-    EXPECT_EQ((d1.Top()).ValueProof(j), 1);
+    EXPECT_EQ((d1.Back()).ValueProof(j), 1);
 
     d1.Pop();
     --j;

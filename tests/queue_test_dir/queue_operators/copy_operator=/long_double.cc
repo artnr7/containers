@@ -25,7 +25,7 @@ TEST(copy_assignment_operator_long_double, long_double_2) {
   EXPECT_EQ(d2.Size(), 5);
 
   while (d2.Size()) {
-    EXPECT_FLOAT_EQ(d2.Top(), d3.top());
+    EXPECT_FLOAT_EQ(d2.Front(), d3.back());
     d2.Pop();
     d3.pop();
   }
@@ -46,7 +46,7 @@ TEST(copy_assignment_operator_long_double, long_double_3) {
   EXPECT_EQ(d2.Size(), 5);
 
   while (d2.Size()) {
-    EXPECT_FLOAT_EQ(d2.Top(), d3.top());
+    EXPECT_FLOAT_EQ(d2.Front(), d3.back());
     d2.Pop();
     d3.pop();
   }

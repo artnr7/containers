@@ -12,11 +12,11 @@ TEST(operators_push_long_double, empty_copy_1) {
 
   EXPECT_EQ(d1.Size(), N - 1);
 
-  int j = N - 2;
+  int j = 0;
   while (d1.Size()) {
-    EXPECT_FLOAT_EQ(d1.Top(), j);
+    EXPECT_FLOAT_EQ(d1.Front(), j);
     d1.Pop();
-    --j;
+    ++j;
   }
 }
 
@@ -28,11 +28,11 @@ TEST(operators_push_long_double, empty_copy_2) {
 
   EXPECT_EQ(d1.Size(), N);
 
-  int j = N - 1;
+  int j = 0;
   while (d1.Size()) {
-    EXPECT_FLOAT_EQ(d1.Top(), j);
+    EXPECT_FLOAT_EQ(d1.Front(), j);
     d1.Pop();
-    --j;
+    ++j;
   }
 }
 
@@ -44,11 +44,11 @@ TEST(operators_push_long_double, empty_copy_3) {
 
   EXPECT_EQ(d1.Size(), N * 3);
 
-  int j = N * 3 - 1;
+  int j = 0;
   while (d1.Size()) {
-    EXPECT_FLOAT_EQ(d1.Top(), j);
+    EXPECT_FLOAT_EQ(d1.Front(), j);
     d1.Pop();
-    --j;
+    ++j;
   }
 }
 
@@ -83,7 +83,7 @@ TEST(operators_push_long_double, filled_copy_1) {
   EXPECT_EQ(d1.Size(), 64);
 
   while (d1.Size()) {
-    EXPECT_FLOAT_EQ(d1.Top(), d2.top());
+    EXPECT_FLOAT_EQ(d1.Front(), d2.front());
     d1.Pop();
     d2.pop();
   }
@@ -120,7 +120,7 @@ TEST(operators_push_long_double, filled_copy_2) {
   EXPECT_EQ(d1.Size(), 64);
 
   while (d1.Size()) {
-    EXPECT_FLOAT_EQ(d1.Top(), d2.top());
+    EXPECT_FLOAT_EQ(d1.Front(), d2.front());
     d1.Pop();
     d2.pop();
   }
@@ -3212,7 +3212,7 @@ TEST(operators_push_long_double, filled_copy_3) {
   EXPECT_EQ(d1.Size(), 2048);
 
   while (d1.Size()) {
-    EXPECT_FLOAT_EQ(d1.Top(), d2.top());
+    EXPECT_FLOAT_EQ(d1.Front(), d2.front());
     d1.Pop();
     d2.pop();
   }
@@ -3229,7 +3229,7 @@ TEST(operators_push_long_double, empty_move_1) {
 
   int j = N - 2;
   while (d1.Size()) {
-    EXPECT_FLOAT_EQ(d1.Top(), j);
+    EXPECT_FLOAT_EQ(d1.Front(), j);
     d1.Pop();
     --j;
   }
@@ -3245,7 +3245,7 @@ TEST(operators_push_long_double, empty_move_2) {
 
   int j = N - 1;
   while (d1.Size()) {
-    EXPECT_FLOAT_EQ(d1.Top(), j);
+    EXPECT_FLOAT_EQ(d1.Front(), j);
     d1.Pop();
     --j;
   }
@@ -3261,7 +3261,7 @@ TEST(operators_push_long_double, empty_move_3) {
 
   int j = N * 3 - 1;
   while (d1.Size()) {
-    EXPECT_FLOAT_EQ(d1.Top(), j);
+    EXPECT_FLOAT_EQ(d1.Front(), j);
     d1.Pop();
     --j;
   }
@@ -3298,7 +3298,7 @@ TEST(operators_push_long_double, filled_move_1) {
   EXPECT_EQ(d1.Size(), 64);
 
   while (d1.Size()) {
-    EXPECT_FLOAT_EQ(d1.Top(), d2.top());
+    EXPECT_FLOAT_EQ(d1.Front(), d2.front());
     d1.Pop();
     d2.pop();
   }
@@ -3335,7 +3335,7 @@ TEST(operators_push_long_double, filled_move_2) {
   EXPECT_EQ(d1.Size(), 64);
 
   while (d1.Size()) {
-    EXPECT_FLOAT_EQ(d1.Top(), d2.top());
+    EXPECT_FLOAT_EQ(d1.Front(), d2.front());
     d1.Pop();
     d2.pop();
   }
@@ -6427,7 +6427,7 @@ TEST(operators_push_long_double, filled_move_3) {
   EXPECT_EQ(d1.Size(), 2048);
 
   while (d1.Size()) {
-    EXPECT_FLOAT_EQ(d1.Top(), d2.top());
+    EXPECT_FLOAT_EQ(d1.Front(), d2.front());
     d1.Pop();
     d2.pop();
   }

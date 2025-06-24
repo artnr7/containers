@@ -7,12 +7,12 @@ TEST(operators_push_int, empty_copy_1) {
   for (int i = 0; i < N - 1; ++i) {
     d1.Push(i);
   }
-  int j = N - 2;
+  int j = 0;
 
   while (d1.Size()) {
-    EXPECT_EQ(d1.Top(), j);
+    EXPECT_EQ(d1.Front(), j);
     d1.Pop();
-    --j;
+    ++j;
   }
 }
 
@@ -22,12 +22,12 @@ TEST(operators_push_int, empty_copy_2) {
     d1.Push(i);
   }
 
-  int j = N - 1;
+  int j = 0;
 
   while (d1.Size()) {
-    EXPECT_EQ(d1.Top(), j);
+    EXPECT_EQ(d1.Front(), j);
     d1.Pop();
-    --j;
+    ++j;
   }
 }
 
@@ -36,12 +36,12 @@ TEST(operators_push_int, empty_copy_3) {
   for (int i = 0; i < N * 3; ++i) {
     d1.Push(i);
   }
-  int j = N * 3 - 1;
+  int j = 0;
 
   while (d1.Size()) {
-    EXPECT_EQ(d1.Top(), j);
+    EXPECT_EQ(d1.Front(), j);
     d1.Pop();
-    --j;
+    ++j;
   }
 }
 
@@ -61,12 +61,12 @@ TEST(operators_push_int, filled_copy_1) {
     d1.Push(i);
   }
 
-  int j = N * 5 - 1;
+  int j = 0;
 
   while (d1.Size()) {
-    EXPECT_EQ(d1.Top(), j);
+    EXPECT_EQ(d1.Front(), j);
     d1.Pop();
-    --j;
+    ++j;
   }
 }
 
@@ -86,12 +86,12 @@ TEST(operators_push_int, filled_copy_2) {
     d1.Push(i);
   }
 
-  int j = N * 6 - 1;
+  int j = 129;
 
   while (d1.Size()) {
-    EXPECT_EQ(d1.Top(), j);
+    EXPECT_EQ(d1.Front(), j);
     d1.Pop();
-    --j;
+    ++j;
   }
 }
 
@@ -186,12 +186,12 @@ TEST(operators_push_int, filled_copy_3) {
   for (int i = 1025; i < N * 20; ++i) {
     d1.Push(i);
   }
-  int j = N * 20 - 1;
+  int j = 0;
 
   while (d1.Size()) {
-    EXPECT_EQ(d1.Top(), j);
+    EXPECT_EQ(d1.Front(), j);
     d1.Pop();
-    --j;
+    ++j;
   }
 }
 
@@ -201,12 +201,12 @@ TEST(operators_push_int, empty_move_1) {
   for (int i = 0; i < N - 1; ++i) {
 d1.Push(std::move(i));
   }
-  int j = N - 2;
+  int j = 0;
 
   while (d1.Size()) {
-    EXPECT_EQ(d1.Top(), j);
+    EXPECT_EQ(d1.Front(), j);
     d1.Pop();
-    --j;
+    ++j;
   }
 }
 
@@ -216,12 +216,12 @@ TEST(operators_push_int, empty_move_2) {
 d1.Push(std::move(i));
   }
 
-  int j = N - 1;
+  int j = 0;
 
   while (d1.Size()) {
-    EXPECT_EQ(d1.Top(), j);
+    EXPECT_EQ(d1.Front(), j);
     d1.Pop();
-    --j;
+    ++j;
   }
 }
 
@@ -230,12 +230,12 @@ TEST(operators_push_int, empty_move_3) {
   for (int i = 0; i < N * 3; ++i) {
 d1.Push(std::move(i));
   }
-  int j = N * 3 - 1;
+  int j = 0;
 
   while (d1.Size()) {
-    EXPECT_EQ(d1.Top(), j);
+    EXPECT_EQ(d1.Front(), j);
     d1.Pop();
-    --j;
+    ++j;
   }
 }
 
@@ -255,12 +255,12 @@ TEST(operators_push_int, filled_move_1) {
 d1.Push(std::move(i));
   }
 
-  int j = N * 5 - 1;
+  int j = 128;
 
   while (d1.Size()) {
-    EXPECT_EQ(d1.Top(), j);
+    EXPECT_EQ(d1.Front(), j);
     d1.Pop();
-    --j;
+    ++j;
   }
 }
 
@@ -280,12 +280,12 @@ TEST(operators_push_int, filled_move_2) {
 d1.Push(std::move(i));
   }
 
-  int j = N * 6 - 1;
+  int j = 129;
 
   while (d1.Size()) {
-    EXPECT_EQ(d1.Top(), j);
+    EXPECT_EQ(d1.Front(), j);
     d1.Pop();
-    --j;
+    ++j;
   }
 }
 
@@ -380,11 +380,11 @@ TEST(operators_push_int, filled_move_3) {
   for (int i = 1025; i < N * 20; ++i) {
 d1.Push(std::move(i));
   }
-  int j = N * 20 - 1;
+  int j = 1025;
 
   while (d1.Size()) {
-    EXPECT_EQ(d1.Top(), j);
+    EXPECT_EQ(d1.Front(), j);
     d1.Pop();
-    --j;
+    ++j;
   }
 }

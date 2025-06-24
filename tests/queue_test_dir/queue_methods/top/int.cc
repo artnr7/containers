@@ -3,11 +3,11 @@
 TEST(top_method, int_1) {
   s21::Queue<int> d1{1, 2, 3};
 
-  EXPECT_EQ(d1.Top(), 3);
+  EXPECT_EQ(d1.Back(), 3);
 }
 
 TEST(top_method, int_2) {
   s21::Queue<int> d1{1, 2, 3};
   d1.Push(5);
-  EXPECT_EQ(d1.Top(), 5);
+  EXPECT_EQ(d1.Back(), 5);
 }

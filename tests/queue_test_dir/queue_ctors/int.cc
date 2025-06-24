@@ -16,12 +16,12 @@ TEST(int_constructors, init_list_constructor_2) {
   s21::Queue<int> d1{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
   EXPECT_EQ(d1.Size(), 10);
 
-  int j = 10;
+  int j = 1;
 
   while (d1.Size()) {
-    EXPECT_EQ(d1.Top(), j);
+    EXPECT_EQ(d1.Front(), j);
     d1.Pop();
-    --j;
+    ++j;
   }
 }
 
@@ -38,12 +38,12 @@ TEST(int_constructors, init_list_constructor_3) {
       121, 122, 123, 124, 125, 126, 127};
   EXPECT_EQ(d1.Size(), 127);
 
-  int j = 127;
+  int j = 1;
 
   while (d1.Size()) {
-    EXPECT_EQ(d1.Top(), j);
+    EXPECT_EQ(d1.Front(), j);
     d1.Pop();
-    --j;
+    ++j;
   }
 }
 
@@ -60,12 +60,12 @@ TEST(int_constructors, init_list_constructor_4) {
       121, 122, 123, 124, 125, 126, 127, 128};
   EXPECT_EQ(d1.Size(), 128);
 
-  int j = 128;
+  int j = 1;
 
   while (d1.Size()) {
-    EXPECT_EQ(d1.Top(), j);
+    EXPECT_EQ(d1.Front(), j);
     d1.Pop();
-    --j;
+    ++j;
   }
 }
 
@@ -82,12 +82,12 @@ TEST(int_constructors, init_list_constructor_5) {
       121, 122, 123, 124, 125, 126, 127, 128, 129};
   EXPECT_EQ(d1.Size(), 129);
 
-  int j = 129;
+  int j = 1;
 
   while (d1.Size()) {
-    EXPECT_EQ(d1.Top(), j);
+    EXPECT_EQ(d1.Front(), j);
     d1.Pop();
-    --j;
+    ++j;
   }
 }
 
@@ -181,12 +181,12 @@ TEST(int_constructors, init_list_constructor_6) {
       1021, 1022, 1023, 1024};
   EXPECT_EQ(d1.Size(), 1024);
 
-  int j = 1024;
+  int j = 1;
 
   while (d1.Size()) {
-    EXPECT_EQ(d1.Top(), j);
+    EXPECT_EQ(d1.Front(), j);
     d1.Pop();
-    --j;
+    ++j;
   }
 }
 
@@ -208,7 +208,7 @@ TEST(int_constructors, copy_2) {
   int j = 10;
 
   while (d2.Size()) {
-    EXPECT_EQ(d2.Top(), j);
+    EXPECT_EQ(d2.Front(), j);
     d2.Pop();
     --j;
   }
@@ -232,7 +232,7 @@ TEST(int_constructors, move_2) {
   int j = 10;
 
   while (d2.Size()) {
-    EXPECT_EQ(d2.Top(), j);
+    EXPECT_EQ(d2.Front(), j);
     d2.Pop();
     --j;
   }

@@ -6,7 +6,7 @@ TEST(pop_method, int_1) {
   d1.Pop();
 
   EXPECT_EQ(d1.Size(), 2);
-  EXPECT_EQ(d1.Top(), 2);
+  EXPECT_EQ(d1.Back(), 2);
 }
 
 TEST(pop_method, int_2) {
@@ -16,5 +16,5 @@ TEST(pop_method, int_2) {
   d1.Pop();
 
   EXPECT_EQ(d1.Size(), 1);
-  EXPECT_EQ(d1.Top(), 1);
+  EXPECT_EQ(d1.Back(), 1);
 }

@@ -9,17 +9,17 @@ TEST(operators_push_big_data, empty_copy_1) {
     d1.Push(i);
   }
 
-  int j = N - 1;
+  int j = 1;
 
   size_t bd_deque_size = 0;
 
   while (d1.Size()) {
-    bd_deque_size += (d1.Top()).Size();
+    bd_deque_size += (d1.Front()).Size();
 
-    EXPECT_EQ((d1.Top()).ValueProof(j), 1);
+    EXPECT_EQ((d1.Front()).ValueProof(j), 1);
 
     d1.Pop();
-    --j;
+    ++j;
   }
   EXPECT_EQ(bd_deque_size, (N - 1) * 256);
 }
@@ -30,17 +30,17 @@ TEST(operators_push_big_data, empty_copy_2) {
     d1.Push(i);
   }
 
-  int j = N * 3 - 1;
+  int j = 1;
 
   size_t bd_deque_size = 0;
 
   while (d1.Size()) {
-    bd_deque_size += (d1.Top()).Size();
+    bd_deque_size += (d1.Front()).Size();
 
-    EXPECT_EQ((d1.Top()).ValueProof(j), 1);
+    EXPECT_EQ((d1.Front()).ValueProof(j), 1);
 
     d1.Pop();
-    --j;
+    ++j;
   }
   EXPECT_EQ(bd_deque_size, (N * 3 - 1) * 256);
 }
@@ -52,17 +52,17 @@ TEST(operators_push_big_data, filled_copy_1) {
     d1.Push(i);
   }
 
-  int j = N * 2 - 1;
+  int j = 1;
 
   size_t bd_deque_size = 0;
 
   while (d1.Size()) {
-    bd_deque_size += (d1.Top()).Size();
+    bd_deque_size += (d1.Front()).Size();
 
-    EXPECT_EQ((d1.Top()).ValueProof(j), 1);
+    EXPECT_EQ((d1.Front()).ValueProof(j), 1);
 
     d1.Pop();
-    --j;
+    ++j;
   }
   EXPECT_EQ(bd_deque_size, (N * 2 - 1) * 256);
 }
@@ -74,17 +74,17 @@ TEST(operators_push_big_data, empty_move_1) {
     d1.Push(std::move(i));
   }
 
-  int j = N - 1;
+  int j = 1;
 
   size_t bd_deque_size = 0;
 
   while (d1.Size()) {
-    bd_deque_size += (d1.Top()).Size();
+    bd_deque_size += (d1.Front()).Size();
 
-    EXPECT_EQ((d1.Top()).ValueProof(j), 1);
+    EXPECT_EQ((d1.Front()).ValueProof(j), 1);
 
     d1.Pop();
-    --j;
+    ++j;
   }
   EXPECT_EQ(bd_deque_size, (N - 1) * 256);
 }
@@ -95,17 +95,17 @@ TEST(operators_push_big_data, empty_move_2) {
     d1.Push(std::move(i));
   }
 
-  int j = N * 3 - 1;
+  int j = 1;
 
   size_t bd_deque_size = 0;
 
   while (d1.Size()) {
-    bd_deque_size += (d1.Top()).Size();
+    bd_deque_size += (d1.Front()).Size();
 
-    EXPECT_EQ((d1.Top()).ValueProof(j), 1);
+    EXPECT_EQ((d1.Front()).ValueProof(j), 1);
 
     d1.Pop();
-    --j;
+    ++j;
   }
   EXPECT_EQ(bd_deque_size, (N * 3 - 1) * 256);
 }
@@ -117,17 +117,17 @@ TEST(operators_push_big_data, filled_move_1) {
     d1.Push(std::move(i));
   }
 
-  int j = N * 2 - 1;
+  int j = 1;
 
   size_t bd_deque_size = 0;
 
   while (d1.Size()) {
-    bd_deque_size += (d1.Top()).Size();
+    bd_deque_size += (d1.Front()).Size();
 
-    EXPECT_EQ((d1.Top()).ValueProof(j), 1);
+    EXPECT_EQ((d1.Front()).ValueProof(j), 1);
 
     d1.Pop();
-    --j;
+    ++j;
   }
   EXPECT_EQ(bd_deque_size, (N * 2 - 1) * 256);
 }
