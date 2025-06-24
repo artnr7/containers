@@ -1,4 +1,4 @@
-#ifndef S21_QUEUE_H_
+#ifndef S21_QUEUE_H
 #define S21_QUEUE_H_
 
 #include "./s21_deque.h"
@@ -34,6 +34,6 @@ public:
   size_type Size() const { return c.Size(); }
 };
 
-}  // namespace s21
+} // namespace s21
 
-#endif  // S21_QUEUE_H
+#endif // S21_QUEUE_H

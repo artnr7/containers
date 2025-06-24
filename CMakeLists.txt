@@ -9,7 +9,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 find_package(GTest REQUIRED)
 find_package(Threads REQUIRED)
 
-set(SUNDAEKA_CONTAINERS deque stack)
+set(SUNDAEKA_CONTAINERS deque queue stack)
 
 # Список тестируемых контейнеров
 set(CONTAINERS
