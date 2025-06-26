@@ -5,6 +5,7 @@
 
 namespace s21 {
 
+  
 template <typename Ptr_>
 RBTreeNodeBase<Ptr_>::BasePtr_ RBTreeNodeBase<Ptr_>::maximum(BasePtr_ tree) noexcept {
   while (tree->right_ != nullptr) {
@@ -49,11 +50,11 @@ void RBTreeHeader<NodeBase_>::reset() noexcept {
  header_.right_ = &header_;
  node_count_ = 0;
 }
-
+// [TODO] Разобраться в этой функции
 template <typename NodeBase_>
 void RBTreeHeader<NodeBase_>::move_data(RBTreeHeader& other) noexcept {
   header_ = other.header_;
-  header_.parent_->parent_  = &header_;
+  if(header_.parent_) header_.parent_->parent_  = &header_;
   node_count_ = other.node_count_;
   other.reset();
 }
@@ -74,13 +75,13 @@ RBTreeKeyCompare<KeyCompare_>::RBTreeKeyCompare(RBTreeKeyCompare&& other)
 template <typename Val_>
 [[nodiscard]] 
 Val_* RBTreeNode<Val_>::valptr() noexcept {
-  return std::launder(reinterpret_cast<Val_*>(storage_));
+  return std::launder(reinterpret_cast<Val_*>(value_));
 }
 
 template <typename Val_>
 [[nodiscard]]
 const Val_* RBTreeNode<Val_>::valptr() const noexcept {
-  return std::launder(reinterpret_cast<const Val_*>(storage_));
+  return std::launder(reinterpret_cast<const Val_*>(value_));
 }
 
 template <typename Val_>
