@@ -443,3 +443,18 @@ TEST(VectorTest, InsertManyNoArgs) {
   EXPECT_EQ(vec[2], 3);
   EXPECT_EQ(1, 1);
 }
+
+TEST(VectorTest, InsertManyBack) {
+  s21::vector<int> v;
+
+  v.insert_many_back(1, 2, 3);
+  ASSERT_EQ(v.size(), 3);
+  EXPECT_EQ(v[0], 1);
+  EXPECT_EQ(v[1], 2);
+  EXPECT_EQ(v[2], 3);
+
+  std::string s = "test";
+  s21::vector<std::string> vs;
+  vs.insert_many_back(std::move(s));
+  EXPECT_FALSE(s.empty());
+}
