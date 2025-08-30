@@ -4,33 +4,41 @@
 #include <algorithm>
 #include <iostream>
 namespace s21 {
-template <typename T> class Deque {
-
-public:
+template <typename T>
+class Deque {
+ public:
   using value_type = T;
   using reference = T &;
   using const_reference = const T &;
   using size_type = size_t;
 
   class Iterator {
-  public:
+   public:
     /*--------→ CONSTRUCTORS ←-------------*/
     Iterator() noexcept
-        : _cur_chunk(nullptr), _cur_el(nullptr), _first_el(nullptr),
+        : _cur_chunk(nullptr),
+          _cur_el(nullptr),
+          _first_el(nullptr),
           _last_el(nullptr) {}
     // @todo не знаю как сделать с помощью const чтобы нельзя изменить что-то
     // внутри конструктора ↓
     Iterator(T **cur_chunk, T *cur_elt, T *first_el, T *last_el) noexcept
-        : _cur_chunk(cur_chunk), _cur_el(cur_elt), _first_el(first_el),
+        : _cur_chunk(cur_chunk),
+          _cur_el(cur_elt),
+          _first_el(first_el),
           _last_el(last_el) {}
 
     Iterator(const Iterator &o)
-        : _cur_chunk(o._cur_chunk), _cur_el(o._cur_el), _first_el(o._first_el),
+        : _cur_chunk(o._cur_chunk),
+          _cur_el(o._cur_el),
+          _first_el(o._first_el),
           _last_el(o._last_el) {}
 
     Iterator(Iterator &&o) noexcept
-        : _cur_chunk(std::move(o._cur_chunk)), _cur_el(std::move(o._cur_el)),
-          _first_el(std::move(o._first_el)), _last_el(std::move(o._last_el)) {
+        : _cur_chunk(std::move(o._cur_chunk)),
+          _cur_el(std::move(o._cur_el)),
+          _first_el(std::move(o._first_el)),
+          _last_el(std::move(o._last_el)) {
       o._cur_chunk = nullptr;
       o._cur_el = nullptr;
       o._first_el = nullptr;
@@ -106,7 +114,7 @@ public:
               _first_el == o._first_el && _last_el == o._last_el);
     }
 
-  private:
+   private:
     friend class Deque<T>;
 
     T **_cur_chunk;
@@ -151,7 +159,9 @@ public:
 
   /** @brief Конструктор копирования */
   Deque(const Deque &o)
-      : _map_size(o._map_size), _map(o._map), _start(o._start),
+      : _map_size(o._map_size),
+        _map(o._map),
+        _start(o._start),
         _finish(o._finish) {
     if (!EqZero(o.Size())) {
       Malloc(GetChunkCapacity(), o.Size() / GetChunkCapacity() + 1);
@@ -164,8 +174,10 @@ public:
 
   /** @brief Конструктор перемешщения */
   Deque(Deque &&o) noexcept
-      : _map_size(std::move(o._map_size)), _map(std::move(o._map)),
-        _start(std::move(o._start)), _finish(std::move(o._finish)) {
+      : _map_size(std::move(o._map_size)),
+        _map(std::move(o._map)),
+        _start(std::move(o._start)),
+        _finish(std::move(o._finish)) {
     o._map_size = 0;
     o._map = nullptr;
     o._start = Iterator();
@@ -234,25 +246,27 @@ public:
     return *tmp_finish._cur_el;
   }
 
-  void PopBack() { // удаление последнего элемента
+  void PopBack() {  // удаление последнего элемента
     if (Size()) {
       --_finish;
       *_finish._cur_el = T{};
     }
   }
 
-  void PopFront() { // удаление последнего элемента
+  void PopFront() {  // удаление последнего элемента
     if (Size()) {
       *_start._cur_el = T{};
       ++_start;
     }
   }
 
-  template <typename... Args> void AppendRange(Args &&...args) {
+  template <typename... Args>
+  void AppendRange(Args &&...args) {
     (PushBack(std::forward<Args>(args)), ...);
   }
 
-  template <typename U> void PushBack(U &&value) {
+  template <typename U>
+  void PushBack(U &&value) {
     const size_t &chunk_capacity = GetChunkCapacity();
     if (_map == nullptr) {
       DeqInit(1);
@@ -266,7 +280,8 @@ public:
     ExpandMapsize(chunk_capacity);
   }
 
-  template <typename U> void PushFront(U &&value) {
+  template <typename U>
+  void PushFront(U &&value) {
     const size_t &chunk_capacity = GetChunkCapacity();
     if (_map == nullptr) {
       DeqInit(1);
@@ -315,10 +330,10 @@ public:
 
   Iterator End() const noexcept { return _finish; }
 
-#define CONTAINER_ELEM_MAX_QTY 4611686018427387903 // ← в элементах 2^62
+#define CONTAINER_ELEM_MAX_QTY 4611686018427387903  // ← в элементах 2^62
   constexpr size_t MaxSize() noexcept { return CONTAINER_ELEM_MAX_QTY; }
 
-private:
+ private:
   friend class Iterator;
 
   /*--------→  VARIABLES ←-------------*/
@@ -332,7 +347,7 @@ private:
   /** @note Определения
    * ШТ - Шаблонный тип */
 
-#define BUF_SIZE 512 // ← в байтах
+#define BUF_SIZE 512  // ← в байтах
   /** @brief Нахождение максимально возможно количества вмещенных ШТ в
    * BUF_SIZE*/
   constexpr static size_t GetChunkCapacity() noexcept {
@@ -343,7 +358,7 @@ private:
     return sizeof(T) < BUF_SIZE ? size_t(BUF_SIZE / sizeof(T)) : size_t(1);
   }
 
-#define RESERVE_SHIFT 1 // ← кол-во запасных указателей, != 0
+#define RESERVE_SHIFT 1  // ← кол-во запасных указателей, != 0
   /** @brief Выделение памяти и инициализация итераторов */
   void DeqInit(const size_t Tp_qty) {
     const size_t &chunk_capacity = GetChunkCapacity();
@@ -529,14 +544,13 @@ private:
   }
 
   /** @brief Функция заполнения выделенной памяти заданными значениями */
-  void BlocksFill(const T value) { // @todo сделать const T& value
+  void BlocksFill(const T value) {  // @todo сделать const T& value
     std::fill(Begin(), End(), value);
   }
 
   /** @brief Функция заполнения выделенной памяти заданными значениями из
    * initializer_list */
   void BlocksFill(const std::initializer_list<T> values) {
-
     auto values_it = values.begin();
     for (auto itB = Begin(); itB != End(); ++itB, ++values_it) {
       *itB = *values_it;
@@ -589,6 +603,6 @@ private:
   }
 };
 
-} // namespace s21
+}  // namespace s21
 
 #endif

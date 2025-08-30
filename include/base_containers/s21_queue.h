@@ -5,26 +5,31 @@
 
 namespace s21 {
 
-template <typename T, typename Container = Deque<T>> class Queue {
-public:
+template <typename T, typename Container = Deque<T>>
+class Queue {
+ public:
   using value_type = Container::value_type;
   using reference = Container::reference;
   using const_reference = Container::const_reference;
   using size_type = Container::size_type;
 
-protected:
+ protected:
   Container c;
 
-public:
+ public:
   explicit Queue() : c() {}
   Queue(const std::initializer_list<value_type> &values) : c{values} {}
 
   /*--------→ METHODS  ←-----------*/
-  template <typename U> void Push(U &&value) { c.PushBack(value); }
+  template <typename U>
+  void Push(U &&value) {
+    c.PushBack(value);
+  }
   void Pop() { c.PopFront(); }
   void Swap(Queue &o) { std::swap(c, o.c); }
 
-  template <typename... Args> void InsertManyBack(Args &&...args) {
+  template <typename... Args>
+  void InsertManyBack(Args &&...args) {
     (c.PushBack(std::forward<Args>(args)), ...);
   }
 
@@ -38,6 +43,6 @@ public:
   size_type Size() const { return c.Size(); }
 };
 
-} // namespace s21
+}  // namespace s21
 
-#endif // S21_QUEUE_H
+#endif  // S21_QUEUE_H

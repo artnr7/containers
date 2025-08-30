@@ -438,4 +438,3 @@ class vector {
 }  // namespace s21
 
 #endif  // S21_VECTOR_H
-
