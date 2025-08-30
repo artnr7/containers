@@ -1,8 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "../include/base_containers/s21_array.h"
-
-// TODO(root): Add test cases for array
+#include "base_containers/s21_array.h"
 
 TEST(ArrayTest, DefaultConstructor) {
   s21::array<int, 3> arr;

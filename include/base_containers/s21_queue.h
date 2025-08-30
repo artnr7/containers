@@ -1,4 +1,4 @@
-#ifndef S21_QUEUE_H
+#ifndef S21_QUEUE_H_
 #define S21_QUEUE_H_
 
 #include "./s21_deque.h"

@@ -1,0 +1,6 @@
+add_subdirectory(rb_tree)
+add_subdirectory(map_set_multiset)
+add_subdirectory(array_vector)
+add_subdirectory(deque)
+add_subdirectory(queue)
+add_subdirectory(stack)

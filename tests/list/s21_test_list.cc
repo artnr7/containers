@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "./../include/base_containers/s21_list.h"
+#include "base_containers/s21_list.h"
 
 // TODO(root): Add test cases for list
 
