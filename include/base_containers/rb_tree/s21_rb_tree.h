@@ -1,8 +1,6 @@
 #ifndef _S21_RB_TREE_
 #define _S21_RB_TREE_
 
-#include <queue>
-
 #include "s21_rb_tree_utils.h"
 #include "base_containers/s21_vector.h"
 
@@ -85,15 +83,19 @@ class RbTree {
   iterator LowerBound(BasePtr_ x, BasePtr_ y, const Key_& key) const;
   iterator UpperBound(BasePtr_ x, BasePtr_ y, const Key_& key) const;
 
-  static void RotateLeft(BasePtr_ x, BasePtr_& root);
-  static void RotateRight(BasePtr_ x, BasePtr_& root);
-  static void Transplant(BasePtr_ u, BasePtr_ v, NodeBase_& header);
-  static void UpdateBoundaryPointers(NodeBase_& header);
-  static void RebalanceInsert(BasePtr_ x, BasePtr_& root);
-  static void RebalanceErase(BasePtr_ x, BasePtr_ x_parent, BasePtr_& root);
+  void PushNode(BasePtr_ parent, BasePtr_ new_node, NodeBase_& header,
+                       bool is_left);
+  BasePtr_ ExtractNode(BasePtr_ z, NodeBase_& header);
 
-  static bool IsBlack(BasePtr_ node);
-  static bool IsRed(BasePtr_ node);
+  void RotateLeft(BasePtr_ x, BasePtr_& root);
+  void RotateRight(BasePtr_ x, BasePtr_& root);
+  void Transplant(BasePtr_ u, BasePtr_ v, NodeBase_& header);
+  void UpdateBoundaryPointers(NodeBase_& header);
+  void RebalanceInsert(BasePtr_ x, BasePtr_& root);
+  void RebalanceErase(BasePtr_ x, BasePtr_ x_parent, BasePtr_& root);
+
+  bool IsBlack(BasePtr_ node);
+  bool IsRed(BasePtr_ node);
 
  public:
   RbTree() = default;
@@ -159,10 +161,6 @@ class RbTree {
   const_iterator begin() const noexcept;
   const_iterator end() const noexcept;
 
-  static void PushNode(BasePtr_ parent, BasePtr_ new_node, NodeBase_& header,
-                       bool is_left);
-  static BasePtr_ ExtractNode(BasePtr_ z, NodeBase_& header);
-
   template <typename InsertFunc, typename... Args>
   vector<std::pair<iterator, bool>>
   InsertMany(InsertFunc insert_func, Args&&...);
@@ -172,43 +170,6 @@ class RbTree {
 
   template <typename... Args>
   vector<std::pair<iterator, bool>> InsertManyEqual(Args&&...);
-
-  void PrintTreeByLevelsSimple() {
-    if (!impl_.header_.parent_ || impl_.header_.parent_ == GetEnd()) {
-      std::cout << "Tree is empty!" << std::endl;
-      return;
-    }
-
-    std::cout << "Tree:" << std::endl;
-
-    std::queue<BasePtr_> q;
-    q.push(impl_.header_.parent_);
-
-    while (!q.empty()) {
-      int level_size = q.size();
-
-      for (int i = 0; i < level_size; ++i) {
-        BasePtr_ node = q.front();
-        q.pop();
-
-        if (node == GetEnd() || !node) continue;
-
-        const Key_& key = GetKey(node);
-        std::string color = (node->color_ == Color_::kRed) ? "R" : "B";
-        std::cout << key << color << ":"
-                  << (*static_cast<Node_&>(*node).GetValPtr()).second << " ";
-
-        if (node->left_ && node->left_ != GetEnd()) {
-          q.push(node->left_);
-        }
-        if (node->right_ && node->right_ != GetEnd()) {
-          q.push(node->right_);
-        }
-      }
-      std::cout << std::endl;
-    }
-    std::cout << std::endl;
-  }
 };
 
 template <typename Key_, typename Val_, typename KeyOfValue_, typename Compare_,
