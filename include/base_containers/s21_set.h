@@ -75,6 +75,9 @@ class Set {
   iterator Find(const key_type& key);
   const_iterator Find(const key_type& key) const;
   bool Contains(const key_type& key) const;
+
+  template <typename... Args>
+  vector<std::pair<iterator, bool>> InsertMany(Args&&... args);
 };
 
 template <typename Key_, typename Compare_, typename Alloc_,
@@ -179,6 +182,14 @@ Set<Key_, Compare_, Alloc_>::const_iterator Set<Key_, Compare_, Alloc_>::Find(
 template <typename Key_, typename Compare_, typename Alloc_>
 bool Set<Key_, Compare_, Alloc_>::Contains(const key_type& key) const {
   return rb_tree_.Find(key) != rb_tree_.end();
+}
+
+template <typename Key_, typename Compare_, typename Alloc_>
+template <typename... Args>
+vector<std::pair<
+  typename Set<Key_, Compare_, Alloc_>::iterator, bool>>
+Set<Key_, Compare_, Alloc_>::InsertMany(Args&&... args) {
+    return rb_tree_.InsertManyUnique(std::forward<Args>(args)...);
 }
 
 }  //  namespace s21

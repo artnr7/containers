@@ -88,6 +88,9 @@ class Multiset {
 
   const_iterator LowerBound(const key_type& key) const;
   const_iterator UpperBound(const key_type& key) const;
+
+  template <typename... Args>
+  vector<std::pair<iterator, bool>> InsertMany(Args&&... args);
 };
 
 template <typename Key_, typename Compare_, typename Alloc_,
@@ -239,6 +242,14 @@ template <typename Key_, typename Compare_, typename Alloc_>
 Multiset<Key_, Compare_, Alloc_>::const_iterator
 Multiset<Key_, Compare_, Alloc_>::UpperBound(const key_type& key) const {
   return rb_tree_.UpperBound(key);
+}
+
+template <typename Key_, typename Compare_, typename Alloc_>
+template <typename... Args>
+vector<std::pair<
+  typename Multiset<Key_, Compare_, Alloc_>::iterator, bool>>
+Multiset<Key_, Compare_, Alloc_>::InsertMany(Args&&... args) {
+  return rb_tree_.InsertManyEqual(std::forward<Args>(args)...);
 }
 
 }  //  namespace s21
