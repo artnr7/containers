@@ -11,7 +11,6 @@ RUN wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | gpg --dearmor -o /usr
       cmake \
       python3-pip \
       git \
-      cppcheck \
       lcov \
       valgrind \
       clang-format-18 \
@@ -23,10 +22,5 @@ WORKDIR /project
 COPY . .
 
 WORKDIR /project/src
-
-#RUN cmake -DCOVERAGE=ON -B build -S .
-#RUN cmake --build build
-
-#WORKDIR /project/build
 
 CMD ["/bin/bash"]
