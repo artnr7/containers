@@ -522,3 +522,65 @@ TEST(SetTest, EraseThrowsWhenPositionIsEnd) {
 
   EXPECT_THROW(set.Erase(end_it), std::out_of_range);
 }
+
+TEST(SetTest, InsertManyBasic) {
+  s21::Set<int> set;
+
+  auto results = set.InsertMany(1, 2, 3, 4, 5);
+
+  EXPECT_EQ(set.Size(), 5);
+  EXPECT_EQ(results.size(), 5);
+
+  for (const auto& result : results) {
+    EXPECT_TRUE(result.second);
+  }
+
+  EXPECT_TRUE(set.Contains(1));
+  EXPECT_TRUE(set.Contains(3));
+  EXPECT_TRUE(set.Contains(5));
+}
+
+TEST(SetTest, InsertManyWithDuplicates) {
+  s21::Set<int> set;
+
+  auto results = set.InsertMany(1, 2, 1, 3, 2, 1);
+
+  EXPECT_EQ(set.Size(), 3);
+  EXPECT_EQ(results.size(), 6);
+
+  EXPECT_TRUE(results[0].second);
+  EXPECT_TRUE(results[1].second);
+  EXPECT_FALSE(results[2].second);
+  EXPECT_TRUE(results[3].second);
+  EXPECT_FALSE(results[4].second);
+  EXPECT_FALSE(results[5].second);
+}
+
+TEST(SetTest, InsertManyEmpty) {
+  s21::Set<int> set;
+
+  auto results = set.InsertMany();
+
+  EXPECT_TRUE(set.Empty());
+  EXPECT_TRUE(results.empty());
+}
+
+TEST(SetTest, InsertManyMixedTypes) {
+  s21::Set<std::string> set;
+
+  auto results = set.InsertMany("hello", "world", "test");
+
+  EXPECT_EQ(set.Size(), 3);
+  EXPECT_TRUE(set.Contains("hello"));
+  EXPECT_TRUE(set.Contains("world"));
+}
+
+TEST(SetTest, InsertManyIteratorsValid) {
+  s21::Set<int> set;
+
+  auto results = set.InsertMany(10, 20, 30);
+
+  EXPECT_EQ(*(results[0].first), 10);
+  EXPECT_EQ(*(results[1].first), 20);
+  EXPECT_EQ(*(results[2].first), 30);
+}
