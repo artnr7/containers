@@ -2,11 +2,10 @@
 
 :root {
   --textColor: aliceblue;
-  --mainBg: #1e1e1e; /* ← БЫЛО #131313, СТАЛО #1e1e1e (светлее) */
+  --mainBg: #1e1e1e;
   --linkColor: aquamarine;
-  --lighter: #ffffff10; /* ← Также можно сделать светлее */
+  --lighter: #ffffff10;
 
-  /* Добавим переменные для покрытия */
   --lineCov-bg: #004d40;
   --lineCov-text: #a7ffeb;
   --lineNoCov-bg: #500000;
@@ -48,7 +47,6 @@ td.coverBar > table {
   padding: 0;
 }
 
-/*code-related style is below this line*/
 span.tlaGNC {
     background-color: var(--lineCov-bg);
 }
