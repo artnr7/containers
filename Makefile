@@ -7,7 +7,7 @@ docker-build:
 
 .PHONY: build
 build:
-	docker run --rm -v $(PWD):/project -w /project/build $(IMAGE_NAME) bash -c "cmake -DCOVERAGE=ON -B . -S .. && cmake --build ."
+	docker run --rm -v $(PWD):/project -w /project/build $(IMAGE_NAME) bash -c "cmake -DCOVERAGE=ON -B . -S .. && cmake --build . --parallel $(nproc)"
 
 .PHONY: test
 test:
@@ -21,8 +21,8 @@ test-%:
 test-verbose-%:
 	docker run --rm -v $(PWD):/project -w /project/build $(IMAGE_NAME) ctest -V -R ^$*$$
 
-.PHONY: clang-format
-clang-format:
+.PHONY: clang-format-test
+clang-format-test:
 	docker run --rm -v $(PWD):/project -w /project/build $(IMAGE_NAME) cmake --build . --target clang-format-test
 
 .PHONY: clang-format-fix
