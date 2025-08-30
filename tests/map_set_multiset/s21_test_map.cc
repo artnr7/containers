@@ -460,3 +460,56 @@ TEST(MapIntegrationTest, LargeInsertion) {
   }
   EXPECT_EQ(expected, count);
 }
+
+TEST(MapTest, InsertManyBasic) {
+  s21::Map<int, std::string> map;
+
+  auto results = map.InsertMany(
+    std::make_pair(1, "one"),
+    std::make_pair(2, "two"),
+    std::make_pair(3, "three")
+  );
+
+  EXPECT_EQ(map.Size(), 3);
+  EXPECT_EQ(results.size(), 3);
+
+  for (const auto& result : results) {
+    EXPECT_TRUE(result.second);
+  }
+
+  EXPECT_EQ(map[1], "one");
+  EXPECT_EQ(map[2], "two");
+  EXPECT_EQ(map[3], "three");
+}
+
+TEST(MapTest, InsertManyWithDuplicateKeys) {
+  s21::Map<int, std::string> map;
+
+  auto results = map.InsertMany(
+    std::make_pair(1, "first"),
+    std::make_pair(1, "duplicate"),
+    std::make_pair(2, "second")
+  );
+
+  EXPECT_EQ(map.Size(), 2);
+  EXPECT_EQ(results.size(), 3);
+
+  EXPECT_TRUE(results[0].second);
+  EXPECT_FALSE(results[1].second);
+  EXPECT_TRUE(results[2].second);
+
+  EXPECT_EQ(map[1], "first");
+}
+
+TEST(MapTest, InsertManyComplexTypes) {
+  s21::Map<std::string, s21::vector<int>> map;
+
+  auto results = map.InsertMany(
+    std::make_pair("a", s21::vector<int>{1, 2, 3}),
+    std::make_pair("b", s21::vector<int>{4, 5})
+  );
+
+  EXPECT_EQ(map.Size(), 2);
+  EXPECT_EQ(map["a"].size(), 3);
+  EXPECT_EQ(map["b"].size(), 2);
+}
