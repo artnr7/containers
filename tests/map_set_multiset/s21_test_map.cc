@@ -513,3 +513,15 @@ TEST(MapTest, InsertManyComplexTypes) {
   EXPECT_EQ(map["a"].size(), 3);
   EXPECT_EQ(map["b"].size(), 2);
 }
+
+TEST(MapTest, InsertManyEmpty) {
+  s21::Map<int, std::string> map;
+
+  auto results = map.InsertMany();
+
+  EXPECT_TRUE(map.Empty());
+  EXPECT_EQ(map.Size(), 0);
+
+  EXPECT_TRUE(results.empty());
+  EXPECT_EQ(results.size(), 0);
+}
