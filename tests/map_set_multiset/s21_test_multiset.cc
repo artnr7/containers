@@ -325,17 +325,84 @@ TEST(MultisetTest, ConstBeginEnd) {
   EXPECT_NE(const_it, const_multiset.End());
   EXPECT_EQ(*const_it, 1);
 
-  std::vector<int> const_values;
+  s21::vector<int> const_values;
   for (auto it = const_multiset.Begin(); it != const_multiset.End(); ++it) {
     const_values.push_back(*it);
   }
 
-  std::vector<int> expected{1, 2, 2, 3, 3, 3};
-  EXPECT_EQ(const_values, expected);
+  EXPECT_EQ(const_values[0], 1);
+  EXPECT_EQ(const_values[1], 2);
+  EXPECT_EQ(const_values[2], 2);
+  EXPECT_EQ(const_values[3], 3);
+  EXPECT_EQ(const_values[4], 3);
+  EXPECT_EQ(const_values[5], 3);
 }
 
 TEST(MultisetTest, ConstBeginEmpty) {
   const s21::Multiset<int> empty_const_multiset;
 
   EXPECT_EQ(empty_const_multiset.Begin(), empty_const_multiset.End());
+}
+
+TEST(MultisetTest, InsertManyBasic) {
+  s21::Multiset<int> multiset;
+
+  auto results = multiset.InsertMany(1, 2, 3, 4, 5);
+
+  EXPECT_EQ(multiset.Size(), 5);
+  EXPECT_EQ(results.size(), 5);
+
+  for (const auto& result : results) {
+    EXPECT_TRUE(result.second);
+  }
+}
+
+TEST(MultisetTest, InsertManyWithDuplicates) {
+  s21::Multiset<int> multiset;
+
+  auto results = multiset.InsertMany(1, 2, 1, 3, 2, 1);
+
+  EXPECT_EQ(multiset.Size(), 6);
+  EXPECT_EQ(results.size(), 6);
+
+  for (const auto& result : results) {
+    EXPECT_TRUE(result.second);
+  }
+
+  EXPECT_EQ(multiset.Count(1), 3);
+  EXPECT_EQ(multiset.Count(2), 2);
+  EXPECT_EQ(multiset.Count(3), 1);
+}
+
+TEST(MultisetTest, InsertManyEmpty) {
+  s21::Multiset<int> multiset;
+
+  auto results = multiset.InsertMany();
+
+  EXPECT_TRUE(multiset.Empty());
+  EXPECT_TRUE(results.empty());
+}
+
+TEST(MultisetTest, InsertManyCount) {
+  s21::Multiset<int> multiset;
+
+  multiset.InsertMany(1, 1, 1, 2, 2, 3);
+
+  EXPECT_EQ(multiset.Count(1), 3);
+  EXPECT_EQ(multiset.Count(2), 2);
+  EXPECT_EQ(multiset.Count(3), 1);
+  EXPECT_EQ(multiset.Count(4), 0);
+}
+
+TEST(MultisetTest, InsertManyOrder) {
+  s21::Multiset<int> multiset;
+
+  multiset.InsertMany(5, 3, 1, 4, 2);
+
+  auto it = multiset.Begin();
+  EXPECT_EQ(*it++, 1);
+  EXPECT_EQ(*it++, 2);
+  EXPECT_EQ(*it++, 3);
+  EXPECT_EQ(*it++, 4);
+  EXPECT_EQ(*it++, 5);
 }
