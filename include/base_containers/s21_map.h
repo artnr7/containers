@@ -225,10 +225,9 @@ bool Map<Key_, T_, Compare_, Alloc_>::Contains(const key_type& key) const {
 
 template <typename Key_, typename T_, typename Compare_, typename Alloc_>
 template <typename... Args>
-vector<std::pair<
-  typename Map<Key_, T_, Compare_, Alloc_>::iterator, bool>>
+vector<std::pair<typename Map<Key_, T_, Compare_, Alloc_>::iterator, bool>>
 Map<Key_, T_, Compare_, Alloc_>::InsertMany(Args&&... args) {
-    return rb_tree_.InsertManyUnique(std::forward<Args>(args)...);
+  return rb_tree_.InsertManyUnique(std::forward<Args>(args)...);
 }
 
 }  //  namespace s21

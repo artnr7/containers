@@ -1,8 +1,8 @@
 #ifndef _S21_RB_TREE_
 #define _S21_RB_TREE_
 
-#include "s21_rb_tree_utils.h"
 #include "base_containers/s21_vector.h"
+#include "s21_rb_tree_utils.h"
 
 namespace s21 {
 
@@ -10,7 +10,7 @@ template <typename Tree, typename OtherCompare_>
 struct RbTreeMergeHelper {};
 
 template <typename Key_, typename Val_, typename KeyOfValue_, typename Compare_,
-          typename Alloc_ = std::allocator<Val_> >
+          typename Alloc_ = std::allocator<Val_>>
 class RbTree {
  private:
   using ValAlloc_ = std::allocator_traits<Alloc_>::template rebind_alloc<Val_>;
@@ -84,7 +84,7 @@ class RbTree {
   iterator UpperBound(BasePtr_ x, BasePtr_ y, const key_type& key) const;
 
   void PushNode(BasePtr_ parent, BasePtr_ new_node, NodeBase_& header,
-                       bool is_left);
+                bool is_left);
   BasePtr_ ExtractNode(BasePtr_ z, NodeBase_& header);
 
   void RotateLeft(BasePtr_ x, BasePtr_& root);
@@ -169,8 +169,8 @@ class RbTree {
   const_iterator end() const noexcept;
 
   template <typename InsertFunc, typename... Args>
-  vector<std::pair<iterator, bool>>
-  InsertMany(InsertFunc insert_func, Args&&...);
+  vector<std::pair<iterator, bool>> InsertMany(InsertFunc insert_func,
+                                               Args&&...);
 
   template <typename... Args>
   vector<std::pair<iterator, bool>> InsertManyUnique(Args&&...);
@@ -331,8 +331,8 @@ RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::GetRight(
 template <typename Key_, typename Val_, typename KeyOfValue_, typename Compare_,
           typename Alloc_>
 const RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::key_type&
-RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::
-GetKey(BasePtr_ node_ptr) const {
+RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::GetKey(
+    BasePtr_ node_ptr) const {
   const Node_& node = static_cast<const Node_&>(*node_ptr);
   static_assert(
       std::is_invocable_v<const Compare_&, const key_type&, const key_type&>,
@@ -382,9 +382,8 @@ RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::NewNode() {
 
 template <typename Key_, typename Val_, typename KeyOfValue_, typename Compare_,
           typename Alloc_>
-void
-RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::
-DeleteNode(NodePtr_ node_ptr) {
+void RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::DeleteNode(
+    NodePtr_ node_ptr) {
   if constexpr (std::is_same_v<NodePtr_, typename NodeAllocTraits_::pointer>) {
     NodeAllocTraits_::deallocate(impl_, node_ptr, 1);
   } else {
@@ -399,8 +398,8 @@ DeleteNode(NodePtr_ node_ptr) {
 template <typename Key_, typename Val_, typename KeyOfValue_, typename Compare_,
           typename Alloc_>
 template <typename Arg_>
-void RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::
-ConstructNode(NodePtr_ node, Arg_ arg) {
+void RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::ConstructNode(
+    NodePtr_ node, Arg_ arg) {
   try {
     ::new (std::addressof(*node)) Node_;
     NodeAllocTraits_::construct(impl_, node->GetValPtr(),
@@ -414,8 +413,8 @@ ConstructNode(NodePtr_ node, Arg_ arg) {
 
 template <typename Key_, typename Val_, typename KeyOfValue_, typename Compare_,
           typename Alloc_>
-void RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::
-DestroyNode(NodePtr_ node) {
+void RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::DestroyNode(
+    NodePtr_ node) {
   NodeAllocTraits_::destroy(impl_, node->GetValPtr());
   node->~Node_();
 }
@@ -424,8 +423,7 @@ template <typename Key_, typename Val_, typename KeyOfValue_, typename Compare_,
           typename Alloc_>
 template <typename Arg_>
 RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::NodePtr_
-RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::
-CreateNode(Arg_ arg) {
+RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::CreateNode(Arg_ arg) {
   NodePtr_ ptr = NewNode();
   ConstructNode(ptr, std::forward<Arg_>(arg));
   return ptr;
@@ -433,8 +431,8 @@ CreateNode(Arg_ arg) {
 
 template <typename Key_, typename Val_, typename KeyOfValue_, typename Compare_,
           typename Alloc_>
-void RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::
-DropNode(NodePtr_ node) {
+void RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::DropNode(
+    NodePtr_ node) {
   DestroyNode(node);
   DeleteNode(node);
 }
@@ -443,8 +441,8 @@ template <typename Key_, typename Val_, typename KeyOfValue_, typename Compare_,
           typename Alloc_>
 std::pair<typename RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::BasePtr_,
           typename RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::BasePtr_>
-RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::
-GetInsertUniquePos(const key_type& key) {
+RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::GetInsertUniquePos(
+    const key_type& key) {
   std::pair<BasePtr_, BasePtr_> result;
   BasePtr_ node = GetBegin();
   BasePtr_ parent = GetEnd();
@@ -475,8 +473,8 @@ template <typename Key_, typename Val_, typename KeyOfValue_, typename Compare_,
           typename Alloc_>
 std::pair<typename RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::BasePtr_,
           typename RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::BasePtr_>
-RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::
-GetInsertEqualPos(const key_type& k) {
+RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::GetInsertEqualPos(
+    const key_type& k) {
   BasePtr_ node = GetBegin();
   BasePtr_ parent = GetEnd();
 
@@ -496,8 +494,8 @@ template <typename Key_, typename Val_, typename KeyOfValue_, typename Compare_,
           typename Alloc_>
 std::pair<typename RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::BasePtr_,
           typename RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::BasePtr_>
-RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::
-GetInsertHintUniquePos(const_iterator hint, const key_type& k) {
+RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::GetInsertHintUniquePos(
+    const_iterator hint, const key_type& k) {
   BasePtr_ x = hint.node_;
   std::pair<BasePtr_, BasePtr_> result{BasePtr_(), BasePtr_()};
 
@@ -548,8 +546,9 @@ template <typename Key_, typename Val_, typename KeyOfValue_, typename Compare_,
           typename Alloc_>
 template <typename Arg_>
 RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::iterator
-RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::
-InsertNode(BasePtr_ node, BasePtr_ parent, Arg_&& arg) {
+RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::InsertNode(BasePtr_ node,
+                                                              BasePtr_ parent,
+                                                              Arg_&& arg) {
   AllocNode alloc_node(*this);
   BasePtr_ new_base = alloc_node(std::forward<Arg_>(arg))->GetBasePtr();
 
@@ -567,8 +566,7 @@ template <typename Key_, typename Val_, typename KeyOfValue_, typename Compare_,
 template <typename Arg_>
 std::pair<typename RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::iterator,
           bool>
-RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::
-InsertUnique(Arg_&& x) {
+RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::InsertUnique(Arg_&& x) {
   using Result_ = std::pair<iterator, bool>;
   std::pair<BasePtr_, BasePtr_> res = GetInsertUniquePos(KeyOfValue_()(x));
   Result_ result = Result_(res.first, false);
@@ -585,8 +583,7 @@ template <typename Key_, typename Val_, typename KeyOfValue_, typename Compare_,
           typename Alloc_>
 template <typename Arg_>
 RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::iterator
-RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::
-InsertEqual(Arg_&& x) {
+RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::InsertEqual(Arg_&& x) {
   std::pair<BasePtr_, BasePtr_> res = GetInsertEqualPos(KeyOfValue_()(x));
   return InsertNode(res.first, res.second, std::forward<Arg_>(x));
 }
@@ -595,8 +592,7 @@ template <typename Key_, typename Val_, typename KeyOfValue_, typename Compare_,
           typename Alloc_>
 template <typename Arg_>
 typename RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::iterator
-RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::
-InsertHintUnique(
+RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::InsertHintUnique(
     iterator hint, Arg_&& arg) {
   std::pair<BasePtr_, BasePtr_> pos = GetInsertHintUniquePos(hint, arg);
   iterator result(pos.first);
@@ -612,8 +608,7 @@ InsertHintUnique(
 template <typename Key_, typename Val_, typename KeyOfValue_, typename Compare_,
           typename Alloc_>
 RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::iterator
-RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::
-Erase(iterator position) {
+RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::Erase(iterator position) {
   if (position == end()) {
     throw std::out_of_range("Iterator cannot be end");
   }
@@ -627,8 +622,8 @@ Erase(iterator position) {
 template <typename Key_, typename Val_, typename KeyOfValue_, typename Compare_,
           typename Alloc_>
 template <typename OtherCompare_, typename GetPosFunc>
-void RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::
-Merge(OtherTree_<OtherCompare_>& other_tree, GetPosFunc get_pos) noexcept {
+void RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::Merge(
+    OtherTree_<OtherCompare_>& other_tree, GetPosFunc get_pos) noexcept {
   auto it = other_tree.begin();
   auto end = other_tree.end();
   while (it != end) {
@@ -654,8 +649,7 @@ Merge(OtherTree_<OtherCompare_>& other_tree, GetPosFunc get_pos) noexcept {
 template <typename Key_, typename Val_, typename KeyOfValue_, typename Compare_,
           typename Alloc_>
 template <typename OtherCompare_>
-void RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::
-MergeUnique(
+void RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::MergeUnique(
     OtherTree_<OtherCompare_>& other_tree) noexcept {
   Merge(other_tree,
         [this](const key_type& key) { return GetInsertUniquePos(key); });
@@ -664,8 +658,7 @@ MergeUnique(
 template <typename Key_, typename Val_, typename KeyOfValue_, typename Compare_,
           typename Alloc_>
 template <typename OtherCompare_>
-void RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::
-MergeEqual(
+void RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::MergeEqual(
     OtherTree_<OtherCompare_>& other_tree) noexcept {
   Merge(other_tree,
         [this](const key_type& key) { return GetInsertEqualPos(key); });
@@ -699,8 +692,8 @@ RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::Size() const noexcept {
 template <typename Key_, typename Val_, typename KeyOfValue_, typename Compare_,
           typename Alloc_>
 RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::size_type
-RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::
-Count(const key_type& key) const {
+RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::Count(
+    const key_type& key) const {
   auto range = EqualRange(key);
   return rb_tree::distance(range.first, range.second);
 }
@@ -750,8 +743,8 @@ void RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::PushNode(
 template <typename Key_, typename Val_, typename KeyOfValue_, typename Compare_,
           typename Alloc_>
 typename RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::BasePtr_
-RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::
-ExtractNode(BasePtr_ z, NodeBase_& header) {
+RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::ExtractNode(
+    BasePtr_ z, NodeBase_& header) {
   BasePtr_ y = z;
   Color_ y_original_color = y->color_;
   BasePtr_ x = nullptr;
@@ -803,9 +796,8 @@ ExtractNode(BasePtr_ z, NodeBase_& header) {
 
 template <typename Key_, typename Val_, typename KeyOfValue_, typename Compare_,
           typename Alloc_>
-void
-RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::
-EraseNode(iterator position) {
+void RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::EraseNode(
+    iterator position) {
   BasePtr_ extract_node = ExtractNode(position.node_, impl_.header_);
   DropNode(static_cast<Node_&>(*extract_node).GetNodePtr());
   --impl_.node_count_;
@@ -813,9 +805,8 @@ EraseNode(iterator position) {
 
 template <typename Key_, typename Val_, typename KeyOfValue_, typename Compare_,
           typename Alloc_>
-void
-RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::
-EraseSubtree(BasePtr_ node) {
+void RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::EraseSubtree(
+    BasePtr_ node) {
   while (node && node != GetEnd()) {
     EraseSubtree(node->right_);
     BasePtr_ left = node->left_;
@@ -827,8 +818,8 @@ EraseSubtree(BasePtr_ node) {
 template <typename Key_, typename Val_, typename KeyOfValue_, typename Compare_,
           typename Alloc_>
 RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::BasePtr_
-RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::
-CopyTree(BasePtr_ node, BasePtr_ parent, AllocNode& alloc_node) {
+RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::CopyTree(
+    BasePtr_ node, BasePtr_ parent, AllocNode& alloc_node) {
   if (!node) {
     return nullptr;
   }
@@ -879,32 +870,32 @@ CopyTree(BasePtr_ node, BasePtr_ parent, AllocNode& alloc_node) {
 template <typename Key_, typename Val_, typename KeyOfValue_, typename Compare_,
           typename Alloc_>
 RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::iterator
-RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::
-LowerBound(const key_type& key) {
+RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::LowerBound(
+    const key_type& key) {
   return LowerBound(GetBegin(), GetEnd(), key);
 }
 
 template <typename Key_, typename Val_, typename KeyOfValue_, typename Compare_,
           typename Alloc_>
 RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::iterator
-RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::
-UpperBound(const key_type& key) {
+RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::UpperBound(
+    const key_type& key) {
   return UpperBound(GetBegin(), GetEnd(), key);
 }
 
 template <typename Key_, typename Val_, typename KeyOfValue_, typename Compare_,
           typename Alloc_>
 RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::const_iterator
-RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::
-LowerBound(const key_type& key) const {
+RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::LowerBound(
+    const key_type& key) const {
   return LowerBound(GetBegin(), GetEnd(), key);
 }
 
 template <typename Key_, typename Val_, typename KeyOfValue_, typename Compare_,
           typename Alloc_>
 RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::const_iterator
-RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::
-UpperBound(const key_type& key) const {
+RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::UpperBound(
+    const key_type& key) const {
   return UpperBound(GetBegin(), GetEnd(), key);
 }
 
@@ -912,8 +903,8 @@ template <typename Key_, typename Val_, typename KeyOfValue_, typename Compare_,
           typename Alloc_>
 std::pair<typename RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::iterator,
           typename RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::iterator>
-RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::
-EqualRange(const key_type& key) const {
+RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::EqualRange(
+    const key_type& key) const {
   BasePtr_ current_node = GetBegin();
   BasePtr_ upper_bound_candidate = GetEnd();
 
@@ -984,8 +975,8 @@ RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::LowerBound(
 template <typename Key_, typename Val_, typename KeyOfValue_, typename Compare_,
           typename Alloc_>
 RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::iterator
-RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::
-UpperBound(BasePtr_ x, BasePtr_ y, const key_type& key) const {
+RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::UpperBound(
+    BasePtr_ x, BasePtr_ y, const key_type& key) const {
   while (x) {
     if (key_compare_(key, GetKey(x))) {
       y = x;
@@ -1001,8 +992,7 @@ UpperBound(BasePtr_ x, BasePtr_ y, const key_type& key) const {
 template <typename Key_, typename Val_, typename KeyOfValue_, typename Compare_,
           typename Alloc_>
 RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::iterator
-RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::
-Find(const key_type& key) {
+RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::Find(const key_type& key) {
   iterator it = LowerBound(key);
   if (it != end() && key_compare_(key, GetKey(it.node_))) {
     it = end();
@@ -1013,8 +1003,8 @@ Find(const key_type& key) {
 template <typename Key_, typename Val_, typename KeyOfValue_, typename Compare_,
           typename Alloc_>
 RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::const_iterator
-RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::
-Find(const key_type& key) const {
+RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::Find(
+    const key_type& key) const {
   const_iterator it = LowerBound(key);
   if (it != end() && key_compare_(key, GetKey(it.node_))) {
     it = end();
@@ -1024,9 +1014,8 @@ Find(const key_type& key) const {
 
 template <typename Key_, typename Val_, typename KeyOfValue_, typename Compare_,
           typename Alloc_>
-void
-RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::
-RotateLeft(BasePtr_ x, BasePtr_& root) {
+void RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::RotateLeft(
+    BasePtr_ x, BasePtr_& root) {
   if (!x->right_) {
     return;
   }
@@ -1053,9 +1042,8 @@ RotateLeft(BasePtr_ x, BasePtr_& root) {
 
 template <typename Key_, typename Val_, typename KeyOfValue_, typename Compare_,
           typename Alloc_>
-void
-RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::
-RotateRight(BasePtr_ x, BasePtr_& root) {
+void RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::RotateRight(
+    BasePtr_ x, BasePtr_& root) {
   if (!x->left_) {
     return;
   }
@@ -1083,9 +1071,8 @@ RotateRight(BasePtr_ x, BasePtr_& root) {
 
 template <typename Key_, typename Val_, typename KeyOfValue_, typename Compare_,
           typename Alloc_>
-void
-RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::
-Transplant(BasePtr_ u, BasePtr_ v, NodeBase_& header) {
+void RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::Transplant(
+    BasePtr_ u, BasePtr_ v, NodeBase_& header) {
   if (u->parent_ == header.GetBasePtr()) {
     header.parent_ = v;
   } else if (u == u->parent_->left_) {
@@ -1101,9 +1088,8 @@ Transplant(BasePtr_ u, BasePtr_ v, NodeBase_& header) {
 
 template <typename Key_, typename Val_, typename KeyOfValue_, typename Compare_,
           typename Alloc_>
-void
-RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::
-UpdateBoundaryPointers(NodeBase_& header) {
+void RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::UpdateBoundaryPointers(
+    NodeBase_& header) {
   if (header.parent_ != header.GetBasePtr() && header.parent_ != nullptr) {
     header.left_ = NodeBase_::Minimum(header.parent_);
     header.right_ = NodeBase_::Maximum(header.parent_);
@@ -1116,9 +1102,8 @@ UpdateBoundaryPointers(NodeBase_& header) {
 
 template <typename Key_, typename Val_, typename KeyOfValue_, typename Compare_,
           typename Alloc_>
-void
-RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::
-RebalanceInsertLeftCase(BasePtr_& x, BasePtr_& root) {
+void RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::RebalanceInsertLeftCase(
+    BasePtr_& x, BasePtr_& root) {
   BasePtr_ u = x->parent_->parent_->right_;
 
   if (u && u->color_ == Color_::kRed) {
@@ -1137,12 +1122,10 @@ RebalanceInsertLeftCase(BasePtr_& x, BasePtr_& root) {
   }
 }
 
-
 template <typename Key_, typename Val_, typename KeyOfValue_, typename Compare_,
           typename Alloc_>
-void
-RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::
-RebalanceInsertRightCase(BasePtr_& x, BasePtr_& root) {
+void RbTree<Key_, Val_, KeyOfValue_, Compare_,
+            Alloc_>::RebalanceInsertRightCase(BasePtr_& x, BasePtr_& root) {
   BasePtr_ u = x->parent_->parent_->left_;
 
   if (u && u->color_ == Color_::kRed) {
@@ -1163,9 +1146,8 @@ RebalanceInsertRightCase(BasePtr_& x, BasePtr_& root) {
 
 template <typename Key_, typename Val_, typename KeyOfValue_, typename Compare_,
           typename Alloc_>
-void
-RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::
-RebalanceInsert(BasePtr_ x, BasePtr_& root) {
+void RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::RebalanceInsert(
+    BasePtr_ x, BasePtr_& root) {
   while (x != root && x->parent_->color_ == Color_::kRed) {
     if (x->parent_ == x->parent_->parent_->left_) {
       RebalanceInsertLeftCase(x, root);
@@ -1179,9 +1161,8 @@ RebalanceInsert(BasePtr_ x, BasePtr_& root) {
 
 template <typename Key_, typename Val_, typename KeyOfValue_, typename Compare_,
           typename Alloc_>
-void
-RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::
-RebalanceEraseLeftCase(BasePtr_& x, BasePtr_& x_parent, BasePtr_& root) {
+void RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::RebalanceEraseLeftCase(
+    BasePtr_& x, BasePtr_& x_parent, BasePtr_& root) {
   BasePtr_ w = x_parent->right_;
 
   if (IsRed(w)) {
@@ -1213,9 +1194,8 @@ RebalanceEraseLeftCase(BasePtr_& x, BasePtr_& x_parent, BasePtr_& root) {
 
 template <typename Key_, typename Val_, typename KeyOfValue_, typename Compare_,
           typename Alloc_>
-void
-RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::
-RebalanceEraseRightCase(BasePtr_& x, BasePtr_& x_parent, BasePtr_& root) {
+void RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::RebalanceEraseRightCase(
+    BasePtr_& x, BasePtr_& x_parent, BasePtr_& root) {
   BasePtr_ w = x_parent->left_;
 
   if (IsRed(w)) {
@@ -1247,9 +1227,8 @@ RebalanceEraseRightCase(BasePtr_& x, BasePtr_& x_parent, BasePtr_& root) {
 
 template <typename Key_, typename Val_, typename KeyOfValue_, typename Compare_,
           typename Alloc_>
-void
-RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::
-RebalanceErase(BasePtr_ x, BasePtr_ x_parent, BasePtr_& root) {
+void RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::RebalanceErase(
+    BasePtr_ x, BasePtr_ x_parent, BasePtr_& root) {
   while (x != root && IsBlack(x) && x_parent != nullptr) {
     if (x == x_parent->left_) {
       RebalanceEraseLeftCase(x, x_parent, root);
@@ -1265,26 +1244,23 @@ RebalanceErase(BasePtr_ x, BasePtr_ x_parent, BasePtr_& root) {
 
 template <typename Key_, typename Val_, typename KeyOfValue_, typename Compare_,
           typename Alloc_>
-bool
-RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::
-IsBlack(BasePtr_ node) {
+bool RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::IsBlack(BasePtr_ node) {
   return node == nullptr || node->color_ == Color_::kBlack;
 }
 
 template <typename Key_, typename Val_, typename KeyOfValue_, typename Compare_,
           typename Alloc_>
-bool
-RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::
-IsRed(BasePtr_ node) {
+bool RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::IsRed(BasePtr_ node) {
   return node != nullptr && node->color_ == Color_::kRed;
 }
 
 template <typename Key_, typename Val_, typename KeyOfValue_, typename Compare_,
           typename Alloc_>
 template <typename InsertFunc, typename... Args>
-vector<std::pair<typename RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::iterator, bool>>
-RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::
-InsertMany(InsertFunc insert_func, Args&&... args) {
+vector<std::pair<
+    typename RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::iterator, bool>>
+RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::InsertMany(
+    InsertFunc insert_func, Args&&... args) {
   vector<std::pair<iterator, bool>> results;
 
   if constexpr (sizeof...(args) > 0) {
@@ -1298,9 +1274,10 @@ InsertMany(InsertFunc insert_func, Args&&... args) {
 template <typename Key_, typename Val_, typename KeyOfValue_, typename Compare_,
           typename Alloc_>
 template <typename... Args>
-vector<std::pair<typename RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::iterator, bool>>
-RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::
-InsertManyUnique(Args&&... args) {
+vector<std::pair<
+    typename RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::iterator, bool>>
+RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::InsertManyUnique(
+    Args&&... args) {
   auto insert_func = [this](auto&& arg) {
     return InsertUnique(std::forward<decltype(arg)>(arg));
   };
@@ -1311,14 +1288,13 @@ InsertManyUnique(Args&&... args) {
 template <typename Key_, typename Val_, typename KeyOfValue_, typename Compare_,
           typename Alloc_>
 template <typename... Args>
-vector<std::pair< typename RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::iterator, bool>>
-RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::
-InsertManyEqual(Args&&... args) {
+vector<std::pair<
+    typename RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::iterator, bool>>
+RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::InsertManyEqual(
+    Args&&... args) {
   auto insert_func = [this](auto&& arg) {
     return std::pair<iterator, bool>(
-      InsertEqual(std::forward<decltype(arg)>(arg)),
-      true
-    );
+        InsertEqual(std::forward<decltype(arg)>(arg)), true);
   };
 
   return InsertMany(insert_func, std::forward<Args>(args)...);

@@ -9,7 +9,7 @@
 namespace s21 {
 
 template <typename Key_, typename Compare_ = std::less<Key_>,
-          typename Alloc_ = std::allocator<Key_> >
+          typename Alloc_ = std::allocator<Key_>>
 class Multiset {
  public:
   using key_type = Key_;
@@ -246,8 +246,7 @@ Multiset<Key_, Compare_, Alloc_>::UpperBound(const key_type& key) const {
 
 template <typename Key_, typename Compare_, typename Alloc_>
 template <typename... Args>
-vector<std::pair<
-  typename Multiset<Key_, Compare_, Alloc_>::iterator, bool>>
+vector<std::pair<typename Multiset<Key_, Compare_, Alloc_>::iterator, bool>>
 Multiset<Key_, Compare_, Alloc_>::InsertMany(Args&&... args) {
   return rb_tree_.InsertManyEqual(std::forward<Args>(args)...);
 }

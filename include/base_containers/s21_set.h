@@ -9,7 +9,7 @@
 namespace s21 {
 
 template <typename Key_, typename Compare_ = std::less<Key_>,
-          typename Alloc_ = std::allocator<Key_> >
+          typename Alloc_ = std::allocator<Key_>>
 class Set {
  public:
   using key_type = Key_;
@@ -186,10 +186,9 @@ bool Set<Key_, Compare_, Alloc_>::Contains(const key_type& key) const {
 
 template <typename Key_, typename Compare_, typename Alloc_>
 template <typename... Args>
-vector<std::pair<
-  typename Set<Key_, Compare_, Alloc_>::iterator, bool>>
+vector<std::pair<typename Set<Key_, Compare_, Alloc_>::iterator, bool>>
 Set<Key_, Compare_, Alloc_>::InsertMany(Args&&... args) {
-    return rb_tree_.InsertManyUnique(std::forward<Args>(args)...);
+  return rb_tree_.InsertManyUnique(std::forward<Args>(args)...);
 }
 
 }  //  namespace s21
