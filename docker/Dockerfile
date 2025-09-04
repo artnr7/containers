@@ -21,6 +21,4 @@ WORKDIR /project
 
 COPY . .
 
-WORKDIR /project/src
-
 CMD ["/bin/bash"]
