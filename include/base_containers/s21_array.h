@@ -2,7 +2,7 @@
 #define S21_ARRAY_H
 
 #include <iostream>
-// #include <cstddef>
+
 
 namespace s21 {
 

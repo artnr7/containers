@@ -1,5 +1,5 @@
-#ifndef S21_VECTOR_H
-#define S21_VECTOR_H
+#ifndef S21_VECTOR_H_
+#define S21_VECTOR_H_
 
 #include <iostream>
 #include <limits>
@@ -150,52 +150,52 @@ class vector {
   explicit vector() : data_(nullptr), size_(0), capacity_(0) {}
 
   explicit vector(size_type n) : data_(nullptr), size_(n), capacity_(n) {
-    data_ = traits::allocate(alloc, capacity_);
+    data_ = traits::allocate(alloc_, capacity_);
     try {
       for (size_type i = 0; i < size_; ++i) {
-        traits::construct(alloc, data_ + i);
+        traits::construct(alloc_, data_ + i);
       }
     } catch (...) {
       for (size_type j = 0; j < size_; ++j) {
-        traits::destroy(alloc, data_ + j);
+        traits::destroy(alloc_, data_ + j);
       }
-      traits::deallocate(alloc, data_, capacity_);
+      traits::deallocate(alloc_, data_, capacity_);
       throw;
     }
   }
 
   vector(std::initializer_list<value_type> const& items)
       : data_(nullptr), size_(items.size()), capacity_(items.size()) {
-    data_ = traits::allocate(alloc, capacity_);
+    data_ = traits::allocate(alloc_, capacity_);
     size_type index = 0;
     try {
       auto iterItem = items.begin();
       for (; iterItem != items.end(); ++index) {
-        traits::construct(alloc, data_ + index, *iterItem);
+        traits::construct(alloc_, data_ + index, *iterItem);
         ++iterItem;
       }
     } catch (...) {
       for (size_type j = 0; j < index; ++j) {
-        traits::destroy(alloc, data_ + j);
+        traits::destroy(alloc_, data_ + j);
       }
-      traits::deallocate(alloc, data_, capacity_);
+      traits::deallocate(alloc_, data_, capacity_);
       throw;
     }
   }
 
   vector(const vector& other)
       : data_(nullptr), size_(other.size_), capacity_(other.size_) {
-    data_ = traits::allocate(alloc, capacity_);
+    data_ = traits::allocate(alloc_, capacity_);
     size_type index = 0;
     try {
       for (; index < size_; ++index) {
-        traits::construct(alloc, data_ + index, other.data_[index]);
+        traits::construct(alloc_, data_ + index, other.data_[index]);
       }
     } catch (...) {
       for (size_type j = 0; j < index; ++j) {
-        traits::destroy(alloc, data_ + j);
+        traits::destroy(alloc_, data_ + j);
       }
-      traits::deallocate(alloc, data_, capacity_);
+      traits::deallocate(alloc_, data_, capacity_);
       throw;
     }
   }
@@ -209,22 +209,22 @@ class vector {
 
   ~vector() {
     for (size_type i = 0; i < size_; ++i) {
-      traits::destroy(alloc, data_ + i);
+      traits::destroy(alloc_, data_ + i);
     }
 
     if (data_) {
-      traits::deallocate(alloc, data_, capacity_);
+      traits::deallocate(alloc_, data_, capacity_);
     }
   }
 
   vector& operator=(vector&& other) noexcept {
     if (this != &other) {
       for (size_type i = 0; i < size_; ++i) {
-        traits::destroy(alloc, data_ + i);
+        traits::destroy(alloc_, data_ + i);
       }
 
       if (data_) {
-        traits::deallocate(alloc, data_, capacity_);
+        traits::deallocate(alloc_, data_, capacity_);
       }
 
       data_ = other.data_;
@@ -282,20 +282,20 @@ class vector {
 
   void reserve(size_type capacity) {
     if (capacity > capacity_) {
-      T* newdata = traits::allocate(alloc, capacity);
+      T* newdata = traits::allocate(alloc_, capacity);
       try {
         for (size_type i = 0; i < size_; ++i) {
-          traits::construct(alloc, newdata + i, data_[i]);
+          traits::construct(alloc_, newdata + i, data_[i]);
         }
       } catch (...) {
-        traits::deallocate(alloc, newdata, capacity);
+        traits::deallocate(alloc_, newdata, capacity);
         throw;
       }
 
       for (size_type i = 0; i < size_; ++i) {
-        traits::destroy(alloc, data_ + i);
+        traits::destroy(alloc_, data_ + i);
       }
-      traits::deallocate(alloc, data_, capacity_);
+      traits::deallocate(alloc_, data_, capacity_);
       data_ = newdata;
       capacity_ = capacity;
     }
@@ -305,14 +305,14 @@ class vector {
 
   void shrink_to_fit() {
     if (size_ != capacity_) {
-      T* newData = traits::allocate(alloc, size_);
+      T* newData = traits::allocate(alloc_, size_);
       for (size_type i = 0; i < size_; ++i) {
-        traits::construct(alloc, newData + i, std::move(data_[i]));
-        traits::destroy(alloc, data_ + i);
+        traits::construct(alloc_, newData + i, std::move(data_[i]));
+        traits::destroy(alloc_, data_ + i);
       }
 
       if (data_) {
-        traits::deallocate(alloc, data_, capacity_);
+        traits::deallocate(alloc_, data_, capacity_);
       }
 
       data_ = newData;
@@ -322,7 +322,7 @@ class vector {
 
   void clear() {
     for (size_type i = 0; i < size_; ++i) {
-      traits::destroy(alloc, data_ + i);
+      traits::destroy(alloc_, data_ + i);
     }
     size_ = 0;
   }
@@ -331,7 +331,7 @@ class vector {
     if (size_ == capacity_) {
       reserve(capacity_ == 0 ? 1 : capacity_ * 2);
     }
-    traits::construct(alloc, data_ + size_, value);
+    traits::construct(alloc_, data_ + size_, value);
     size_++;
   }
 
@@ -339,7 +339,7 @@ class vector {
     if (size_ == 0) {
       throw std::out_of_range("OUT OF RANGE");
     }
-    traits::destroy(alloc, data_ + size_ - 1);
+    traits::destroy(alloc_, data_ + size_ - 1);
     size_--;
   }
 
@@ -353,12 +353,12 @@ class vector {
     size_type position = size_;
     try {
       for (; position > index; --position) {
-        traits::construct(alloc, data_ + position, data_[position - 1]);
+        traits::construct(alloc_, data_ + position, data_[position - 1]);
       }
-      traits::construct(alloc, data_ + index, value);
+      traits::construct(alloc_, data_ + index, value);
     } catch (...) {
       for (size_type j = size_; j > position; --j) {
-        traits::destroy(alloc, data_ + j);
+        traits::destroy(alloc_, data_ + j);
       }
       throw;
     }
@@ -370,11 +370,11 @@ class vector {
   void erase(iterator pos) {
     size_type index = pos - begin();
 
-    traits::destroy(alloc, data_ + index);
+    traits::destroy(alloc_, data_ + index);
 
     for (size_type i = index; i < size_ - 1; ++i) {
-      traits::construct(alloc, data_ + i, std::move(data_[i + 1]));
-      traits::destroy(alloc, data_ + i + 1);
+      traits::construct(alloc_, data_ + i, std::move(data_[i + 1]));
+      traits::destroy(alloc_, data_ + i + 1);
     }
 
     size_--;
@@ -385,7 +385,7 @@ class vector {
     swap(data_, other.data_);
     swap(size_, other.size_);
     swap(capacity_, other.capacity_);
-    swap(alloc, other.alloc);
+    swap(alloc_, other.alloc_);
   }
 
   template <typename... Args>
@@ -403,20 +403,20 @@ class vector {
     }
 
     for (size_type i = size_; i > index; --i) {
-      traits::construct(alloc, data_ + i + n - 1, data_[i - 1]);
-      traits::destroy(alloc, data_ + i - 1);
+      traits::construct(alloc_, data_ + i + n - 1, data_[i - 1]);
+      traits::destroy(alloc_, data_ + i - 1);
     }
 
     size_type i = index;
     try {
-      ((traits::construct(alloc, data_ + i++, std::forward<Args>(args))), ...);
+      ((traits::construct(alloc_, data_ + i++, std::forward<Args>(args))), ...);
     } catch (...) {
       for (size_type j = index; j < i; ++j) {
-        traits::destroy(alloc, data_ + j);
+        traits::destroy(alloc_, data_ + j);
       }
       for (size_type j = index + n; j < size_ + n; ++j) {
-        traits::construct(alloc, data_ + j - n, data_[j]);
-        traits::destroy(alloc, data_ + j);
+        traits::construct(alloc_, data_ + j - n, data_[j]);
+        traits::destroy(alloc_, data_ + j);
       }
       throw;
     }
@@ -432,7 +432,7 @@ class vector {
   T* data_;
   size_type size_;
   size_type capacity_;
-  Alloc alloc;
+  Alloc alloc_;
 };
 
 }  // namespace s21
