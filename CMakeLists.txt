@@ -35,7 +35,7 @@ add_subdirectory(tests)
 
 add_custom_target(coverage
   COMMAND ${CMAKE_CTEST_COMMAND} --output-on-failure
-  COMMAND ${LCOV} --capture --directory ${CMAKE_BINARY_DIR} --output-file coverage.info --ignore-errors inconsistent --rc geninfo_unexecuted_blocks=1 --quiet 2>/dev/null
+  COMMAND ${LCOV} --capture --directory ${CMAKE_BINARY_DIR} --output-file coverage.info --ignore-errors mismatch,inconsistent --rc geninfo_unexecuted_blocks=1 --quiet 2>/dev/null
   COMMAND ${LCOV} --remove coverage.info '/usr/*' '${CMAKE_SOURCE_DIR}/tests/*' --output-file coverage.filtered.info --ignore-errors inconsistent --quiet 2>/dev/null
   COMMAND ${GENHTML}
     coverage.filtered.info
