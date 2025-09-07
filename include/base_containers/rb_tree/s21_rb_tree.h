@@ -15,7 +15,7 @@ class RbTree {
  private:
   using ValAlloc_ = std::allocator_traits<Alloc_>::template rebind_alloc<Val_>;
   using ValPtr_ = std::allocator_traits<ValAlloc_>::pointer;
-  using NodeTraits_ = rb_tree::NodeTraits<Val_, ValPtr_>;
+  using NodeTraits_ = rb_tree::NodeTraits<ValPtr_>;
 
  public:
   using value_type = Val_;

@@ -53,12 +53,9 @@ TYPED_TEST(UniversalPtrTest, IteratorInternalTypesNonConst) {
   EXPECT_TYPE_SAME(typename Iter::Node_, ExpectedNode);
   EXPECT_TYPE_SAME(typename Iter::NodeBase_, ExpectedNodeBase);
   EXPECT_TYPE_SAME(typename Iter::BasePtr_, ExpectedBasePtr);
-  EXPECT_TYPE_SAME(typename Iter::value_type, ExpectedValueType);
-  EXPECT_TYPE_SAME(typename Iter::reference, ExpectedReference);
-  EXPECT_TYPE_SAME(typename Iter::pointer, ExpectedPointer);
-  EXPECT_TYPE_SAME(typename Iter::iterator_category,
-                   std::bidirectional_iterator_tag);
-  EXPECT_TYPE_SAME(typename Iter::difference_type, std::ptrdiff_t);
+  EXPECT_TYPE_SAME(typename Iter::ValueType, ExpectedValueType);
+  EXPECT_TYPE_SAME(typename Iter::Reference, ExpectedReference);
+  EXPECT_TYPE_SAME(typename Iter::Pointer, ExpectedPointer);
 }
 
 TYPED_TEST(UniversalPtrTest, IteratorInternalTypesConst) {
@@ -77,12 +74,9 @@ TYPED_TEST(UniversalPtrTest, IteratorInternalTypesConst) {
   EXPECT_TYPE_SAME(typename Iter::Node_, ExpectedNode);
   EXPECT_TYPE_SAME(typename Iter::NodeBase_, ExpectedNodeBase);
   EXPECT_TYPE_SAME(typename Iter::BasePtr_, ExpectedBasePtr);
-  EXPECT_TYPE_SAME(typename Iter::value_type, ExpectedValueType);
-  EXPECT_TYPE_SAME(typename Iter::reference, ExpectedReference);
-  EXPECT_TYPE_SAME(typename Iter::pointer, ExpectedPointer);
-  EXPECT_TYPE_SAME(typename Iter::iterator_category,
-                   std::bidirectional_iterator_tag);
-  EXPECT_TYPE_SAME(typename Iter::difference_type, std::ptrdiff_t);
+  EXPECT_TYPE_SAME(typename Iter::ValueType, ExpectedValueType);
+  EXPECT_TYPE_SAME(typename Iter::Reference, ExpectedReference);
+  EXPECT_TYPE_SAME(typename Iter::Pointer, ExpectedPointer);
 }
 
 TEST(SelectFirstTest, ReturnsFirstElement) {
