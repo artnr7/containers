@@ -1,12 +1,11 @@
 #ifndef S21_LIST_H_
 #define S21_LIST_H_
-
-#include <cstddef>
+#include <iostream>
 
 namespace s21 {
 
 template <typename T>
-class list {
+class List{
  private:
   struct BaseNode {
     BaseNode *prev;
@@ -17,282 +16,331 @@ class list {
     Node(const T &data) { value = data; }
   };
 
-  BaseNode fakeNode;  // нода которая содержит ссылки на начало и конец списка
-  size_t sizing;      // счетчик длины листа
+  BaseNode fake_node_;
+  size_t sizing_;
 
  public:
-  using value_type = T;
-  using reference = T &;
-  using const_reference = const T &;
-  using size_type = size_t;
+  using ValueType = T;
+  using Reference = T &;
+  using ConstReference = const T &;
+  using SizeType = size_t;
 
   class ListIterator {
    private:
-    BaseNode *current_node;
+    BaseNode *current_node_;
 
    public:
-    using difference_type = std::ptrdiff_t;
-    using value_type = T;
+    using DifferenceType = std::ptrdiff_t;
+    using ValueType = T;
 
-    ListIterator() : current_node(nullptr) {}
-    ListIterator(BaseNode *node) : current_node(node) {}
-    T &operator*() const { return static_cast<Node *>(current_node)->value; }
+    ListIterator() : current_node_(nullptr) {}
+    ListIterator(BaseNode *node) : current_node_(node) {}
+    T &operator*() const { return static_cast<Node *>(current_node_)->value; }
     T *operator->() const {
-      return &(static_cast<Node *>(current_node)->value);
+      return &(static_cast<Node *>(current_node_)->value);
     }
-    //++it
+
     ListIterator &operator++() {
-      current_node = current_node->next;
+      current_node_ = current_node_->next;
       return *this;
     };
-    // it++
+
     ListIterator operator++(int) {
-      ListIterator temp = current_node;
-      current_node = current_node->next;
+      ListIterator temp = current_node_;
+      current_node_ = current_node_->next;
       return temp;
     }
 
     ListIterator &operator--() {
-      current_node = current_node->prev;
+      current_node_ = current_node_->prev;
       return *this;
     };
 
     ListIterator operator--(int) {
-      ListIterator temp = current_node;
-      current_node = current_node->prev;
+      ListIterator temp = current_node_;
+      current_node_ = current_node_->prev;
       return temp;
     }
 
     bool operator==(const ListIterator &other) const {
-      return current_node == other.current_node;
+      return current_node_ == other.current_node_;
     }
     bool operator!=(const ListIterator &other) const {
-      return current_node != other.current_node;
+      return current_node_ != other.current_node_;
     }
 
-    BaseNode *get_node() const { return current_node; }
+    BaseNode *GetNode() const { return current_node_; }
   };
 
-  using iterator = ListIterator;
+  class ListConstIterator {
+   private:
+    const BaseNode *current_node_;
 
-  ListIterator begin() { return ListIterator(fakeNode.next); }
-  ListIterator end() { return ListIterator(&fakeNode); }
+   public:
+    ListConstIterator() : current_node_(nullptr) {}
+    explicit ListConstIterator(const BaseNode *node) : current_node_(node) {}
+    ListConstIterator(const ListIterator &it) : current_node_(it.GetNode()) {}
 
-  list()
-      : fakeNode{&fakeNode, &fakeNode},
-        sizing(0) {}  // конструктор по умолчанию, создает пустой список
+    const T &operator*() const {
+      return static_cast<const Node *>(current_node_)->value;
+    }
+    const T *operator->() const {
+      return &(static_cast<const Node *>(current_node_)->value);
+    }
 
-  list(size_type n) : list() {
-    for (size_type i = 0; i < n; i++) push_back(T());
-  }  // параметризованный конструктор, создает список размера n
+    ListConstIterator &operator++() {
+      current_node_ = current_node_->next;
+      return *this;
+    }
 
-  list(std::initializer_list<value_type> const &items) : list() {
-    for (typename std::initializer_list<value_type>::iterator it =
+    ListConstIterator operator++(int) {
+      ListConstIterator temp = *this;
+      current_node_ = current_node_->next;
+      return temp;
+    }
+
+    ListConstIterator &operator--() {
+      current_node_ = current_node_->prev;
+      return *this;
+    }
+
+    ListConstIterator operator--(int) {
+      ListConstIterator temp = *this;
+      current_node_ = current_node_->prev;
+      return temp;
+    }
+
+    bool operator==(const ListConstIterator &other) const {
+      return current_node_ == other.current_node_;
+    }
+    bool operator!=(const ListConstIterator &other) const {
+      return current_node_ != other.current_node_;
+    }
+
+    const BaseNode *GetNode() const { return current_node_; }
+  };
+
+  using Iterator = ListIterator;
+
+  Iterator Begin() { return Iterator(fake_node_.next); }
+  Iterator End() { return Iterator(&fake_node_); }
+
+  using ConstIterator = ListConstIterator;
+
+  ConstIterator Begin() const { return ConstIterator(fake_node_.next); }
+  ConstIterator End() const { return ConstIterator(&fake_node_); }
+
+  List() : fake_node_{&fake_node_, &fake_node_}, sizing_(0) {}
+
+  List(SizeType n) : List() {
+    for (SizeType i = 0; i < n; i++) PushBack(T());
+  }
+
+  List(std::initializer_list<ValueType> const &items) : List() {
+    for (typename std::initializer_list<ValueType>::iterator it =
              items.begin();
          it != items.end(); it++) {
       const T &item = *it;
-      push_back(item);
+      PushBack(item);
     }
-  }  // Конструктор списка инициализаторов, создает список, инициализированный с
+  }
 
-  list(const list &l) : list() {
-    for (Node *current = static_cast<Node *>(l.fakeNode.next);
-         current != &l.fakeNode; current = static_cast<Node *>(current->next)) {
-      push_back(current->value);
+  List(const List&l) : List() {
+    for (Node *current = static_cast<Node *>(l.fake_node_.next);
+         current != &l.fake_node_; current = static_cast<Node *>(current->next)) {
+      PushBack(current->value);
     }
-  }  // конструктор копирования
+  }
 
-  list &operator=(const list &l) {
+  List&operator=(const List&l) {
     if (this != &l) {
-      clear();
-      for (Node *current = static_cast<Node *>(l.fakeNode.next);
-           current != &l.fakeNode;
+      Clear();
+      for (Node *current = static_cast<Node *>(l.fake_node_.next);
+           current != &l.fake_node_;
            current = static_cast<Node *>(current->next)) {
-        push_back(current->value);
+        PushBack(current->value);
       }
     }
     return *this;
   }
 
-  //  Работает с {}, fakeNode(&fakeNode, &fakeNode); // Ошибка: нет конструктора
-  list(list &&l) noexcept : fakeNode{&fakeNode, &fakeNode}, sizing(l.sizing) {
-    fakeNode.next = l.fakeNode.next;
-    fakeNode.prev = l.fakeNode.prev;
-    fakeNode.next->prev = &fakeNode;
-    fakeNode.prev->next = &fakeNode;
-    l.fakeNode.next = &l.fakeNode;
-    l.fakeNode.prev = &l.fakeNode;
-    l.sizing = 0;
-  }  // конструктор перемещений
+  List(List&&l) noexcept : fake_node_{&fake_node_, &fake_node_}, sizing_(l.sizing_) {
+    fake_node_.next = l.fake_node_.next;
+    fake_node_.prev = l.fake_node_.prev;
+    fake_node_.next->prev = &fake_node_;
+    fake_node_.prev->next = &fake_node_;
+    l.fake_node_.next = &l.fake_node_;
+    l.fake_node_.prev = &l.fake_node_;
+    l.sizing_ = 0;
+  }
 
-  void clear() {
-    BaseNode *current = fakeNode.next;
-    while (current != &fakeNode) {
+  void Clear() {
+    BaseNode *current = fake_node_.next;
+    while (current != &fake_node_) {
       BaseNode *next = current->next;
       delete static_cast<Node *>(current);
       current = next;
     }
-    fakeNode.prev = &fakeNode;
-    fakeNode.next = &fakeNode;
-    sizing = 0;
-  }  // чистит лист
+    fake_node_.prev = &fake_node_;
+    fake_node_.next = &fake_node_;
+    sizing_ = 0;
+  }
 
-  list &operator=(list &&l) {
+  List&operator=(List&&l) {
     if (this != &l) {
-      clear();
-      fakeNode.next = l.fakeNode.next;
-      fakeNode.prev = l.fakeNode.prev;
-      fakeNode.next->prev = &fakeNode;
-      fakeNode.prev->next = &fakeNode;
-      sizing = l.sizing;
-      l.fakeNode.next = &l.fakeNode;
-      l.fakeNode.prev = &l.fakeNode;
-      l.sizing = 0;
+      Clear();
+      fake_node_.next = l.fake_node_.next;
+      fake_node_.prev = l.fake_node_.prev;
+      fake_node_.next->prev = &fake_node_;
+      fake_node_.prev->next = &fake_node_;
+      sizing_ = l.sizing_;
+      l.fake_node_.next = &l.fake_node_;
+      l.fake_node_.prev = &l.fake_node_;
+      l.sizing_ = 0;
     }
     return *this;
-  }  // перегрузка оператора присваивания для перемещения объекта
+  }
 
-  ~list() { clear(); }
+  ~List() { Clear(); }
 
-  const_reference front() const {
-    Node *first = static_cast<Node *>(fakeNode.next);
+  ConstReference Front() const {
+    Node *first = static_cast<Node *>(fake_node_.next);
     return first->value;
-  }  // доступ к первому элементу
+  }
 
-  const_reference back() const {
-    Node *last = static_cast<Node *>(fakeNode.prev);
+  ConstReference Back() const {
+    Node *last = static_cast<Node *>(fake_node_.prev);
     return last->value;
-  }  // доступ к последнему элементу
+  }
 
-  void push_back(const T &value) {
+  void PushBack(const T &value) {
     Node *new_node = new Node(value);
-    BaseNode *last = fakeNode.prev;
+    BaseNode *last = fake_node_.prev;
     last->next = new_node;
     new_node->prev = last;
-    new_node->next = &fakeNode;
-    fakeNode.prev = new_node;
-    sizing++;
-  }  // добавляет элемент в конец
+    new_node->next = &fake_node_;
+    fake_node_.prev = new_node;
+    sizing_++;
+  }
 
-  void push_front(const T &value) {
+  void PushFront(const T &value) {
     Node *new_node = new Node(value);
-    BaseNode *first = fakeNode.next;
+    BaseNode *first = fake_node_.next;
     first->prev = new_node;
     new_node->next = first;
-    new_node->prev = &fakeNode;
-    fakeNode.next = new_node;
-    sizing++;
-  }  // добавляет элемент в заголовок
+    new_node->prev = &fake_node_;
+    fake_node_.next = new_node;
+    sizing_++;
+  }
 
-  void pop_front() {
-    if (empty()) return;
-    Node *first = static_cast<Node *>(fakeNode.next);
+  void PopFront() {
+    if (Empty()) return;
+    Node *first = static_cast<Node *>(fake_node_.next);
     BaseNode *new_first = first->next;
-    new_first->prev = &fakeNode;
-    fakeNode.next = new_first;
-    sizing--;
+    new_first->prev = &fake_node_;
+    fake_node_.next = new_first;
+    sizing_--;
     delete first;
-  }  // удаляет первый элемент
+  }
 
-  void pop_back() {
-    if (empty()) return;
-    Node *last = static_cast<Node *>(fakeNode.prev);
+  void PopBack() {
+    if (Empty()) return;
+    Node *last = static_cast<Node *>(fake_node_.prev);
     BaseNode *new_last = last->prev;
-    new_last->next = &fakeNode;
-    fakeNode.prev = new_last;
-    sizing--;
+    new_last->next = &fake_node_;
+    fake_node_.prev = new_last;
+    sizing_--;
     delete last;
-  }  // удаляет последний элемент
+  }
 
-  size_type size() { return sizing; }  // возвращает количество элементов
+  SizeType Size() { return sizing_; }
 
-  size_type max_size() {
-    return std::numeric_limits<size_type>::max() / sizeof(Node);
-  }  // возвращает максимально возможное количество элементов
+  SizeType MaxSize() {
+    return std::numeric_limits<SizeType>::max() / sizeof(Node);
+  }
 
-  bool empty() { return sizing == 0; }  // проверяет, пуст ли контейнер
+  bool Empty() { return sizing_ == 0; }
 
-  void swap(list &other) {
-    clear();
-    if (other.empty()) return;
-    for (Node *current = static_cast<Node *>(other.fakeNode.next);
-         current != &other.fakeNode;
+  void Swap(List&other) {
+    Clear();
+    if (other.Empty()) return;
+    for (Node *current = static_cast<Node *>(other.fake_node_.next);
+         current != &other.fake_node_;
          current = static_cast<Node *>(current->next)) {
-      push_back(current->value);
+      PushBack(current->value);
     }
-  }  // меняет содержимое
+  }
 
-  iterator insert(iterator pos, const_reference value) {
-    BaseNode *node = pos.get_node();
+  Iterator Insert(Iterator pos, ConstReference value) {
+    BaseNode *node = pos.GetNode();
     Node *new_node = new Node(value);
     new_node->next = node;
     new_node->prev = node->prev;
     node->prev->next = new_node;
     node->prev = new_node;
-    sizing++;
-    return iterator(new_node);
-  }  // вставляет элемент в конкретную позицию и возвращает итератор,
-     // указывающий на новый элемент
+    sizing_++;
+    return Iterator(new_node);
+  }
 
   template <typename... Args>
-  iterator insert_many(iterator pos, Args &&...args) {  // CONST
-    iterator it = pos;
+  Iterator InsertMany(Iterator pos, Args &&...args) {
+    Iterator it = pos;
     (void)std::initializer_list<int>{
-        (it = insert(it, std::forward<Args>(args)), 0)...};
+        (it = Insert(it, std::forward<Args>(args)), 0)...};
     return it;
   }
 
   template <typename... Args>
-  void insert_many_back(Args &&...args) {
-    (push_back(std::forward<Args>(args)), ...);
+  void InsertManyBack(Args &&...args) {
+    (PushBack(std::forward<Args>(args)), ...);
   }
 
   template <typename... Args>
-  void insert_many_front(Args &&...args) {
-    (push_front(std::forward<Args>(args)), ...);
+  void InsertManyFront(Args &&...args) {
+    (PushFront(std::forward<Args>(args)), ...);
   }
 
-  void erase(iterator pos) {
-    if (pos == end()) return;
-    BaseNode *node = pos.get_node();
+  void Erase(Iterator pos) {
+    if (pos == End()) return;
+    BaseNode *node = pos.GetNode();
     node->next->prev = node->prev;
     node->prev->next = node->next;
     delete node;
-    sizing--;
-  }  // стирает элемент в позиции pos
+    sizing_--;
+  }
 
-  void reverse() {
-    if (empty()) return;
-    BaseNode *current = &fakeNode;
+  void Reverse() {
+    if (Empty()) return;
+    BaseNode *current = &fake_node_;
     do {
       BaseNode *temp = current->next;
       current->next = current->prev;
       current->prev = temp;
       current = temp;
-    } while (current != &fakeNode);
-  }  // меняет порядок элементов на противоположный
+    } while (current != &fake_node_);
+  }
 
-  void unique() {
-    if (empty()) return;
-    Node *current = static_cast<Node *>(fakeNode.next);
-    while (current->next != &fakeNode) {
+  void Unique() {
+    if (Empty()) return;
+    Node *current = static_cast<Node *>(fake_node_.next);
+    while (current->next != &fake_node_) {
       Node *next_node = static_cast<Node *>(current->next);
       if (current->value == next_node->value) {
         current->next = next_node->next;
         next_node->next->prev = current;
         delete next_node;
-        sizing--;
+        sizing_--;
       } else {
         current = next_node;
       }
     }
-  }  // удаляет последовательные повторяющиеся элементы
+  }
 
-  void splice(iterator pos, list &other) {
-    if (other.empty()) return;
-    BaseNode *pos_node = pos.get_node();
-    BaseNode *first = other.fakeNode.next;
-    BaseNode *last = other.fakeNode.prev;
+  void Splice(Iterator pos, List&other) {
+    if (other.Empty()) return;
+    BaseNode *pos_node = pos.GetNode();
+    BaseNode *first = other.fake_node_.next;
+    BaseNode *last = other.fake_node_.prev;
 
     pos_node->prev->next = first;
     first->prev = pos_node->prev;
@@ -300,87 +348,87 @@ class list {
     last->next = pos_node;
     pos_node->prev = last;
 
-    other.fakeNode.next = &other.fakeNode;
-    other.fakeNode.prev = &other.fakeNode;
+    other.fake_node_.next = &other.fake_node_;
+    other.fake_node_.prev = &other.fake_node_;
 
-    sizing += other.sizing;
-    other.sizing = 0;
+    sizing_ += other.sizing_;
+    other.sizing_ = 0;
   }
 
-  void merge(list &other) {
-    if (this == &other || other.empty()) return;
-    iterator this_it = begin();
-    iterator other_it = other.begin();
-    while (this_it != end() && other_it != other.end()) {
+  void Merge(List&other) {
+    if (this == &other || other.Empty()) return;
+    Iterator this_it = Begin();
+    Iterator other_it = other.Begin();
+    while (this_it != End() && other_it != other.End()) {
       if (*other_it < *this_it) {
         auto next_other = other_it;
         ++next_other;
-        splice(this_it, other);
+        Splice(this_it, other);
         other_it = next_other;
       } else {
         ++this_it;
       }
     }
-    if (other_it != other.end()) {
-      splice(end(), other);
+    if (other_it != other.End()) {
+      Splice(End(), other);
     }
-  }  // объединяет два отсортированных списка
+  }
 
  private:
-  Node *split(Node *head) {
+  Node *Split(Node *head) {
     Node *slow = head;
     Node *fast = head;
-    while (fast->next != &fakeNode && fast->next->next != &fakeNode) {
+    while (fast->next != &fake_node_ && fast->next->next != &fake_node_) {
       slow = static_cast<Node *>(slow->next);
       fast = static_cast<Node *>(fast->next->next);
     }
     Node *right = static_cast<Node *>(slow->next);
-    slow->next = &fakeNode;
-    fakeNode.prev = slow;
-    right->prev = &fakeNode;
+    slow->next = &fake_node_;
+    fake_node_.prev = slow;
+    right->prev = &fake_node_;
 
     return right;
-  }  // функция для нахождения середины списка
+  }
 
-  Node *unite(Node *left, Node *right) {
-    if (left == &fakeNode) return right;
-    if (right == &fakeNode) return left;
+  Node *Unite(Node *left, Node *right) {
+    if (left == &fake_node_) return right;
+    if (right == &fake_node_) return left;
 
     if (left->value < right->value) {
-      left->next = unite(static_cast<Node *>(left->next), right);
+      left->next = Unite(static_cast<Node *>(left->next), right);
       left->next->prev = left;
-      left->prev = &fakeNode;
+      left->prev = &fake_node_;
       return left;
     } else {
-      right->next = unite(left, static_cast<Node *>(right->next));
+      right->next = Unite(left, static_cast<Node *>(right->next));
       right->next->prev = right;
-      right->prev = &fakeNode;
+      right->prev = &fake_node_;
       return right;
     }
   }
 
-  Node *mergeSort(Node *head) {
-    if (head == &fakeNode || head->next == &fakeNode) return head;
+  Node *MergeSort(Node *head) {
+    if (head == &fake_node_ || head->next == &fake_node_) return head;
 
-    Node *right = split(head);
+    Node *right = Split(head);
 
-    head = mergeSort(head);
-    right = mergeSort(right);
+    head = MergeSort(head);
+    right = MergeSort(right);
 
-    return unite(head, right);
+    return Unite(head, right);
   }
 
  public:
-  void sort() {
-    if (empty() || sizing < 2) return;
-    fakeNode.next = mergeSort(static_cast<Node *>(fakeNode.next));
-    Node *left = static_cast<Node *>(fakeNode.next);
-    left->prev = &fakeNode;
+  void Sort() {
+    if (Empty() || sizing_ < 2) return;
+    fake_node_.next = MergeSort(static_cast<Node *>(fake_node_.next));
+    Node *left = static_cast<Node *>(fake_node_.next);
+    left->prev = &fake_node_;
     Node *current = left;
-    while (current->next != &fakeNode)
+    while (current->next != &fake_node_)
       current = static_cast<Node *>(current->next);
-    fakeNode.prev = current;
-    current->next = &fakeNode;
+    fake_node_.prev = current;
+    current->next = &fake_node_;
   }
 };
 
