@@ -529,10 +529,10 @@ TEST(SetTest, InsertManyBasic) {
   auto results = set.InsertMany(1, 2, 3, 4, 5);
 
   EXPECT_EQ(set.Size(), 5);
-  EXPECT_EQ(results.size(), 5);
+  EXPECT_EQ(results.Size(), 5);
 
-  for (const auto& result : results) {
-    EXPECT_TRUE(result.second);
+  for (auto it = results.Begin(); it != results.End(); ++it) {
+    EXPECT_TRUE((*it).second);
   }
 
   EXPECT_TRUE(set.Contains(1));
@@ -546,7 +546,7 @@ TEST(SetTest, InsertManyWithDuplicates) {
   auto results = set.InsertMany(1, 2, 1, 3, 2, 1);
 
   EXPECT_EQ(set.Size(), 3);
-  EXPECT_EQ(results.size(), 6);
+  EXPECT_EQ(results.Size(), 6);
 
   EXPECT_TRUE(results[0].second);
   EXPECT_TRUE(results[1].second);
@@ -562,7 +562,7 @@ TEST(SetTest, InsertManyEmpty) {
   auto results = set.InsertMany();
 
   EXPECT_TRUE(set.Empty());
-  EXPECT_TRUE(results.empty());
+  EXPECT_TRUE(results.Empty());
 }
 
 TEST(SetTest, InsertManyMixedTypes) {

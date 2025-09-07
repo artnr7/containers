@@ -471,10 +471,10 @@ TEST(MapTest, InsertManyBasic) {
   );
 
   EXPECT_EQ(map.Size(), 3);
-  EXPECT_EQ(results.size(), 3);
+  EXPECT_EQ(results.Size(), 3);
 
-  for (const auto& result : results) {
-    EXPECT_TRUE(result.second);
+  for (auto it = results.Begin(); it != results.End(); ++it) {
+    EXPECT_TRUE((*it).second);
   }
 
   EXPECT_EQ(map[1], "one");
@@ -492,7 +492,7 @@ TEST(MapTest, InsertManyWithDuplicateKeys) {
   );
 
   EXPECT_EQ(map.Size(), 2);
-  EXPECT_EQ(results.size(), 3);
+  EXPECT_EQ(results.Size(), 3);
 
   EXPECT_TRUE(results[0].second);
   EXPECT_FALSE(results[1].second);
@@ -502,16 +502,16 @@ TEST(MapTest, InsertManyWithDuplicateKeys) {
 }
 
 TEST(MapTest, InsertManyComplexTypes) {
-  s21::Map<std::string, s21::vector<int>> map;
+  s21::Map<std::string, s21::Vector<int>> map;
 
   auto results = map.InsertMany(
-    std::make_pair("a", s21::vector<int>{1, 2, 3}),
-    std::make_pair("b", s21::vector<int>{4, 5})
+    std::make_pair("a", s21::Vector<int>{1, 2, 3}),
+    std::make_pair("b", s21::Vector<int>{4, 5})
   );
 
   EXPECT_EQ(map.Size(), 2);
-  EXPECT_EQ(map["a"].size(), 3);
-  EXPECT_EQ(map["b"].size(), 2);
+  EXPECT_EQ(map["a"].Size(), 3);
+  EXPECT_EQ(map["b"].Size(), 2);
 }
 
 TEST(MapTest, InsertManyEmpty) {
@@ -522,6 +522,6 @@ TEST(MapTest, InsertManyEmpty) {
   EXPECT_TRUE(map.Empty());
   EXPECT_EQ(map.Size(), 0);
 
-  EXPECT_TRUE(results.empty());
-  EXPECT_EQ(results.size(), 0);
+  EXPECT_TRUE(results.Empty());
+  EXPECT_EQ(results.Size(), 0);
 }

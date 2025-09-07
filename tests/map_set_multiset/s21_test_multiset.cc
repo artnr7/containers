@@ -207,39 +207,45 @@ TEST(MultisetTest, Merge) {
 TEST(MultisetTest, IterationWithDuplicates) {
   s21::Multiset<int> multiset{1, 2, 2, 3, 3, 3};
 
-  std::vector<int> values;
+  int expected[] = {1, 2, 2, 3, 3, 3};
+  size_t index = 0;
+
   for (auto it = multiset.Begin(); it != multiset.End(); ++it) {
-    values.push_back(*it);
+    EXPECT_EQ(*it, expected[index]);
+    ++index;
   }
 
-  std::vector<int> expected{1, 2, 2, 3, 3, 3};
-  EXPECT_EQ(values, expected);
+  EXPECT_EQ(index, sizeof(expected) / sizeof(expected[0]));
 }
 
 TEST(MultisetTest, ReverseIteration) {
   s21::Multiset<int> multiset{1, 2, 2, 3};
 
-  std::vector<int> reverse_values;
+  int expected[] = {3, 2, 2, 1};
+  size_t index = 0;
+
   auto it = multiset.End();
   while (it != multiset.Begin()) {
     --it;
-    reverse_values.push_back(*it);
+    EXPECT_EQ(*it, expected[index]);
+    ++index;
   }
 
-  std::vector<int> expected{3, 2, 2, 1};
-  EXPECT_EQ(reverse_values, expected);
+  EXPECT_EQ(index, sizeof(expected) / sizeof(expected[0]));
 }
 
 TEST(MultisetTest, CustomComparator) {
   s21::Multiset<int, std::greater<int>> multiset{1, 2, 2, 3};
 
-  std::vector<int> values;
-  for (auto it = multiset.Begin(); it != multiset.End(); ++it) {
-    values.push_back(*it);
-  }
+  auto it = multiset.Begin();
 
-  std::vector<int> expected{3, 2, 2, 1};
-  EXPECT_EQ(values, expected);
+  EXPECT_EQ(*it, 3);
+  ++it;
+  EXPECT_EQ(*it, 2);
+  ++it;
+  EXPECT_EQ(*it, 2);
+  ++it;
+  EXPECT_EQ(*it, 1);
 }
 
 TEST(MultisetTest, StringMultiset) {
@@ -325,9 +331,9 @@ TEST(MultisetTest, ConstBeginEnd) {
   EXPECT_NE(const_it, const_multiset.End());
   EXPECT_EQ(*const_it, 1);
 
-  s21::vector<int> const_values;
+  s21::Vector<int> const_values;
   for (auto it = const_multiset.Begin(); it != const_multiset.End(); ++it) {
-    const_values.push_back(*it);
+    const_values.PushBack(*it);
   }
 
   EXPECT_EQ(const_values[0], 1);
@@ -350,10 +356,10 @@ TEST(MultisetTest, InsertManyBasic) {
   auto results = multiset.InsertMany(1, 2, 3, 4, 5);
 
   EXPECT_EQ(multiset.Size(), 5);
-  EXPECT_EQ(results.size(), 5);
+  EXPECT_EQ(results.Size(), 5);
 
-  for (const auto& result : results) {
-    EXPECT_TRUE(result.second);
+  for (auto it = results.Begin(); it != results.End(); ++it) {
+    EXPECT_TRUE((*it).second);
   }
 }
 
@@ -363,10 +369,10 @@ TEST(MultisetTest, InsertManyWithDuplicates) {
   auto results = multiset.InsertMany(1, 2, 1, 3, 2, 1);
 
   EXPECT_EQ(multiset.Size(), 6);
-  EXPECT_EQ(results.size(), 6);
+  EXPECT_EQ(results.Size(), 6);
 
-  for (const auto& result : results) {
-    EXPECT_TRUE(result.second);
+  for (auto it = results.Begin(); it != results.End(); ++it) {
+    EXPECT_TRUE((*it).second);
   }
 
   EXPECT_EQ(multiset.Count(1), 3);
@@ -380,7 +386,7 @@ TEST(MultisetTest, InsertManyEmpty) {
   auto results = multiset.InsertMany();
 
   EXPECT_TRUE(multiset.Empty());
-  EXPECT_TRUE(results.empty());
+  EXPECT_TRUE(results.Empty());
 }
 
 TEST(MultisetTest, InsertManyCount) {
