@@ -9,15 +9,15 @@ build:
 	cd build && cmake -DCOVERAGE=ON -S .. && cmake --build . --parallel $(NPROC)
 
 .PHONY: test
-test:
+test: build
 	cd build && ctest --parallel $(NPROC) --output-on-failure
 
 .PHONY: test-%
-test-%:
+test-%: build
 	cd build && ctest --parallel $(NPROC) -R ^$*$$ --output-on-failure
 
 .PHONY: test-verbose-%
-test-verbose-%:
+test-verbose-%: build
 	cd build && ctest --parallel $(NPROC) -V -R ^$*$$
 
 .PHONY: clang-format-test
