@@ -1,46 +1,44 @@
-IMAGE_NAME = s21containers
-DOCKERFILE = docker/Dockerfile
-
-.PHONY: docker-build
-docker-build:
-	docker build -t $(IMAGE_NAME) -f $(DOCKERFILE) .
+NPROC := $(shell expr $$(nproc) - 2)
+ifeq ($(shell expr $(NPROC) \< 1), 1)
+  NPROC := 1
+endif
 
 .PHONY: build
 build:
-	docker run --rm -v $(PWD):/project -w /project/build $(IMAGE_NAME) bash -c "cmake -DCOVERAGE=ON -B . -S .. && cmake --build ."
+	mkdir -p build
+	cd build && cmake -DCOVERAGE=ON -S .. && cmake --build . --parallel $(NPROC)
 
 .PHONY: test
 test:
-	docker run --rm -it -v $(PWD):/project -w /project/build $(IMAGE_NAME) ctest --output-on-failure
+	ctest --parallel $(NPROC) --output-on-failure
 
 .PHONY: test-%
 test-%:
-	docker run --rm -it -v $(PWD):/project -w /project/build $(IMAGE_NAME) ctest -R ^$*$$ --output-on-failure
+	ctest --parallel $(NPROC) -R ^$*$$ --output-on-failure
 
 .PHONY: test-verbose-%
 test-verbose-%:
-	docker run --rm -v $(PWD):/project -w /project/build $(IMAGE_NAME) ctest -V -R ^$*$$
+	ctest --parallel $(NPROC) -V -R ^$*$$
 
 .PHONY: clang-format-test
 clang-format-test:
-	docker run --rm -v $(PWD):/project -w /project/build $(IMAGE_NAME) cmake --build . --target clang-format-test
+	cmake --build . --target clang-format-test
 
 .PHONY: clang-format-fix
 clang-format-fix:
-	docker run --rm -v $(PWD):/project -w /project/build $(IMAGE_NAME) cmake --build . --target clang-format-fix
+	cmake --build . --target clang-format-fix
 
 .PHONY: valgrind
 valgrind:
-	docker run --rm -v $(PWD):/project -w /project/build $(IMAGE_NAME) cmake --build . --target valgrind-test
+	cmake --build . --target valgrind-test
 
 .PHONY: coverage
 coverage:
-	docker run --rm -v $(PWD):/project -w /project/build $(IMAGE_NAME) cmake --build . --target coverage
+	cmake --build . --target coverage
 
 .PHONY: help
 help:
-	@echo 'make docker-build           — собрать docker image'
-	@echo 'make build                  — пересобрать проект в контейнере'
+	@echo 'make build                  — собрать проект'
 	@echo 'make test                   — все тесты (ctest)'
 	@echo 'make test-<имя_теста>       — один тест (make test-s21_test_rb_tree)'
 	@echo 'make test-verbose-<имя>     — один тест подробно'
