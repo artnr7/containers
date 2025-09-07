@@ -114,16 +114,7 @@ TEST(vectorTest, Iterators) {
   EXPECT_EQ(*end, 3);
 }
 
-TEST(vectorTest, ConstIterators) {
-  const s21::Vector<int> victor = {11, 22, 33};
-  auto itVector = victor.Cbegin();
-  EXPECT_EQ(*itVector, 11);
-  ++itVector;
-  EXPECT_EQ(*itVector, 22);
-  auto end = victor.Cend();
-  --end;
-  EXPECT_EQ(*end, 33);
-}
+
 
 TEST(vectorTest, EmptyAndSize) {
   s21::Vector<int> empty_victor;
@@ -290,26 +281,6 @@ TEST(VectorConstIteratorTest, DereferenceOperator) {
   EXPECT_EQ(*it, 10);
 }
 
-TEST(VectorConstIteratorTest, IncrementOperators) {
-  const s21::Vector<int> vec = {1, 2, 3};
-  auto it = vec.Cbegin();
-
-  ++it;
-  EXPECT_EQ(*it, 2);
-
-  it++;
-  EXPECT_EQ(*it, 3);
-}
-
-TEST(VectorConstIteratorTest, DecrementOperators) {
-  const s21::Vector<int> vec = {5, 6, 7};
-  auto it = vec.Cend();
-  --it;
-  EXPECT_EQ(*it, 7);
-
-  it--;
-  EXPECT_EQ(*it, 6);
-}
 
 TEST(VectorConstIteratorTest, EqualityOperators) {
   const s21::Vector<int> vec = {100, 200};

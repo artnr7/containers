@@ -139,17 +139,7 @@ TEST(ArrayTest, Iterators) {
   EXPECT_EQ(it, arr.End());
 }
 
-TEST(ArrayTest, ConstIterators) {
-  const s21::Array<int, 3> arr{10, 20, 30};
-  auto it = arr.Begin();
-  EXPECT_EQ(*it, 10);
-  ++it;
-  EXPECT_EQ(*it, 20);
-  ++it;
-  EXPECT_EQ(*it, 30);
-  ++it;
-  EXPECT_EQ(it, arr.End());
-}
+
 
 TEST(ArrayTest, MaxSize) {
   s21::Array<int, 3> arr{10, 20, 30};
@@ -253,26 +243,7 @@ TEST(ArrayConstIteratorTest, DereferenceOperator) {
   EXPECT_EQ(*it, 10);
 }
 
-TEST(ArrayConstIteratorTest, IncrementOperators) {
-  const s21::Array<int, 3> arr = {1, 2, 3};
-  auto it = arr.Cbegin();
 
-  ++it;
-  EXPECT_EQ(*it, 2);
-
-  it++;
-  EXPECT_EQ(*it, 3);
-}
-
-TEST(ArrayConstIteratorTest, DecrementOperators) {
-  const s21::Array<int, 3> arr = {5, 6, 7};
-  auto it = arr.Cend();
-  --it;
-  EXPECT_EQ(*it, 7);
-
-  it--;
-  EXPECT_EQ(*it, 6);
-}
 
 TEST(ArrayConstIteratorTest, EqualityOperators) {
   const s21::Array<int, 2> arr = {100, 200};

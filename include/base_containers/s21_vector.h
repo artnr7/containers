@@ -83,27 +83,6 @@ class Vector {
 
     const T& operator*() const { return *ptr; }
 
-    VectorIteratorConst& operator++() {
-      ++ptr;
-      return *this;
-    }
-
-    VectorIteratorConst operator++(int) {
-      VectorIteratorConst tmp = *this;
-      ++ptr;
-      return tmp;
-    }
-
-    VectorIteratorConst& operator--() {
-      --ptr;
-      return *this;
-    }
-
-    VectorIteratorConst operator--(int) {
-      VectorIteratorConst tmp = *this;
-      --ptr;
-      return tmp;
-    }
 
     bool operator==(const VectorIteratorConst& other) const {
       return ptr == other.ptr;

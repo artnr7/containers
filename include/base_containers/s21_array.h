@@ -82,27 +82,6 @@ class Array {
 
     const T& operator*() { return *ptr; }
 
-    ArrayIteratorConst& operator++() {
-      ++ptr;
-      return *this;
-    }
-
-    ArrayIteratorConst operator++(int) {
-      ArrayIteratorConst tmp = *this;
-      ++ptr;
-      return tmp;
-    }
-
-    ArrayIteratorConst& operator--() {
-      --ptr;
-      return *this;
-    }
-
-    ArrayIteratorConst operator--(int) {
-      ArrayIteratorConst tmp = *this;
-      --ptr;
-      return tmp;
-    }
 
     bool operator==(const ArrayIteratorConst& other) const {
       return ptr == other.ptr;
