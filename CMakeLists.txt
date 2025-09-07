@@ -16,10 +16,6 @@ set(FORMAT_SOURCES
   ${CMAKE_SOURCE_DIR}/include/base_containers/rb_tree/*.h
 )
 
-file(GLOB_RECURSE TEST_SOURCES
-  ${CMAKE_SOURCE_DIR}/tests/*.cc
-)
-
 include(CTest)
 
 find_package(GTest REQUIRED)
