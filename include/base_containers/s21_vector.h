@@ -81,7 +81,7 @@ class Vector {
    public:
     explicit VectorIteratorConst(const T* pointer) : ptr(pointer) {}
 
-    const T& operator*() { return *ptr; }
+    const T& operator*() const { return *ptr; }
 
     VectorIteratorConst& operator++() {
       ++ptr;

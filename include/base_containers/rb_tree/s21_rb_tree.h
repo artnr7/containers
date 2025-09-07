@@ -169,14 +169,14 @@ class RbTree {
   ConstIterator end() const noexcept;
 
   template <typename InsertFunc, typename... Args>
-  vector<std::pair<Iterator, bool>> InsertMany(InsertFunc insert_func,
+  Vector<std::pair<Iterator, bool>> InsertMany(InsertFunc insert_func,
                                                Args&&...);
 
   template <typename... Args>
-  vector<std::pair<Iterator, bool>> InsertManyUnique(Args&&...);
+  Vector<std::pair<Iterator, bool>> InsertManyUnique(Args&&...);
 
   template <typename... Args>
-  vector<std::pair<Iterator, bool>> InsertManyEqual(Args&&...);
+  Vector<std::pair<Iterator, bool>> InsertManyEqual(Args&&...);
 };
 
 template <typename Key_, typename Val_, typename KeyOfValue_, typename Compare_,
@@ -1257,15 +1257,15 @@ bool RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::IsRed(BasePtr_ node) {
 template <typename Key_, typename Val_, typename KeyOfValue_, typename Compare_,
           typename Alloc_>
 template <typename InsertFunc, typename... Args>
-vector<std::pair<
+Vector<std::pair<
     typename RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::Iterator, bool>>
 RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::InsertMany(
     InsertFunc insert_func, Args&&... args) {
-  vector<std::pair<Iterator, bool>> results;
+  Vector<std::pair<Iterator, bool>> results;
 
   if constexpr (sizeof...(args) > 0) {
-    results.reserve(sizeof...(args));
-    (results.push_back(insert_func(std::forward<Args>(args))), ...);
+    results.Reserve(sizeof...(args));
+    (results.PushBack(insert_func(std::forward<Args>(args))), ...);
   }
 
   return results;
@@ -1274,7 +1274,7 @@ RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::InsertMany(
 template <typename Key_, typename Val_, typename KeyOfValue_, typename Compare_,
           typename Alloc_>
 template <typename... Args>
-vector<std::pair<
+Vector<std::pair<
     typename RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::Iterator, bool>>
 RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::InsertManyUnique(
     Args&&... args) {
@@ -1288,7 +1288,7 @@ RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::InsertManyUnique(
 template <typename Key_, typename Val_, typename KeyOfValue_, typename Compare_,
           typename Alloc_>
 template <typename... Args>
-vector<std::pair<
+Vector<std::pair<
     typename RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::Iterator, bool>>
 RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::InsertManyEqual(
     Args&&... args) {

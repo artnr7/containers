@@ -83,7 +83,7 @@ class Map {
   bool Contains(const KeyType& key) const;
 
   template <typename... Args>
-  vector<std::pair<Iterator, bool>> InsertMany(Args&&... args);
+  Vector<std::pair<Iterator, bool>> InsertMany(Args&&... args);
 };
 
 template <typename Key_, typename Val_, typename Compare_, typename Alloc_,
@@ -225,7 +225,7 @@ bool Map<Key_, T_, Compare_, Alloc_>::Contains(const KeyType& key) const {
 
 template <typename Key_, typename T_, typename Compare_, typename Alloc_>
 template <typename... Args>
-vector<std::pair<typename Map<Key_, T_, Compare_, Alloc_>::Iterator, bool>>
+Vector<std::pair<typename Map<Key_, T_, Compare_, Alloc_>::Iterator, bool>>
 Map<Key_, T_, Compare_, Alloc_>::InsertMany(Args&&... args) {
   return rb_tree_.InsertManyUnique(std::forward<Args>(args)...);
 }

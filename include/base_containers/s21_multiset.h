@@ -90,7 +90,7 @@ class Multiset {
   ConstIterator UpperBound(const KeyType& key) const;
 
   template <typename... Args>
-  vector<std::pair<Iterator, bool>> InsertMany(Args&&... args);
+  Vector<std::pair<Iterator, bool>> InsertMany(Args&&... args);
 };
 
 template <typename Key_, typename Compare_, typename Alloc_,
@@ -246,7 +246,7 @@ Multiset<Key_, Compare_, Alloc_>::UpperBound(const KeyType& key) const {
 
 template <typename Key_, typename Compare_, typename Alloc_>
 template <typename... Args>
-vector<std::pair<typename Multiset<Key_, Compare_, Alloc_>::Iterator, bool>>
+Vector<std::pair<typename Multiset<Key_, Compare_, Alloc_>::Iterator, bool>>
 Multiset<Key_, Compare_, Alloc_>::InsertMany(Args&&... args) {
   return rb_tree_.InsertManyEqual(std::forward<Args>(args)...);
 }
