@@ -114,12 +114,11 @@ struct Iterator {
   using NodeBase_ = NodeBase<PtrTraitsRebind_<ValPtr_, void>>;
   using BasePtr_ = PtrTraitsRebind_<ValPtr_, NodeBase_>;
 
-  using value_type = PtrTraitsElemType_<ValPtr_>;
-  using reference = MaybeConst_<value_type>&;
-  using pointer = MaybeConst_<value_type>*;
+  using ValueType = PtrTraitsElemType_<ValPtr_>;
+  using Reference = MaybeConst_<ValueType>&;
+  using Pointer = MaybeConst_<ValueType>*;
 
-  using iterator_category = std::bidirectional_iterator_tag;
-  using difference_type = std::ptrdiff_t;
+  using DifferenceType = std::ptrdiff_t;
 
   Iterator() noexcept = default;
   Iterator(const Iterator&) = default;
@@ -128,8 +127,8 @@ struct Iterator {
   constexpr Iterator(const Iterator<false, ValPtr_>& it)
     requires IsConst_;
 
-  [[nodiscard]] reference operator*() const noexcept;
-  [[nodiscard]] pointer operator->() const noexcept;
+  [[nodiscard]] Reference operator*() const noexcept;
+  [[nodiscard]] Pointer operator->() const noexcept;
 
   constexpr Iterator& operator++() noexcept;
   constexpr Iterator operator++(int) noexcept;
@@ -147,8 +146,7 @@ struct Iterator {
   BasePtr_ node_;
 };
 
-// А зачем Val_?
-template <typename Val_, typename ValPtr_>
+template <typename ValPtr_>
 struct NodeTraits {
   using Node_ = Node<ValPtr_>;
   using NodePtr_ = PtrTraitsRebind_<ValPtr_, Node_>;
@@ -274,15 +272,15 @@ constexpr Iterator<IsConst_, ValPtr_>::Iterator(
 
 template <bool IsConst_, typename ValPtr_>
 [[nodiscard]]
-Iterator<IsConst_, ValPtr_>::reference Iterator<IsConst_, ValPtr_>::operator*()
-    const noexcept {
+Iterator<IsConst_, ValPtr_>::Reference
+Iterator<IsConst_, ValPtr_>::operator*() const noexcept {
   return *static_cast<Node_&>(*node_).GetValPtr();
 }
 
 template <bool IsConst_, typename ValPtr_>
 [[nodiscard]]
-Iterator<IsConst_, ValPtr_>::pointer Iterator<IsConst_, ValPtr_>::operator->()
-    const noexcept {
+Iterator<IsConst_, ValPtr_>::Pointer
+Iterator<IsConst_, ValPtr_>::operator->() const noexcept {
   return static_cast<Node_&>(*node_).GetValPtr();
 }
 
@@ -352,8 +350,8 @@ constexpr Iterator<IsConst_, ValPtr_> Iterator<IsConst_, ValPtr_>::operator--(
 }
 
 template <typename Iter_>
-std::iterator_traits<Iter_>::difference_type distance(Iter_ first, Iter_ last) {
-  typename std::iterator_traits<Iter_>::difference_type count = 0;
+inline Iter_::DifferenceType distance(Iter_ first, Iter_ last) {
+  typename Iter_::DifferenceType count = 0;
   while (first != last) {
     ++count;
     ++first;

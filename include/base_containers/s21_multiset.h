@@ -1,5 +1,5 @@
-#ifndef _S21_MULTISET_H_
-#define _S21_MULTISET_H_
+#ifndef S21_MULTISET_H_
+#define S21_MULTISET_H_
 
 #include <functional>
 #include <memory>
@@ -12,28 +12,28 @@ template <typename Key_, typename Compare_ = std::less<Key_>,
           typename Alloc_ = std::allocator<Key_>>
 class Multiset {
  public:
-  using key_type = Key_;
-  using value_type = Key_;
-  using key_compare = Compare_;
-  using allocator_type = Alloc_;
+  using KeyType = Key_;
+  using ValueType = Key_;
+  using KeyCompare = Compare_;
+  using AllocatorType = Alloc_;
 
  private:
   using KeyAlloc_ =
-      std::allocator_traits<allocator_type>::template rebind_alloc<value_type>;
-  using RbTree_ = RbTree<key_type, value_type, rb_tree::Identity<value_type>,
-                         key_compare, KeyAlloc_>;
+      std::allocator_traits<AllocatorType>::template rebind_alloc<ValueType>;
+  using RbTree_ = RbTree<KeyType, ValueType, rb_tree::Identity<ValueType>,
+                         KeyCompare, KeyAlloc_>;
 
   using AllocTraits_ = std::allocator_traits<KeyAlloc_>;
 
   RbTree_ rb_tree_;
 
-  using reference = value_type&;
-  using const_reference = const value_type&;
+  using Reference = ValueType&;
+  using ConstReference = const ValueType&;
 
-  using iterator = RbTree_::iterator;
-  using const_iterator = RbTree_::const_iterator;
+  using Iterator = RbTree_::Iterator;
+  using ConstIterator = RbTree_::ConstIterator;
 
-  using size_type = RbTree_::size_type;
+  using SizeType = RbTree_::SizeType;
 
   template <typename OtherCompare_>
   using OtherMultiset_ = Multiset<Key_, OtherCompare_, Alloc_>;
@@ -47,50 +47,50 @@ class Multiset {
   Multiset(Multiset&&) = default;
   ~Multiset() = default;
 
-  Multiset(std::initializer_list<value_type> const& items,
-           const key_compare& compare = key_compare(),
-           const allocator_type& alloc = allocator_type());
+  Multiset(std::initializer_list<ValueType> const& items,
+           const KeyCompare& compare = KeyCompare(),
+           const AllocatorType& alloc = AllocatorType());
 
   Multiset& operator=(const Multiset&) = default;
   Multiset& operator=(Multiset&&) = default;
 
-  iterator Begin() noexcept;
-  iterator End() noexcept;
+  Iterator Begin() noexcept;
+  Iterator End() noexcept;
 
-  const_iterator Begin() const noexcept;
-  const_iterator End() const noexcept;
+  ConstIterator Begin() const noexcept;
+  ConstIterator End() const noexcept;
 
   bool Empty() const noexcept;
-  size_type Size() const noexcept;
-  size_type MaxSize() const noexcept;
+  SizeType Size() const noexcept;
+  SizeType MaxSize() const noexcept;
 
   void Clear();
-  iterator Insert(const value_type& value);
-  void Erase(iterator position);
+  Iterator Insert(const ValueType& value);
+  void Erase(Iterator position);
   void Swap(Multiset& other);
 
   template <typename OtherCompare_>
   void Merge(OtherMultiset_<OtherCompare_>& other_set);
 
-  size_type Count(const key_type& key) const;
+  SizeType Count(const KeyType& key) const;
 
-  iterator Find(const key_type& key);
-  const_iterator Find(const key_type& key) const;
+  Iterator Find(const KeyType& key);
+  ConstIterator Find(const KeyType& key) const;
 
-  bool Contains(const key_type& key) const;
+  bool Contains(const KeyType& key) const;
 
-  std::pair<iterator, iterator> EqualRange(const key_type& key);
-  std::pair<const_iterator, const_iterator> EqualRange(
-      const key_type& key) const;
+  std::pair<Iterator, Iterator> EqualRange(const KeyType& key);
+  std::pair<ConstIterator, ConstIterator> EqualRange(
+      const KeyType& key) const;
 
-  iterator LowerBound(const key_type& key);
-  iterator UpperBound(const key_type& key);
+  Iterator LowerBound(const KeyType& key);
+  Iterator UpperBound(const KeyType& key);
 
-  const_iterator LowerBound(const key_type& key) const;
-  const_iterator UpperBound(const key_type& key) const;
+  ConstIterator LowerBound(const KeyType& key) const;
+  ConstIterator UpperBound(const KeyType& key) const;
 
   template <typename... Args>
-  vector<std::pair<iterator, bool>> InsertMany(Args&&... args);
+  vector<std::pair<Iterator, bool>> InsertMany(Args&&... args);
 };
 
 template <typename Key_, typename Compare_, typename Alloc_,
@@ -107,32 +107,32 @@ struct RbTreeMergeHelper<Multiset<Key_, Compare_, Alloc_>, OtherCompare_> {
 
 template <typename Key_, typename Compare_, typename Alloc_>
 Multiset<Key_, Compare_, Alloc_>::Multiset(
-    std::initializer_list<value_type> const& items, const key_compare& compare,
-    const allocator_type& alloc)
+    std::initializer_list<ValueType> const& items, const KeyCompare& compare,
+    const AllocatorType& alloc)
     : rb_tree_(compare, alloc) {
   rb_tree_.InsertRangeEqual(items.begin(), items.end());
 }
 
 template <typename Key_, typename Compare_, typename Alloc_>
-Multiset<Key_, Compare_, Alloc_>::iterator
+Multiset<Key_, Compare_, Alloc_>::Iterator
 Multiset<Key_, Compare_, Alloc_>::Begin() noexcept {
   return rb_tree_.begin();
 }
 
 template <typename Key_, typename Compare_, typename Alloc_>
-Multiset<Key_, Compare_, Alloc_>::iterator
+Multiset<Key_, Compare_, Alloc_>::Iterator
 Multiset<Key_, Compare_, Alloc_>::End() noexcept {
   return rb_tree_.end();
 }
 
 template <typename Key_, typename Compare_, typename Alloc_>
-Multiset<Key_, Compare_, Alloc_>::const_iterator
+Multiset<Key_, Compare_, Alloc_>::ConstIterator
 Multiset<Key_, Compare_, Alloc_>::Begin() const noexcept {
   return rb_tree_.begin();
 }
 
 template <typename Key_, typename Compare_, typename Alloc_>
-Multiset<Key_, Compare_, Alloc_>::const_iterator
+Multiset<Key_, Compare_, Alloc_>::ConstIterator
 Multiset<Key_, Compare_, Alloc_>::End() const noexcept {
   return rb_tree_.end();
 }
@@ -143,13 +143,13 @@ bool Multiset<Key_, Compare_, Alloc_>::Empty() const noexcept {
 }
 
 template <typename Key_, typename Compare_, typename Alloc_>
-Multiset<Key_, Compare_, Alloc_>::size_type
+Multiset<Key_, Compare_, Alloc_>::SizeType
 Multiset<Key_, Compare_, Alloc_>::Size() const noexcept {
   return rb_tree_.Size();
 }
 
 template <typename Key_, typename Compare_, typename Alloc_>
-Multiset<Key_, Compare_, Alloc_>::size_type
+Multiset<Key_, Compare_, Alloc_>::SizeType
 Multiset<Key_, Compare_, Alloc_>::MaxSize() const noexcept {
   return rb_tree_.MaxSize();
 }
@@ -160,13 +160,13 @@ void Multiset<Key_, Compare_, Alloc_>::Clear() {
 }
 
 template <typename Key_, typename Compare_, typename Alloc_>
-Multiset<Key_, Compare_, Alloc_>::iterator
-Multiset<Key_, Compare_, Alloc_>::Insert(const value_type& value) {
+Multiset<Key_, Compare_, Alloc_>::Iterator
+Multiset<Key_, Compare_, Alloc_>::Insert(const ValueType& value) {
   return rb_tree_.InsertEqual(value);
 }
 
 template <typename Key_, typename Compare_, typename Alloc_>
-void Multiset<Key_, Compare_, Alloc_>::Erase(iterator position) {
+void Multiset<Key_, Compare_, Alloc_>::Erase(Iterator position) {
   rb_tree_.Erase(position);
 }
 
@@ -184,73 +184,73 @@ void Multiset<Key_, Compare_, Alloc_>::Merge(
 }
 
 template <typename Key_, typename Compare_, typename Alloc_>
-Multiset<Key_, Compare_, Alloc_>::size_type
-Multiset<Key_, Compare_, Alloc_>::Count(const key_type& key) const {
+Multiset<Key_, Compare_, Alloc_>::SizeType
+Multiset<Key_, Compare_, Alloc_>::Count(const KeyType& key) const {
   return rb_tree_.Count(key);
 }
 
 template <typename Key_, typename Compare_, typename Alloc_>
-Multiset<Key_, Compare_, Alloc_>::iterator
-Multiset<Key_, Compare_, Alloc_>::Find(const key_type& key) {
+Multiset<Key_, Compare_, Alloc_>::Iterator
+Multiset<Key_, Compare_, Alloc_>::Find(const KeyType& key) {
   return rb_tree_.Find(key);
 }
 
 template <typename Key_, typename Compare_, typename Alloc_>
-Multiset<Key_, Compare_, Alloc_>::const_iterator
-Multiset<Key_, Compare_, Alloc_>::Find(const key_type& key) const {
+Multiset<Key_, Compare_, Alloc_>::ConstIterator
+Multiset<Key_, Compare_, Alloc_>::Find(const KeyType& key) const {
   return rb_tree_.Find(key);
 }
 
 template <typename Key_, typename Compare_, typename Alloc_>
-bool Multiset<Key_, Compare_, Alloc_>::Contains(const key_type& key) const {
+bool Multiset<Key_, Compare_, Alloc_>::Contains(const KeyType& key) const {
   return rb_tree_.Find(key) != rb_tree_.end();
 }
 
 template <typename Key_, typename Compare_, typename Alloc_>
-std::pair<typename Multiset<Key_, Compare_, Alloc_>::iterator,
-          typename Multiset<Key_, Compare_, Alloc_>::iterator>
-Multiset<Key_, Compare_, Alloc_>::EqualRange(const key_type& key) {
+std::pair<typename Multiset<Key_, Compare_, Alloc_>::Iterator,
+          typename Multiset<Key_, Compare_, Alloc_>::Iterator>
+Multiset<Key_, Compare_, Alloc_>::EqualRange(const KeyType& key) {
   return rb_tree_.EqualRange(key);
 }
 
 template <typename Key_, typename Compare_, typename Alloc_>
-std::pair<typename Multiset<Key_, Compare_, Alloc_>::const_iterator,
-          typename Multiset<Key_, Compare_, Alloc_>::const_iterator>
-Multiset<Key_, Compare_, Alloc_>::EqualRange(const key_type& key) const {
+std::pair<typename Multiset<Key_, Compare_, Alloc_>::ConstIterator,
+          typename Multiset<Key_, Compare_, Alloc_>::ConstIterator>
+Multiset<Key_, Compare_, Alloc_>::EqualRange(const KeyType& key) const {
   return rb_tree_.EqualRange(key);
 }
 
 template <typename Key_, typename Compare_, typename Alloc_>
-Multiset<Key_, Compare_, Alloc_>::iterator
-Multiset<Key_, Compare_, Alloc_>::LowerBound(const key_type& key) {
+Multiset<Key_, Compare_, Alloc_>::Iterator
+Multiset<Key_, Compare_, Alloc_>::LowerBound(const KeyType& key) {
   return rb_tree_.LowerBound(key);
 }
 
 template <typename Key_, typename Compare_, typename Alloc_>
-Multiset<Key_, Compare_, Alloc_>::iterator
-Multiset<Key_, Compare_, Alloc_>::UpperBound(const key_type& key) {
+Multiset<Key_, Compare_, Alloc_>::Iterator
+Multiset<Key_, Compare_, Alloc_>::UpperBound(const KeyType& key) {
   return rb_tree_.UpperBound(key);
 }
 
 template <typename Key_, typename Compare_, typename Alloc_>
-Multiset<Key_, Compare_, Alloc_>::const_iterator
-Multiset<Key_, Compare_, Alloc_>::LowerBound(const key_type& key) const {
+Multiset<Key_, Compare_, Alloc_>::ConstIterator
+Multiset<Key_, Compare_, Alloc_>::LowerBound(const KeyType& key) const {
   return rb_tree_.LowerBound(key);
 }
 
 template <typename Key_, typename Compare_, typename Alloc_>
-Multiset<Key_, Compare_, Alloc_>::const_iterator
-Multiset<Key_, Compare_, Alloc_>::UpperBound(const key_type& key) const {
+Multiset<Key_, Compare_, Alloc_>::ConstIterator
+Multiset<Key_, Compare_, Alloc_>::UpperBound(const KeyType& key) const {
   return rb_tree_.UpperBound(key);
 }
 
 template <typename Key_, typename Compare_, typename Alloc_>
 template <typename... Args>
-vector<std::pair<typename Multiset<Key_, Compare_, Alloc_>::iterator, bool>>
+vector<std::pair<typename Multiset<Key_, Compare_, Alloc_>::Iterator, bool>>
 Multiset<Key_, Compare_, Alloc_>::InsertMany(Args&&... args) {
   return rb_tree_.InsertManyEqual(std::forward<Args>(args)...);
 }
 
 }  //  namespace s21
 
-#endif  //  _S21_MULTISET_H_
+#endif  //  S21_MULTISET_H_
