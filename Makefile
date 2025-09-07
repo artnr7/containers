@@ -10,7 +10,7 @@ build:
 
 .PHONY: test
 test:
-	ctest --parallel $(NPROC) --output-on-failure
+	cd build && ctest --parallel $(NPROC) --output-on-failure
 
 .PHONY: test-%
 test-%:
@@ -22,7 +22,7 @@ test-verbose-%:
 
 .PHONY: clang-format-test
 clang-format-test:
-	cmake --build . --target clang-format-test
+	cmake --build build --target clang-format-test
 
 .PHONY: clang-format-fix
 clang-format-fix:
@@ -30,11 +30,11 @@ clang-format-fix:
 
 .PHONY: valgrind
 valgrind:
-	cmake --build . --target valgrind-test
+	cmake --build build --target valgrind-test 
 
 .PHONY: coverage
 coverage:
-	cmake --build . --target coverage
+	cmake --build build --target coverage
 
 .PHONY: help
 help:
