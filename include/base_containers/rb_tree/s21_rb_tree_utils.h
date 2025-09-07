@@ -118,6 +118,8 @@ struct Iterator {
   using Reference = MaybeConst_<ValueType>&;
   using Pointer = MaybeConst_<ValueType>*;
 
+  using DifferenceType = std::ptrdiff_t;
+
   Iterator() noexcept = default;
   Iterator(const Iterator&) = default;
 
@@ -348,8 +350,8 @@ constexpr Iterator<IsConst_, ValPtr_> Iterator<IsConst_, ValPtr_>::operator--(
 }
 
 template <typename Iter_>
-std::iterator_traits<Iter_>::difference_type distance(Iter_ first, Iter_ last) {
-  typename std::iterator_traits<Iter_>::difference_type count = 0;
+inline Iter_::DifferenceType distance(Iter_ first, Iter_ last) {
+  typename Iter_::DifferenceType count = 0;
   while (first != last) {
     ++count;
     ++first;
