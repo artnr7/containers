@@ -49,4 +49,4 @@ help:
 
 .PHONY: clean
 clean:
-	docker run --rm -v $(PWD):/project -w /project $(IMAGE_NAME) rm -rf build
+	rm -rf build
