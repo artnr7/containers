@@ -26,7 +26,7 @@ clang-format-test:
 
 .PHONY: clang-format-fix
 clang-format-fix:
-	cmake --build . --target clang-format-fix
+	cmake --build build --target clang-format-fix
 
 .PHONY: valgrind
 valgrind:
