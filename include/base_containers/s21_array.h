@@ -10,34 +10,173 @@ namespace s21 {
  * @brief Реализация контейнера array аналогичного std::array
  */
 template <typename T, size_t N>
-class array {
+class Array {
  public:
-  using value_type = T;
-  using reference = T &;
-  using const_reference = const T &;
-  using iterator = T *;
-  using const_iterator = const T *;
-  using size_type = size_t;
+  class ArrayIterator {
+   private:
+    T* ptr;
 
-  array() = default;
+   public:
+    explicit ArrayIterator(T* pointer) : ptr(pointer) {}
 
-  array(std::initializer_list<value_type> const &items) {
+    T& operator*() { return *ptr; }
+
+    ArrayIterator& operator++() {
+      ++ptr;
+      return *this;
+    }
+
+    ArrayIterator operator++(int) {
+      ArrayIterator tmp = *this;
+      ++ptr;
+      return tmp;
+    }
+
+    ArrayIterator& operator--() {
+      --ptr;
+      return *this;
+    }
+
+    ArrayIterator operator--(int) {
+      ArrayIterator tmp = *this;
+      --ptr;
+      return tmp;
+    }
+
+    bool operator==(const ArrayIterator& other) const {
+      return ptr == other.ptr;
+    }
+    bool operator!=(const ArrayIterator& other) const {
+      return ptr != other.ptr;
+    }
+
+    T& operator[](int index) { return *(ptr + index); }
+
+    ArrayIterator operator+(int n) const { return ArrayIterator(ptr + n); }
+
+    ArrayIterator operator-(int n) const { return ArrayIterator(ptr - n); }
+    ptrdiff_t operator-(const ArrayIterator& other) const {
+      return ptr - other.ptr;
+    }
+
+    bool operator>(const ArrayIterator& other) const {
+      return ptr > other.ptr;
+    }
+    bool operator<(const ArrayIterator& other) const {
+      return ptr < other.ptr;
+    }
+    bool operator>=(const ArrayIterator& other) const {
+      return ptr >= other.ptr;
+    }
+    bool operator<=(const ArrayIterator& other) const {
+      return ptr <= other.ptr;
+    }
+  };
+
+  class ArrayIteratorConst {
+   private:
+    const T* ptr;
+
+   public:
+    explicit ArrayIteratorConst(const T* pointer) : ptr(pointer) {}
+
+    const T& operator*() { return *ptr; }
+
+    ArrayIteratorConst& operator++() {
+      ++ptr;
+      return *this;
+    }
+
+    ArrayIteratorConst operator++(int) {
+      ArrayIteratorConst tmp = *this;
+      ++ptr;
+      return tmp;
+    }
+
+    ArrayIteratorConst& operator--() {
+      --ptr;
+      return *this;
+    }
+
+    ArrayIteratorConst operator--(int) {
+      ArrayIteratorConst tmp = *this;
+      --ptr;
+      return tmp;
+    }
+
+    bool operator==(const ArrayIteratorConst& other) const {
+      return ptr == other.ptr;
+    }
+    bool operator!=(const ArrayIteratorConst& other) const {
+      return ptr != other.ptr;
+    }
+
+    const T& operator[](int index) { return *(ptr + index); }
+
+    ArrayIteratorConst operator+(int n) const {
+      return ArrayIteratorConst(ptr + n);
+    }
+
+    ArrayIteratorConst operator-(int n) const {
+      return ArrayIteratorConst(ptr - n);
+    }
+    ptrdiff_t operator-(const ArrayIteratorConst& other) const {
+      return ptr - other.ptr;
+    }
+
+    bool operator>(const ArrayIteratorConst& other) const {
+      return ptr > other.ptr;
+    }
+    bool operator<(const ArrayIteratorConst& other) const {
+      return ptr < other.ptr;
+    }
+    bool operator>=(const ArrayIteratorConst& other) const {
+      return ptr >= other.ptr;
+    }
+    bool operator<=(const ArrayIteratorConst& other) const {
+      return ptr <= other.ptr;
+    }
+  };
+
+  using ValueType = T;
+  using Reference = T &;
+  using ConstReference = const T &;
+  using Iterator = ArrayIterator;
+  using ConstIterator = ArrayIteratorConst;
+  using SizeType = size_t;
+
+  Array() = default;
+
+  Array(std::initializer_list<ValueType> const &items) {
     if (items.size() > N) {
       throw std::out_of_range("OUT OF THE RANGE");
     }
-    size_type index = 0;
+    SizeType index = 0;
     for (auto it = items.begin(); it != items.end(); ++it, ++index) {
       data_[index] = *it;
     }
   }
 
-  array(const array &other) = default;
-  array(array &&other) = default;
-  ~array() = default;
+  
 
-  array &operator=(array &&other) noexcept {
+  Array(const Array &other) {
+    for (SizeType i = 0; i < N; ++i) {
+      data_[i] = other.data_[i];
+    }
+  }
+
+  Array(Array &&other) noexcept {
+    for (SizeType i = 0; i < N; ++i) {
+      data_[i] = std::move(other.data_[i]);
+    }
+  }
+
+  ~Array() {
+  }
+
+  Array &operator=(Array &&other) noexcept {
     if (this != &other) {
-      for (size_type i = 0; i < N; ++i) {
+      for (SizeType i = 0; i < N; ++i) {
         data_[i] = std::move(other.data_[i]);
       }
     }
@@ -45,70 +184,74 @@ class array {
     return *this;
   }
 
-  reference at(size_type pos) {
+  Reference At(SizeType pos) {
     if (pos >= N) {
       throw std::out_of_range("OUT OF THE RANGE");
     }
     return data_[pos];
   }
 
-  const_reference at(size_type pos) const {
+  ConstReference At(SizeType pos) const {
     if (pos >= N) {
       throw std::out_of_range("OUT OF THE RANGE");
     }
     return data_[pos];
   }
 
-  reference operator[](size_type pos) { return data_[pos]; }
+  Reference operator[](SizeType pos) { return data_[pos]; }
 
-  const_reference operator[](size_type pos) const { return data_[pos]; }
+  ConstReference operator[](SizeType pos) const { return data_[pos]; }
 
-  reference front() { return data_[0]; }
+  Reference Front() { return data_[0]; }
 
-  reference back() { return data_[N - 1]; }
+  Reference Back() { return data_[N - 1]; }
 
-  [[nodiscard]] const_reference front() const { return data_[0]; }
+  [[nodiscard]] ConstReference Front() const { return data_[0]; }
 
-  [[nodiscard]] const_reference back() const { return data_[N - 1]; }
+  [[nodiscard]] ConstReference Back() const { return data_[N - 1]; }
 
-  iterator data() { return data_; }
+  Iterator Data() { return Iterator(data_); }
 
-  [[nodiscard]] const_iterator data() const { return data_; }
+  [[nodiscard]] ConstIterator Data() const { return ConstIterator(data_); }
 
-  iterator begin() { return data_; }
+Iterator Begin() { return Iterator(data_); }
 
-  iterator end() { return data_ + N; }
+Iterator End() { return Iterator(data_ + N); }
 
-  [[nodiscard]] const_iterator begin() const { return data_; }
+[[nodiscard]] ConstIterator Cbegin() const { return ConstIterator(data_); }
 
-  [[nodiscard]] const_iterator end() const { return data_ + N; }
+[[nodiscard]] ConstIterator Cend() const { return ConstIterator(data_ + N); }
 
-  bool empty() { return N == 0; }
+[[nodiscard]] ConstIterator Begin() const { return ConstIterator(data_); }
 
-  size_type size() { return N; }
+[[nodiscard]] ConstIterator End() const { return ConstIterator(data_ + N); }
 
-  size_type max_size() { return N; }
+  bool Empty() { return N == 0; }
 
-  [[nodiscard]] bool empty() const { return N == 0; }
+  SizeType Size() { return N; }
 
-  [[nodiscard]] size_type size() const { return N; }
+  SizeType MaxSize() { return N; }
 
-  [[nodiscard]] size_type max_size() const { return N; }
+  [[nodiscard]] bool Empty() const { return N == 0; }
 
-  void swap(array &other) noexcept {
-    for (size_type i = 0; i < N; ++i) {
+  [[nodiscard]] SizeType Size() const { return N; }
+
+  [[nodiscard]] SizeType MaxSize() const { return N; }
+
+  void Swap(Array &other) noexcept {
+    for (SizeType i = 0; i < N; ++i) {
       std::swap(data_[i], other.data_[i]);
     }
   }
 
-  void fill(const_reference value) {
-    for (size_type i = 0; i < N; ++i) {
+  void Fill(ConstReference value) {
+    for (SizeType i = 0; i < N; ++i) {
       data_[i] = value;
     }
   }
 
  private:
-  value_type data_[N]{};
+  ValueType data_[N]{};
 };
 
 }  // namespace s21

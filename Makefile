@@ -18,7 +18,7 @@ test-%:
 
 .PHONY: test-verbose-%
 test-verbose-%:
-	ctest --parallel $(NPROC) -V -R ^$*$$
+	cd build && ctest --parallel $(NPROC) -V -R ^$*$$
 
 .PHONY: clang-format-test
 clang-format-test:

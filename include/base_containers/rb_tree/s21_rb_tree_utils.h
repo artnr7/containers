@@ -96,7 +96,7 @@ struct Node : public NodeBase<PtrTraitsRebind_<ValPtr_, void>> {
 
   union Storage_ {
     Storage_() noexcept {};
-    ~Storage_() {};
+    ~Storage_(){};
     ValueType_ data_;
   } storage_;
 
