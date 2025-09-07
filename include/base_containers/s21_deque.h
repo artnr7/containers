@@ -7,10 +7,10 @@ namespace s21 {
 template <typename T>
 class Deque {
  public:
-  using value_type = T;
-  using reference = T &;
-  using const_reference = const T &;
-  using size_type = size_t;
+  using ValueType = T;
+  using Reference = T &;
+  using ConstReference = const T &;
+  using SizeType = size_t;
 
   class Iterator {
    public:
@@ -50,7 +50,7 @@ class Deque {
     }
 
     /*--------→ OPERATORS ←-------------*/
-    reference operator*() const noexcept { return *_cur_el; }
+    Reference operator*() const noexcept { return *_cur_el; }
 
     Iterator &operator++() {
       ++_cur_el;
@@ -232,15 +232,15 @@ class Deque {
   }
 
   /*--------→ METHODS  ←-----------*/
-  reference Front() { return *_start._cur_el; }
-  const_reference Front() const { return *_start._cur_el; }
+  Reference Front() { return *_start._cur_el; }
+  ConstReference Front() const { return *_start._cur_el; }
 
-  reference Back() {
+  Reference Back() {
     Iterator tmp_finish(_finish);
     --tmp_finish;
     return *tmp_finish._cur_el;
   }
-  const_reference Back() const {
+  ConstReference Back() const {
     Iterator tmp_finish(_finish);
     --tmp_finish;
     return *tmp_finish._cur_el;
@@ -291,25 +291,7 @@ class Deque {
     }
     *(_start._cur_el) = std::forward<U>(value);
     ExpandMapsize(chunk_capacity);
-    // std::cout << "===== _map_size = " << _map_size << "\n" << std::endl;
 
-    // std::cout << "===== _start._cur_chunk = " << _start._cur_chunk - _map
-    //           << std::endl;
-    // std::cout << "===== _start._cur_el = " << _start._cur_el -
-    // _start._first_el
-    //           << std::endl;
-    // std::cout << "===== _start._first_el = " << _start._first_el <<
-    // std::endl; std::cout << "===== _start._last_el = " << _start._last_el <<
-    // std::endl;
-
-    // std::cout << "===== _finish._cur_chunk = " << _finish._cur_chunk - _map
-    //           << std::endl;
-    // std::cout << "===== _finish._cur_el = "
-    //           << _finish._cur_el - _finish._first_el << std::endl;
-    // std::cout << "===== _finish._first_el = " << _finish._first_el <<
-    // std::endl; std::cout << "===== _finish._last_el = " << _finish._last_el
-    // << "\n\n"
-    //           << std::endl;
   }
 
   /** @brief Вычисляет количество элементов, содержащихся в deque */
@@ -365,25 +347,12 @@ class Deque {
     const size_t &chunks_qty = Tp_qty / chunk_capacity + 1;
     _map_size = chunks_qty + 2 * RESERVE_SHIFT;
     Malloc(chunk_capacity, chunks_qty);
-    // std::cout << "===== Tp_qty = " << Tp_qty << std::endl;
-    // std::cout << "===== chunks_qty = " << chunks_qty << std::endl;
-    // std::cout << "===== chunk_capacity = " << chunk_capacity << std::endl;
-    // std::cout << "===== _map_size = " << _map_size << std::endl;
-
-    // std::cout << "===== _map = " << _map << std::endl;
 
     _start._cur_chunk = _map + RESERVE_SHIFT;
     _start._cur_el = _map[RESERVE_SHIFT];
     _start._first_el = _map[RESERVE_SHIFT];
     _start._last_el = _map[RESERVE_SHIFT] + chunk_capacity;
 
-    // std::cout << "===== _start._cur_chunk = " << _start._cur_chunk <<
-    // std::endl; std::cout << "===== _start._cur_el = " << _start._cur_el
-    // << std::endl; std::cout << "===== _start._first_el = " <<
-    // _start._first_el
-    // << std::endl; std::cout << "===== _start._last_el = " <<
-    // _start._last_el
-    // << std::endl;
 
     size_t finish_i = RESERVE_SHIFT + chunks_qty - 1;
     _finish._cur_chunk = _map + finish_i;
@@ -391,15 +360,6 @@ class Deque {
     _finish._cur_el = _map[finish_i] + Tp_qty % chunk_capacity;
     _finish._first_el = _map[finish_i];
     _finish._last_el = _map[finish_i] + chunk_capacity;
-
-    // std::cout << "===== finish_i = " << finish_i << std::endl;
-    // std::cout << "===== _finish._cur_chunk = " << _finish._cur_chunk
-    //           << std::endl;
-    // std::cout << "===== _finish._cur_el = " << _finish._cur_el <<
-    // std::endl; std::cout << "===== _finish._first_el = " <<
-    // _finish._first_el << std::endl; std::cout << "===== _finish._last_el
-    // = " << _finish._last_el
-    // << std::endl;
   }
 
   void Malloc(const size_t &chunk_capacity, const size_t &chunks_qty) {
@@ -428,19 +388,10 @@ class Deque {
   }
 
   void ExpandMapDown(const size_t &chunk_capacity) {
-    // static size_t i = 0;
     Iterator tmp_finish(_finish);
     ++tmp_finish;
     // если след.чанк == nullptr, а не указывает на выделенную память ↓
-    // if (i > 1) {
-    //   ++_finish;
-    //   std::cout << "---" << _finish._cur_chunk << std::endl;
-    //   std::cout << "---" << tmp_finish._cur_chunk << std::endl;
-    //   std::cout << "---" << *(tmp_finish._cur_chunk) << std::endl;
-    //   std::exit(i);
-    // }
     if (*(tmp_finish._cur_chunk) == nullptr) {
-      // i++;
       ++_finish._cur_chunk;
       *(_finish._cur_chunk) = new T[chunk_capacity];
       --_finish._cur_chunk;
@@ -467,43 +418,18 @@ class Deque {
   // последнего выделенного чанка и при этом указатель тоже последний надо
   // увеличивать мап в два раза,  лучше делать это заранее, потому что смещение
   // адреса кур-чанк на + 1 может попасть в невалидную область
-
   void ExpandMapsize(const size_t &chunk_capacity) {
     // если это последний чанк и последний элемент
     // еще можно добавить условие, что если следующий курчанк не равен нуллптр
     if ((size_t(_finish._cur_chunk - _map) == _map_size - 1 &&
          _finish._cur_el == _finish._last_el - 1) ||
         (_start._cur_chunk == _map && _start._cur_el == *_map)) {
-      // std::cout << "===_cur = " << _finish._cur_chunk - _map << std::endl;
-      // std::cout << "===== _map_size = " << _map_size << std::endl;
-      // std::cout << "===== half_map_size = " << half_map_size << std::endl;
+
       size_t expanded_map_size = _map_size * 2, half_map_size = _map_size / 2,
              start_cur_el_i = _start._cur_el - _start._first_el,
              finish_cur_el_i = _finish._cur_el - _finish._first_el,
              start_i = half_map_size + (_start._cur_chunk - _map),
              finish_i = half_map_size + size_t(_finish._cur_chunk - _map);
-      // std::cout << "===== start_cur_el_i = " << start_cur_el_i << std::endl;
-      // std::cout << "===== finish_cur_el_i = " << finish_cur_el_i <<
-      // std::endl;
-
-      // std::cout << "===== _map_size = " << _map_size << "\n" << std::endl;
-
-      // std::cout << "===== _start._cur_chunk = " << _start._cur_chunk - _map
-      //           << std::endl;
-      // std::cout << "===== _start._cur_el = "
-      //           << _start._cur_el - _start._first_el << std::endl;
-      // std::cout << "===== _start._first_el = " << _start._first_el <<
-      // std::endl; std::cout << "===== _start._last_el = " << _start._last_el
-      // << std::endl;
-
-      // std::cout << "===== _finish._cur_chunk = " << _finish._cur_chunk - _map
-      //           << std::endl;
-      // std::cout << "===== _finish._cur_el = "
-      //           << _finish._cur_el - _finish._first_el << std::endl;
-      // std::cout << "===== _finish._first_el = " << _finish._first_el
-      //           << std::endl;
-      // std::cout << "===== _finish._last_el = " << _finish._last_el << "\n\n"
-      //           << std::endl;
       // порядок начала нового _map это _map_size / 2
       T **tmp_map = new T *[expanded_map_size] {};
       for (size_t i = 0; i < _map_size; ++i) {
@@ -517,10 +443,6 @@ class Deque {
       _start._first_el = _map[start_i];
       _start._last_el = _map[start_i] + chunk_capacity;
 
-      // std::cout << "===== _map = " << _map << std::endl;
-      // std::cout << "===== finish_i = " << finish_i << std::endl;
-      // std::cout << "===== _map + finish_i = " << _map + finish_i <<
-      // std::endl;
       _finish._cur_chunk = _map + finish_i;
       _finish._cur_el = _map[finish_i] + finish_cur_el_i;
       _finish._first_el = _map[finish_i];
@@ -529,13 +451,6 @@ class Deque {
       _map_size = expanded_map_size;
     }
   }
-
-  // void SetPrevChunk() noexcept {
-  //   --_cur_chunk;
-  //   _start._cur_el = *_cur_chunk + chunk_capacity - 1;
-  //   _start._first_el = *_cur_chunk;
-  //   _start._last_el = *_cur_chunk + chunk_capacity;
-  // }
 
   /** @brief Функция заполнения выделенной памяти стандартными значениями */
   void BlocksFill() {

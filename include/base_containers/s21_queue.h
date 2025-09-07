@@ -5,44 +5,45 @@
 
 namespace s21 {
 
-template <typename T, typename Container = Deque<T>>
-class Queue {
- public:
-  using value_type = Container::value_type;
-  using reference = Container::reference;
-  using const_reference = Container::const_reference;
-  using size_type = Container::size_type;
+template <typename T, typename Container = Deque<T>> class Queue {
+public:
+  using ValueType = Container::ValueType;
+  using Reference = Container::Reference;
+  using ConstReference = Container::ConstReference;
+  using SizeType = Container::SizeType;
 
- protected:
+protected:
   Container c;
 
- public:
+public:
   explicit Queue() : c() {}
-  Queue(const std::initializer_list<value_type> &values) : c{values} {}
+  Queue(const std::initializer_list<ValueType> &values) : c{values} {}
+  Queue(const Queue &q) = default;
+  Queue(Queue &&q) = default;
+  ~Queue() = default;
+
+  Queue &operator=(Queue &q) = default;
+  Queue &operator=(Queue &&q) = default;
 
   /*--------→ METHODS  ←-----------*/
-  template <typename U>
-  void Push(U &&value) {
-    c.PushBack(value);
-  }
+  template <typename U> void Push(U &&value) { c.PushBack(value); }
   void Pop() { c.PopFront(); }
   void Swap(Queue &o) { std::swap(c, o.c); }
 
-  template <typename... Args>
-  void InsertManyBack(Args &&...args) {
+  template <typename... Args> void InsertManyBack(Args &&...args) {
     (c.PushBack(std::forward<Args>(args)), ...);
   }
 
-  reference Front() { return c.Front(); }
-  const_reference Front() const { return c.Front(); }
+  Reference Front() { return c.Front(); }
+  ConstReference Front() const { return c.Front(); }
 
-  reference Back() { return c.Back(); }
-  const_reference Back() const { return c.Back(); }
+  Reference Back() { return c.Back(); }
+  ConstReference Back() const { return c.Back(); }
 
   bool Empty() const { return c.Empty(); }
-  size_type Size() const { return c.Size(); }
+  SizeType Size() const { return c.Size(); }
 };
 
-}  // namespace s21
+} // namespace s21
 
-#endif  // S21_QUEUE_H
+#endif // S21_QUEUE_H
