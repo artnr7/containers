@@ -20,10 +20,10 @@ TEST(RbTreeTest, InsertHintEnd) {
   tree.InsertUnique(std::make_pair(50, "fifty"));
   tree.InsertUnique(std::make_pair(70, "seventy"));
 
-  auto hint = tree.end();
+  auto hint = tree.End();
   auto result = tree.InsertHintUnique(hint, 90);
 
-  EXPECT_TRUE(result != tree.end());
+  EXPECT_TRUE(result != tree.End());
   EXPECT_EQ(result->first, 90);
 }
 
@@ -32,10 +32,10 @@ TEST(RbTreeTest, InsertHintBegin) {
   tree.InsertUnique(std::make_pair(50, "fifty"));
   tree.InsertUnique(std::make_pair(30, "thirty"));
 
-  auto hint = tree.end();
+  auto hint = tree.End();
   auto result = tree.InsertHintUnique(hint, 10);
 
-  EXPECT_TRUE(result != tree.end());
+  EXPECT_TRUE(result != tree.End());
   EXPECT_EQ(result->first, 10);
 }
 
@@ -48,7 +48,7 @@ TEST(RbTreeTest, InsertHintMiddle) {
   auto hint = tree.Find(40);
   auto result = tree.InsertHintUnique(hint, 35);
 
-  EXPECT_TRUE(result != tree.end());
+  EXPECT_TRUE(result != tree.End());
   EXPECT_EQ(result->first, 35);
 }
 
@@ -59,7 +59,7 @@ TEST(RbTreeTest, InsertHintDuplicate) {
   auto hint = tree.Find(50);
   auto result = tree.InsertHintUnique(hint, 50);
 
-  EXPECT_TRUE(result != tree.end());
+  EXPECT_TRUE(result != tree.End());
   EXPECT_EQ(result->first, 50);
 }
 
@@ -71,7 +71,7 @@ TEST(RbTreeTest, InsertHintNearMax) {
   auto hint = tree.Find(80);
   auto result = tree.InsertHintUnique(hint, 85);
 
-  EXPECT_TRUE(result != tree.end());
+  EXPECT_TRUE(result != tree.End());
   EXPECT_EQ(result->first, 85);
 }
 
@@ -83,7 +83,7 @@ TEST(RbTreeTest, InsertHintNearMin) {
   auto hint = tree.Find(20);
   auto result = tree.InsertHintUnique(hint, 15);
 
-  EXPECT_TRUE(result != tree.end());
+  EXPECT_TRUE(result != tree.End());
   EXPECT_EQ(result->first, 15);
 }
 
@@ -116,7 +116,7 @@ TEST(RbTreeTest, InsertHintRightSideNeedUniquePos) {
   auto hint = tree.Find(70);
   auto result = tree.InsertHintUnique(hint, 75);
 
-  EXPECT_TRUE(result != tree.end());
+  EXPECT_TRUE(result != tree.End());
   EXPECT_EQ(result->first, 75);
 }
 
@@ -132,10 +132,10 @@ TEST(RbTreeTest, InsertHintLeftmost) {
   tree.InsertUnique(std::make_pair(30, "30"));
   tree.InsertUnique(std::make_pair(70, "70"));
 
-  auto hint = tree.begin();
+  auto hint = tree.Begin();
   auto result = tree.InsertHintUnique(hint, 20);
 
-  EXPECT_TRUE(result != tree.end());
+  EXPECT_TRUE(result != tree.End());
   EXPECT_EQ(result->first, 20);
 }
 
@@ -156,7 +156,7 @@ TEST(RbTreeTest, InsertHintRightChild) {
   auto hint = tree.Find(40);
   auto result = tree.InsertHintUnique(hint, 25);
 
-  EXPECT_TRUE(result != tree.end());
+  EXPECT_TRUE(result != tree.End());
   EXPECT_EQ(result->first, 25);
 }
 
@@ -175,7 +175,7 @@ TEST(RbTreeTest, InsertHintAtRightmost) {
   auto hint = tree.Find(70);
   auto result = tree.InsertHintUnique(hint, 80);
 
-  EXPECT_TRUE(result != tree.end());
+  EXPECT_TRUE(result != tree.End());
 }
 
 TEST(RbTreeTest, InsertHintCurrentNoRightChild) {
@@ -198,7 +198,7 @@ TEST(RbTreeTest, InsertHintCurrentNoRightChild) {
   auto hint = tree.Find(70);
   auto result = tree.InsertHintUnique(hint, 65);
 
-  EXPECT_TRUE(result != tree.end());
+  EXPECT_TRUE(result != tree.End());
 }
 
 TEST(RbTreeTest, InsertHintNoRightChildAndKeyGreaterEqualNext) {
@@ -228,7 +228,7 @@ TEST(RbTreeTest, InsertHintNoRightChildAndKeyGreaterEqualNext) {
   auto hint = tree.Find(65);
   auto result = tree.InsertHintUnique(hint, 71);
 
-  EXPECT_TRUE(result != tree.end());
+  EXPECT_TRUE(result != tree.End());
 }
 
 TEST(RbTreeTest, InsertHintRightChildAndKeyGreaterEqualNext) {
@@ -263,7 +263,7 @@ TEST(RbTreeTest, InsertHintRightChildAndKeyGreaterEqualNext) {
   auto hint = tree.Find(65);
   auto result = tree.InsertHintUnique(hint, 72);
 
-  EXPECT_TRUE(result != tree.end());
+  EXPECT_TRUE(result != tree.End());
   EXPECT_EQ(result->first, 72);
 }
 
@@ -296,7 +296,7 @@ TEST(RbTreeTest, InsertHintBeforeNodeNoRightChild) {
   auto hint = tree.Find(30);
   auto result = tree.InsertHintUnique(hint, 15);
 
-  EXPECT_TRUE(result != tree.end());
+  EXPECT_TRUE(result != tree.End());
 }
 
 TEST(RbTreeTest, EraseBlackWWithOneBlackChildren) {
@@ -315,8 +315,8 @@ TEST(RbTreeTest, EraseBlackWWithOneBlackChildren) {
 
   auto it1 = tree1.Find(15);
   auto it2 = tree2.Find(22);
-  ASSERT_NE(it1, tree1.end());
-  ASSERT_NE(it2, tree2.end());
+  ASSERT_NE(it1, tree1.End());
+  ASSERT_NE(it2, tree2.End());
 
   tree1.Erase(it1);
   tree2.Erase(it2);
@@ -340,18 +340,18 @@ TEST(RbTreeTest, EraseBlackWWithTwoBlackChildren) {
 
   auto it1 = tree1.Find(15);
   tree1.Erase(it1);
-  ASSERT_NE(it1, tree1.end());
+  ASSERT_NE(it1, tree1.End());
   it1 = tree1.Find(22);
   tree1.Erase(it1);
-  ASSERT_NE(it1, tree1.end());
+  ASSERT_NE(it1, tree1.End());
   EXPECT_EQ(tree1.Size(), 2);
 
   auto it2 = tree2.Find(15);
   tree2.Erase(it2);
-  ASSERT_NE(it2, tree2.end());
+  ASSERT_NE(it2, tree2.End());
   it2 = tree2.Find(20);
   tree2.Erase(it2);
-  ASSERT_NE(it2, tree2.end());
+  ASSERT_NE(it2, tree2.End());
   EXPECT_EQ(tree2.Size(), 2);
 }
 
@@ -380,7 +380,7 @@ TEST(RbTreeTest, EraseRedW) {
 
   auto it1 = tree1.Find(70);
   tree1.Erase(it1);
-  ASSERT_NE(it1, tree1.end());
+  ASSERT_NE(it1, tree1.End());
   EXPECT_EQ(tree1.Size(), 9);
 
   auto it2 = tree2.Find(50);
@@ -388,6 +388,6 @@ TEST(RbTreeTest, EraseRedW) {
   it2 = tree2.Find(40);
   tree2.Erase(it2);
 
-  ASSERT_NE(it2, tree2.end());
+  ASSERT_NE(it2, tree2.End());
   EXPECT_EQ(tree2.Size(), 5);
 }

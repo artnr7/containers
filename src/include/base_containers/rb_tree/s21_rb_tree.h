@@ -163,10 +163,10 @@ class RbTree {
   SizeType MaxSize() const noexcept;
   void Clear() noexcept;
 
-  Iterator begin() noexcept;
-  Iterator end() noexcept;
-  ConstIterator begin() const noexcept;
-  ConstIterator end() const noexcept;
+  Iterator Begin() noexcept;
+  Iterator End() noexcept;
+  ConstIterator Begin() const noexcept;
+  ConstIterator End() const noexcept;
 
   template <typename InsertFunc, typename... Args>
   Vector<std::pair<Iterator, bool>> InsertMany(InsertFunc insert_func,
@@ -344,28 +344,28 @@ RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::GetKey(
 template <typename Key_, typename Val_, typename KeyOfValue_, typename Compare_,
           typename Alloc_>
 RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::Iterator
-RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::begin() noexcept {
+RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::Begin() noexcept {
   return Iterator(impl_.header_.left_);
 }
 
 template <typename Key_, typename Val_, typename KeyOfValue_, typename Compare_,
           typename Alloc_>
 RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::Iterator
-RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::end() noexcept {
+RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::End() noexcept {
   return Iterator(GetEnd());
 }
 
 template <typename Key_, typename Val_, typename KeyOfValue_, typename Compare_,
           typename Alloc_>
 RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::ConstIterator
-RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::begin() const noexcept {
+RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::Begin() const noexcept {
   return ConstIterator(impl_.header_.left_);
 }
 
 template <typename Key_, typename Val_, typename KeyOfValue_, typename Compare_,
           typename Alloc_>
 RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::ConstIterator
-RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::end() const noexcept {
+RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::End() const noexcept {
   return ConstIterator(GetEnd());
 }
 
@@ -609,7 +609,7 @@ template <typename Key_, typename Val_, typename KeyOfValue_, typename Compare_,
           typename Alloc_>
 RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::Iterator
 RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::Erase(Iterator position) {
-  if (position == end()) {
+  if (position == End()) {
     throw std::out_of_range("Iterator cannot be end");
   }
   Iterator result = position;
@@ -624,8 +624,8 @@ template <typename Key_, typename Val_, typename KeyOfValue_, typename Compare_,
 template <typename OtherCompare_, typename GetPosFunc>
 void RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::Merge(
     OtherTree_<OtherCompare_>& other_tree, GetPosFunc get_pos) noexcept {
-  auto it = other_tree.begin();
-  auto end = other_tree.end();
+  auto it = other_tree.Begin();
+  auto end = other_tree.End();
   while (it != end) {
     auto current = it++;
     auto pos = get_pos(KeyOfValue_()(*current));
@@ -994,8 +994,8 @@ template <typename Key_, typename Val_, typename KeyOfValue_, typename Compare_,
 RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::Iterator
 RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::Find(const KeyType& key) {
   Iterator it = LowerBound(key);
-  if (it != end() && key_compare_(key, GetKey(it.node_))) {
-    it = end();
+  if (it != End() && key_compare_(key, GetKey(it.node_))) {
+    it = End();
   }
   return it;
 }
@@ -1006,8 +1006,8 @@ RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::ConstIterator
 RbTree<Key_, Val_, KeyOfValue_, Compare_, Alloc_>::Find(
     const KeyType& key) const {
   ConstIterator it = LowerBound(key);
-  if (it != end() && key_compare_(key, GetKey(it.node_))) {
-    it = end();
+  if (it != End() && key_compare_(key, GetKey(it.node_))) {
+    it = End();
   }
   return it;
 }

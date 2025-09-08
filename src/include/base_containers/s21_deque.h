@@ -2,7 +2,6 @@
 #define S21_DEQUE_
 
 #include <algorithm>
-#include <iostream>
 namespace s21 {
 template <typename T>
 class Deque {

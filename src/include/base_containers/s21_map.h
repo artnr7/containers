@@ -109,7 +109,7 @@ template <typename Key_, typename T_, typename Compare_, typename Alloc_>
 Map<Key_, T_, Compare_, Alloc_>::MapType& Map<Key_, T_, Compare_, Alloc_>::At(
     const KeyType& key) {
   auto it = rb_tree_.LowerBound(key);
-  if (it == rb_tree_.end() || KeyCompare()(key, it->first)) {
+  if (it == rb_tree_.End() || KeyCompare()(key, it->first)) {
     throw std::out_of_range("Map::at: key not found");
   }
   return it->second;
@@ -119,7 +119,7 @@ template <typename Key_, typename T_, typename Compare_, typename Alloc_>
 Map<Key_, T_, Compare_, Alloc_>::MapType&
 Map<Key_, T_, Compare_, Alloc_>::operator[](const KeyType& key) {
   auto it = rb_tree_.LowerBound(key);
-  if (it == rb_tree_.end() || KeyCompare()(key, it->first)) {
+  if (it == rb_tree_.End() || KeyCompare()(key, it->first)) {
     it = rb_tree_.InsertHintUnique(it, key);
   }
   return it->second;
@@ -128,25 +128,25 @@ Map<Key_, T_, Compare_, Alloc_>::operator[](const KeyType& key) {
 template <typename Key_, typename T_, typename Compare_, typename Alloc_>
 Map<Key_, T_, Compare_, Alloc_>::Iterator
 Map<Key_, T_, Compare_, Alloc_>::Begin() noexcept {
-  return rb_tree_.begin();
+  return rb_tree_.Begin();
 }
 
 template <typename Key_, typename T_, typename Compare_, typename Alloc_>
 Map<Key_, T_, Compare_, Alloc_>::Iterator
 Map<Key_, T_, Compare_, Alloc_>::End() noexcept {
-  return rb_tree_.end();
+  return rb_tree_.End();
 }
 
 template <typename Key_, typename T_, typename Compare_, typename Alloc_>
 Map<Key_, T_, Compare_, Alloc_>::ConstIterator
 Map<Key_, T_, Compare_, Alloc_>::Begin() const noexcept {
-  return rb_tree_.begin();
+  return rb_tree_.Begin();
 }
 
 template <typename Key_, typename T_, typename Compare_, typename Alloc_>
 Map<Key_, T_, Compare_, Alloc_>::ConstIterator
 Map<Key_, T_, Compare_, Alloc_>::End() const noexcept {
-  return rb_tree_.end();
+  return rb_tree_.End();
 }
 
 template <typename Key_, typename T_, typename Compare_, typename Alloc_>
@@ -191,7 +191,7 @@ Map<Key_, T_, Compare_, Alloc_>::InsertOrAssign(const KeyType& key,
   auto it = rb_tree_.LowerBound(key);
   bool inserted = false;
 
-  if (it == rb_tree_.end() || KeyCompare()(key, it->first)) {
+  if (it == rb_tree_.End() || KeyCompare()(key, it->first)) {
     auto insert_result = rb_tree_.InsertUnique(std::make_pair(key, value));
     it = insert_result.first;
     inserted = insert_result.second;
@@ -220,7 +220,7 @@ void Map<Key_, T_, Compare_, Alloc_>::Merge(OtherMap_<OtherCompare_>& other) {
 
 template <typename Key_, typename T_, typename Compare_, typename Alloc_>
 bool Map<Key_, T_, Compare_, Alloc_>::Contains(const KeyType& key) const {
-  return rb_tree_.Find(key) != rb_tree_.end();
+  return rb_tree_.Find(key) != rb_tree_.End();
 }
 
 template <typename Key_, typename T_, typename Compare_, typename Alloc_>

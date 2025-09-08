@@ -102,25 +102,25 @@ Set<Key_, Compare_, Alloc_>::Set(std::initializer_list<ValueType> const& items,
 template <typename Key_, typename Compare_, typename Alloc_>
 Set<Key_, Compare_, Alloc_>::Iterator
 Set<Key_, Compare_, Alloc_>::Begin() noexcept {
-  return rb_tree_.begin();
+  return rb_tree_.Begin();
 }
 
 template <typename Key_, typename Compare_, typename Alloc_>
 Set<Key_, Compare_, Alloc_>::Iterator
 Set<Key_, Compare_, Alloc_>::End() noexcept {
-  return rb_tree_.end();
+  return rb_tree_.End();
 }
 
 template <typename Key_, typename Compare_, typename Alloc_>
 Set<Key_, Compare_, Alloc_>::ConstIterator Set<Key_, Compare_, Alloc_>::Begin()
     const noexcept {
-  return rb_tree_.begin();
+  return rb_tree_.Begin();
 }
 
 template <typename Key_, typename Compare_, typename Alloc_>
 Set<Key_, Compare_, Alloc_>::ConstIterator Set<Key_, Compare_, Alloc_>::End()
     const noexcept {
-  return rb_tree_.end();
+  return rb_tree_.End();
 }
 
 template <typename Key_, typename Compare_, typename Alloc_>
@@ -181,7 +181,7 @@ Set<Key_, Compare_, Alloc_>::ConstIterator Set<Key_, Compare_, Alloc_>::Find(
 
 template <typename Key_, typename Compare_, typename Alloc_>
 bool Set<Key_, Compare_, Alloc_>::Contains(const KeyType& key) const {
-  return rb_tree_.Find(key) != rb_tree_.end();
+  return rb_tree_.Find(key) != rb_tree_.End();
 }
 
 template <typename Key_, typename Compare_, typename Alloc_>

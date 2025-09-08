@@ -115,25 +115,25 @@ Multiset<Key_, Compare_, Alloc_>::Multiset(
 template <typename Key_, typename Compare_, typename Alloc_>
 Multiset<Key_, Compare_, Alloc_>::Iterator
 Multiset<Key_, Compare_, Alloc_>::Begin() noexcept {
-  return rb_tree_.begin();
+  return rb_tree_.Begin();
 }
 
 template <typename Key_, typename Compare_, typename Alloc_>
 Multiset<Key_, Compare_, Alloc_>::Iterator
 Multiset<Key_, Compare_, Alloc_>::End() noexcept {
-  return rb_tree_.end();
+  return rb_tree_.End();
 }
 
 template <typename Key_, typename Compare_, typename Alloc_>
 Multiset<Key_, Compare_, Alloc_>::ConstIterator
 Multiset<Key_, Compare_, Alloc_>::Begin() const noexcept {
-  return rb_tree_.begin();
+  return rb_tree_.Begin();
 }
 
 template <typename Key_, typename Compare_, typename Alloc_>
 Multiset<Key_, Compare_, Alloc_>::ConstIterator
 Multiset<Key_, Compare_, Alloc_>::End() const noexcept {
-  return rb_tree_.end();
+  return rb_tree_.End();
 }
 
 template <typename Key_, typename Compare_, typename Alloc_>
@@ -202,7 +202,7 @@ Multiset<Key_, Compare_, Alloc_>::Find(const KeyType& key) const {
 
 template <typename Key_, typename Compare_, typename Alloc_>
 bool Multiset<Key_, Compare_, Alloc_>::Contains(const KeyType& key) const {
-  return rb_tree_.Find(key) != rb_tree_.end();
+  return rb_tree_.Find(key) != rb_tree_.End();
 }
 
 template <typename Key_, typename Compare_, typename Alloc_>
