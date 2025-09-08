@@ -12,7 +12,6 @@ TEST(insert_many_back_method, int_1) {
     d1.Pop();
     --j;
   }
-
 }
 
 TEST(insert_many_back_method, int_2) {

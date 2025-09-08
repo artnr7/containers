@@ -11,7 +11,7 @@ TEST(copy_assignment_operator_integer, integer_2) {
   s21::Stack<int> d1{1, 2, 3, 4, 5};
   s21::Stack<int> d2{5};
   d2 = d1;
-  
+
   int j = 5;
 
   while (d2.Size()) {

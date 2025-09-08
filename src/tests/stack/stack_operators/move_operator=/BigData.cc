@@ -1,4 +1,5 @@
 #include "../../utils/BigData.h"
+
 #include "../../test_main.h"
 
 TEST(move_assignment_operator_big_data, big_data_1) {

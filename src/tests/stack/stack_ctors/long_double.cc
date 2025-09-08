@@ -1,6 +1,7 @@
-#include "../test_main.h"
 #include <deque>
 #include <stack>
+
+#include "../test_main.h"
 #define N 32
 
 /*---------→ DEFAULT ←---------------*/

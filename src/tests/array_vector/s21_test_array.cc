@@ -21,8 +21,8 @@ TEST(ArrayTest, CopyConstructor) {
   EXPECT_EQ(original[2], 3);
 
   copy[0] = 100;
-  EXPECT_EQ(original[0], 1);  
-  EXPECT_EQ(copy[0], 100);    
+  EXPECT_EQ(original[0], 1);
+  EXPECT_EQ(copy[0], 100);
 }
 
 TEST(ArrayTest, MoveConstructor) {
@@ -33,9 +33,7 @@ TEST(ArrayTest, MoveConstructor) {
   EXPECT_EQ(moved[1], 20);
   EXPECT_EQ(moved[2], 30);
   EXPECT_EQ(moved[3], 40);
-
 }
-
 
 TEST(ArrayTest, InitializerListConstructor) {
   s21::Array<int, 3> arr{1, 2, 3};
@@ -139,8 +137,6 @@ TEST(ArrayTest, Iterators) {
   EXPECT_EQ(it, arr.End());
 }
 
-
-
 TEST(ArrayTest, MaxSize) {
   s21::Array<int, 3> arr{10, 20, 30};
   EXPECT_EQ(arr.MaxSize(), 3);
@@ -242,8 +238,6 @@ TEST(ArrayConstIteratorTest, DereferenceOperator) {
   auto it = arr.Cbegin();
   EXPECT_EQ(*it, 10);
 }
-
-
 
 TEST(ArrayConstIteratorTest, EqualityOperators) {
   const s21::Array<int, 2> arr = {100, 200};

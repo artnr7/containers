@@ -114,8 +114,6 @@ TEST(vectorTest, Iterators) {
   EXPECT_EQ(*end, 3);
 }
 
-
-
 TEST(vectorTest, EmptyAndSize) {
   s21::Vector<int> empty_victor;
   EXPECT_TRUE(empty_victor.Empty());
@@ -281,7 +279,6 @@ TEST(VectorConstIteratorTest, DereferenceOperator) {
   EXPECT_EQ(*it, 10);
 }
 
-
 TEST(VectorConstIteratorTest, EqualityOperators) {
   const s21::Vector<int> vec = {100, 200};
   auto it1 = vec.Cbegin();
@@ -367,8 +364,8 @@ TEST(VectorTest, InsertManyAtEnd) {
   EXPECT_EQ(vec[0], 1);
   EXPECT_EQ(vec[1], 2);
   EXPECT_EQ(vec[2], 3);
-  EXPECT_EQ(vec[3], 40);  
-  EXPECT_EQ(vec[4], 50);  
+  EXPECT_EQ(vec[3], 40);
+  EXPECT_EQ(vec[4], 50);
 
   EXPECT_EQ(*it, 40);
   EXPECT_EQ(it, vec.Begin() + 3);

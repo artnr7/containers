@@ -1,6 +1,7 @@
-#include "../../test_main.h"
 #include <deque>
 #include <queue>
+
+#include "../../test_main.h"
 #define N 32
 
 TEST(copy_assignment_operator_long_double, long_double_1) {

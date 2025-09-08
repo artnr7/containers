@@ -464,11 +464,9 @@ TEST(MapIntegrationTest, LargeInsertion) {
 TEST(MapTest, InsertManyBasic) {
   s21::Map<int, std::string> map;
 
-  auto results = map.InsertMany(
-    std::make_pair(1, "one"),
-    std::make_pair(2, "two"),
-    std::make_pair(3, "three")
-  );
+  auto results =
+      map.InsertMany(std::make_pair(1, "one"), std::make_pair(2, "two"),
+                     std::make_pair(3, "three"));
 
   EXPECT_EQ(map.Size(), 3);
   EXPECT_EQ(results.Size(), 3);
@@ -485,11 +483,9 @@ TEST(MapTest, InsertManyBasic) {
 TEST(MapTest, InsertManyWithDuplicateKeys) {
   s21::Map<int, std::string> map;
 
-  auto results = map.InsertMany(
-    std::make_pair(1, "first"),
-    std::make_pair(1, "duplicate"),
-    std::make_pair(2, "second")
-  );
+  auto results =
+      map.InsertMany(std::make_pair(1, "first"), std::make_pair(1, "duplicate"),
+                     std::make_pair(2, "second"));
 
   EXPECT_EQ(map.Size(), 2);
   EXPECT_EQ(results.Size(), 3);
@@ -504,10 +500,8 @@ TEST(MapTest, InsertManyWithDuplicateKeys) {
 TEST(MapTest, InsertManyComplexTypes) {
   s21::Map<std::string, s21::Vector<int>> map;
 
-  auto results = map.InsertMany(
-    std::make_pair("a", s21::Vector<int>{1, 2, 3}),
-    std::make_pair("b", s21::Vector<int>{4, 5})
-  );
+  auto results = map.InsertMany(std::make_pair("a", s21::Vector<int>{1, 2, 3}),
+                                std::make_pair("b", s21::Vector<int>{4, 5}));
 
   EXPECT_EQ(map.Size(), 2);
   EXPECT_EQ(map["a"].Size(), 3);

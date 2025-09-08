@@ -1,5 +1,6 @@
-#include "../../test_main.h"
 #include <deque>
+
+#include "../../test_main.h"
 #define N 32
 
 /*---------→ COPY ←---------------*/
@@ -10,7 +11,6 @@ TEST(operators_push_back_long_double, empty_copy_1) {
   }
   int i = 0;
   for (auto it = d1.Begin(); it != d1.End(); ++it) {
-
     EXPECT_EQ(*it, i++);
   }
 }
@@ -3196,7 +3196,6 @@ TEST(operators_push_back_long_double, empty_move_1) {
   }
   int i = 0;
   for (auto it = d1.Begin(); it != d1.End(); ++it) {
-
     EXPECT_EQ(*it, i++);
   }
 }

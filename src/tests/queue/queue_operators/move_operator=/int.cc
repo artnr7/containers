@@ -11,7 +11,7 @@ TEST(move_assignment_operator_integer, integer_2) {
   s21::Queue<int> d1{1, 2, 3, 4, 5};
   s21::Queue<int> d2{5};
   d2 = std::move(d1);
-  
+
   int j = 1;
 
   while (d2.Size()) {

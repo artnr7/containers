@@ -1,4 +1,5 @@
 #include "../utils/BigData.h"
+
 #include "../test_main.h"
 
 /*---------→ DEFAULT ←---------------*/
@@ -93,7 +94,6 @@ TEST(big_data_constructors, def_constructor_small_size_2) {
 }
 
 TEST(big_data_constructors, def_constructor_big_size_1) {
-
   s21::Deque<BigData<256>> test;
   size_t deq_max_size = test.MaxSize();
   EXPECT_DEATH(s21::Deque<BigData<256>> d1(deq_max_size + 1),
@@ -115,7 +115,6 @@ TEST(big_data_constructors, def_constructor_big_size_3) {
 }
 
 TEST(big_data_constructors, def_constructor_negative_size_1) {
-
   EXPECT_DEATH(s21::Deque<BigData<256>> d1(-2),
                "To use this constructor Tp_qty must be less than MaxSize()");
 }
@@ -196,8 +195,7 @@ TEST(big_data_constructors, init_list_constructor_3) {
   size_t bd_deque_size = 0;
   for (auto itB = d1.Begin(); itB != d1.End(); ++itB, ++j) {
     bd_deque_size += (*itB).Size();
-      EXPECT_EQ((*itB).ValueProof(j), 1);
-
+    EXPECT_EQ((*itB).ValueProof(j), 1);
   }
 
   EXPECT_EQ(bd_deque_size, 5 * 255);
@@ -225,7 +223,7 @@ TEST(big_data_constructors, init_list_constructor_5) {
   size_t bd_deque_size = 0;
   for (auto itB = d1.Begin(); itB != d1.End(); ++itB, ++j) {
     bd_deque_size += (*itB).Size();
-      EXPECT_EQ((*itB).ValueProof(j), 1);
+    EXPECT_EQ((*itB).ValueProof(j), 1);
   }
 
   EXPECT_EQ(bd_deque_size, 5 * 512);
@@ -239,7 +237,7 @@ TEST(big_data_constructors, init_list_constructor_6) {
   size_t bd_deque_size = 0;
   for (auto itB = d1.Begin(); itB != d1.End(); ++itB, ++j) {
     bd_deque_size += (*itB).Size();
-      EXPECT_EQ((*itB).ValueProof(j), 1);
+    EXPECT_EQ((*itB).ValueProof(j), 1);
   }
 
   EXPECT_EQ(bd_deque_size, 5 * 511);
@@ -253,7 +251,7 @@ TEST(big_data_constructors, init_list_constructor_7) {
   size_t bd_deque_size = 0;
   for (auto itB = d1.Begin(); itB != d1.End(); ++itB, ++j) {
     bd_deque_size += (*itB).Size();
-      EXPECT_EQ((*itB).ValueProof(j), 1);
+    EXPECT_EQ((*itB).ValueProof(j), 1);
   }
 
   EXPECT_EQ(bd_deque_size, 5 * 513);
@@ -275,7 +273,7 @@ TEST(big_data_constructors, copy_2) {
   EXPECT_EQ(d2.Size(), 5);
 
   for (auto itB = d1.Begin(); itB != d1.End(); ++itB) {
-      EXPECT_EQ((*itB).ValueProof(2), 1);
+    EXPECT_EQ((*itB).ValueProof(2), 1);
   }
 }
 
@@ -289,7 +287,7 @@ TEST(big_data_constructors, copy_3) {
   int j = 1;
 
   for (auto itB = d1.Begin(); itB != d1.End(); ++itB, ++j) {
-      EXPECT_EQ((*itB).ValueProof(j), 1);
+    EXPECT_EQ((*itB).ValueProof(j), 1);
   }
 }
 
@@ -309,8 +307,7 @@ TEST(big_data_constructors, move_2) {
   EXPECT_EQ(d2.Size(), 5);
 
   for (auto itB = d1.Begin(); itB != d1.End(); ++itB) {
-      EXPECT_EQ((*itB).ValueProof(2), 1);
-
+    EXPECT_EQ((*itB).ValueProof(2), 1);
   }
 }
 
@@ -324,6 +321,6 @@ TEST(big_data_constructors, move_3) {
   int j = 1;
 
   for (auto itB = d1.Begin(); itB != d1.End(); ++itB, ++j) {
-      EXPECT_EQ((*itB).ValueProof(j), 1);
+    EXPECT_EQ((*itB).ValueProof(j), 1);
   }
 }
