@@ -50,11 +50,3 @@ help:
 .PHONY: clean
 clean:
 	rm -rf build
-
-CLANG_FILES := $(shell find . \( -name '*.c' -o -name '*.h' -o -name '*.cc' -o -name '*.hpp' \))
-
-clang_f:
-	@cp ../materials/linters/.clang-format . 
-	@clang-format -n $(CLANG_FILES)
-	@rm .clang-format
-	@echo "Clang done"
