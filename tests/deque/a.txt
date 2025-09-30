@@ -1,0 +1,67 @@
+.
+├── a.txt
+├── CMakeLists.txt
+├── deque_ctors
+│   ├── BigData.cc
+│   ├── int.cc
+│   └── long_double.cc
+├── deque_methods
+│   ├── append_range
+│   │   ├── BigData.cc
+│   │   ├── int.cc
+│   │   └── long_double.cc
+│   ├── back
+│   │   ├── BigData.cc
+│   │   ├── int.cc
+│   │   └── long_double.cc
+│   ├── begin
+│   │   ├── BigData.cc
+│   │   ├── int.cc
+│   │   └── long_double.cc
+│   ├── empty
+│   │   ├── BigData.cc
+│   │   ├── int.cc
+│   │   └── long_double.cc
+│   ├── end
+│   │   ├── BigData.cc
+│   │   ├── int.cc
+│   │   └── long_double.cc
+│   ├── front
+│   │   ├── BigData.cc
+│   │   ├── int.cc
+│   │   └── long_double.cc
+│   ├── pop_back
+│   │   ├── BigData.cc
+│   │   ├── int.cc
+│   │   └── long_double.cc
+│   ├── pop_front
+│   │   ├── BigData.cc
+│   │   ├── int.cc
+│   │   └── long_double.cc
+│   ├── push_back
+│   │   ├── BigData.cc
+│   │   ├── int.cc
+│   │   └── long_double.cc
+│   ├── push_front
+│   │   ├── BigData.cc
+│   │   ├── int.cc
+│   │   └── long_double.cc
+│   └── size
+│       ├── BigData.cc
+│       ├── int.cc
+│       └── long_double.cc
+├── deque_operators
+│   ├── copy_operator=
+│   │   ├── BigData.cc
+│   │   ├── int.cc
+│   │   └── long_double.cc
+│   └── move_operator=
+│       ├── BigData.cc
+│       ├── int.cc
+│       └── long_double.cc
+├── !FAQ.txt
+├── test_main.h
+└── utils
+    └── BigData.h
+
+18 directories, 47 files
